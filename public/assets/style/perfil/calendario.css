@@ -1,0 +1,92 @@
+/* ============================= */
+/*         MINI CALENDARIO       */
+/* ============================= */
+.mini-calendar.small {
+    background: #fff;
+    /* sin cambios */
+    border: 1px solid #e2e6ea;
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: left;
+    width: 100%;
+    max-width: 220px;
+    /* sin cambios */
+    margin: 0 auto;
+}
+
+.mc-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.mc-month {
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+.mc-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.mc-days>div {
+    text-align: center;
+    font-size: .65rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.mc-date {
+    height: 26px;
+    /* sin cambios */
+    background: #f8f9fa;
+    /* sin cambios */
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-weight: 600;
+    font-size: .75rem;
+    transition: background-color .2s;
+}
+
+.mc-date:hover {
+    background-color: #e8f0ff;
+    /* sin cambios */
+}
+
+.mc-date.mc-empty {
+    background: transparent;
+    /* sin cambios */
+}
+
+.mc-today {
+    outline: 2px solid #0d6efd;
+    background: #e8f0ff;
+    /* sin cambios */
+}
+
+.mc-dot {
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    background: #0d6efd;
+    border-radius: 50%;
+}
+
+/* Calendario dentro de card consistente */
+.card .mini-calendar.small {
+    max-width: 220px;
+    padding: 8px 10px;
+}
+
+.card .mini-calendar .mc-date {
+    height: 26px;
+    font-size: .75rem;
+}

@@ -1,0 +1,38 @@
+/* ============================= */
+/*            GENERAL            */
+/* ============================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    /* sin cambios */
+    color: #333;
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Tipografía fluida base */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.2;
+    margin: 0 0 .6em;
+}
+
+p {
+    margin: .6em 0;
+}

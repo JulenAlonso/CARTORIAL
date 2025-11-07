@@ -1,0 +1,17 @@
+/* ============================= */
+/*            USER INFO          */
+/* ============================= */
+.user-info {
+    background-color: #fff;
+    /* sin cambios */
+    padding: clamp(16px, 2vw, 25px);
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .08);
+    width: min(100%, 1100px);
+}
+
+.user-info p {
+    margin: 8px 0;
+    font-size: 1rem;
+}

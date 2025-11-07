@@ -1,0 +1,67 @@
+body {
+    background: #f6f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: -20px 0 50px;
+}
+
+.col-xl-10 {
+    max-width: 900px;
+    /* o el ancho que quieras */
+    margin: 0 auto;
+    /* centrado horizontal */
+}
+
+
+/* Boton: Registro  */
+.btn.btn-outline-danger {
+    color: #01579B;
+    border-color: #01579B;
+}
+
+.btn.btn-outline-danger:hover {
+    color: #E1F5FE;
+    background-color: #01579B;
+    border-color: #01579B;
+}
+
+/* Boton: volver  */
+.btn.btn-volver {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #01579B;
+    border-color: #01579B;
+}
+
+.btn.btn-volver:hover {
+    color: #E1F5FE;
+    background-color: #01579B;
+    border-color: #01579B;
+}
+
+.gradient-custom-2 {
+    /* fallback for old browsers */
+    /* background: #fccb90; */
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #039BE5, #0288D1, #0277BD, #01579B);
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #039BE5, #0288D1, #0277BD, #01579B);
+}
+
+@media (min-width: 768px) {
+    .gradient-form {
+        height: 100vh !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .gradient-custom-2 {
+        border-top-right-radius: .3rem;
+        border-bottom-right-radius: .3rem;
+    }
+}

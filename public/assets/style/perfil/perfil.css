@@ -1,0 +1,770 @@
+/* ============================= */
+/*            GENERAL            */
+/* ============================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    /* Ajusta el tamaño base de las tarjetas */
+    --vehiculo-card-min: 420px;
+    --vehiculo-card-vertical-max: 420px;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    overflow-y: scroll;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.2;
+    margin: 0 0 .6em;
+}
+
+.h2_mis_vehiculos {
+    margin-bottom: 12px;
+    margin-left: 5vh !important;
+}
+
+p {
+    margin: .6em 0;
+}
+
+/* ============================= */
+/*              MAIN             */
+/* ============================= */
+main {
+    flex-grow: 1;
+    background: linear-gradient(135deg, #e8f0ff, #ffffff);
+    padding: clamp(16px, 3vw, 30px) clamp(12px, 3vw, 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(16px, 2vw, 30px);
+}
+
+main h1 {
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 1rem + 2vw, 2.2rem);
+    margin-bottom: clamp(24px, 4vw, 40px);
+    text-align: center;
+    animation: fadeInDown 1s ease both;
+}
+
+/* ============================= */
+/*            SIDEBAR            */
+/* ============================= */
+aside {
+    width: clamp(220px, 22vw, 260px);
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, .05);
+    position: sticky;
+    top: 0;
+    max-height: 100svh;
+}
+
+.profile-pic img {
+    width: clamp(64px, 8vw, 120px);
+    height: clamp(64px, 8vw, 120px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0d6efd;
+    margin-bottom: 18px;
+    transition: transform .3s ease;
+}
+
+.profile-pic img:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: auto;
+}
+
+.btn-sidebar {
+    background-color: transparent;
+    border: 2px solid #0d6efd;
+    border-radius: 10px;
+    padding: 12px;
+    color: #0d6efd;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.btn-sidebar:hover {
+    background-color: #0d6efd;
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.logout {
+    background-color: #dc3545;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.logout:hover {
+    background-color: #b02a37;
+    transform: translateY(-2px);
+}
+
+/* ============================= */
+/*            USER INFO          */
+/* ============================= */
+.user-info {
+    background-color: #fff;
+    padding: clamp(16px, 2vw, 25px);
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .08);
+    width: min(100%, 1100px);
+}
+
+.user-info p {
+    margin: 8px 0;
+    font-size: 1rem;
+}
+
+/* ============================= */
+/*         MINI CALENDARIO       */
+/* ============================= */
+.mini-calendar.small {
+    background: #fff;
+    border: 1px solid #e2e6ea;
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: left;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+}
+
+.mc-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.mc-month {
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+.mc-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.mc-days>div {
+    text-align: center;
+    font-size: .65rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.mc-date {
+    height: 26px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-weight: 600;
+    font-size: .75rem;
+    transition: background-color .2s;
+}
+
+.mc-date:hover {
+    background-color: #e8f0ff;
+}
+
+.mc-date.mc-empty {
+    background: transparent;
+}
+
+.mc-today {
+    outline: 2px solid #0d6efd;
+    background: #e8f0ff;
+}
+
+.mc-dot {
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    background: #0d6efd;
+    border-radius: 50%;
+}
+
+/* Calendario dentro de card consistente */
+.card .mini-calendar.small {
+    max-width: 220px;
+    padding: 8px 10px;
+}
+
+.card .mini-calendar .mc-date {
+    height: 26px;
+    font-size: .75rem;
+}
+
+/* ============================= */
+/*              CARDS            */
+/* ============================= */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+    gap: clamp(14px, 2vw, 25px);
+    width: 100%;
+    max-width: 1500px;
+    justify-content: center;
+    align-items: stretch;
+    animation: fadeInUp 1s ease both;
+}
+
+.card {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: clamp(12px, 2vw, 20px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .05);
+    transition: transform .3s ease, box-shadow .3s ease;
+    position: relative;
+}
+
+.card h3 {
+    text-align: center;
+    color: #0d6efd;
+    font-size: clamp(1rem, .8rem + .9vw, 1.35rem);
+    margin-bottom: clamp(12px, 2vw, 30px);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, .15);
+}
+
+.card p {
+    font-size: clamp(1rem, .8rem + .8vw, 1.4rem);
+    font-weight: 700;
+    color: #333;
+}
+
+.text-muted {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    font-size: .8rem;
+}
+
+.card[role="button"] {
+    cursor: pointer;
+    user-select: none;
+}
+
+.card[role="button"] :focus {
+    outline: 3px solid rgba(13, 110, 253, .35);
+    outline-offset: 2px;
+}
+
+
+.card .ver-detalles {
+    margin-top: 8px;
+    font-size: .75rem;
+    color: #6c757d;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ============================= */
+/*     LISTADO DE VEHÍCULOS      */
+/* ============================= */
+.vehiculos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--vehiculo-card-min), 100%), 1fr));
+    gap: clamp(18px, 2.5vw, 32px);
+    margin-top: 40px;
+    width: 100%;
+    max-width: 1300px;
+    padding-bottom: 8px;
+}
+
+.vehiculo-card {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background-color: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .08);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.vehiculo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, .1);
+}
+
+/* Imagen izquierda */
+.vehiculo-media {
+    flex: 0 0 40%;
+    max-width: 40%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f6f9;
+    aspect-ratio: 16 / 9;
+}
+
+.vehiculo-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Cuerpo derecha */
+.vehiculo-body {
+    flex: 1;
+    padding: clamp(16px, 2vw, 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.vehiculo-titulo {
+    margin: 0 0 10px 0;
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: clamp(1rem, .9rem + .5vw, 1.1rem);
+}
+
+.vehiculo-titulo span {
+    color: #666;
+    font-weight: 400;
+}
+
+.vehiculo-datos {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    font-size: .95rem;
+}
+
+.vehiculo-datos li {
+    color: #333;
+}
+
+/* ====== LISTA COMPACTA TIPO FOTO (Mis vehículos) ====== */
+.vehiculos-grid2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* alineado a la izquierda como en la imagen */
+    gap: 16px;
+    /* separación entre tarjetas */
+    width: 100%;
+    max-width: 720px;
+    /* ancho máximo del bloque */
+    margin-top: 16px;
+    /* sangría izquierda como en tu diseño */
+    padding-bottom: 8px;
+}
+
+/* Tarjeta compacta */
+.vehiculos-grid2 .vehiculo-card {
+    width: 100%;
+    max-width: 560px;
+    /* ancho visual de cada tarjeta */
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(13, 110, 253, .08), 0 2px 6px rgba(0, 0, 0, .04);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    /* sin margen extra */
+}
+
+/* Oculta imagen en esta vista (en la foto no aparece) */
+.vehiculos-grid2 .vehiculo-media {
+    display: none !important;
+}
+
+/* Título azul, con aspecto de enlace */
+.vehiculos-grid2 .vehiculo-titulo {
+    margin: 0;
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* Grid de datos compacto: 2 columnas para poder alinear 2ª mano a la derecha */
+.vehiculos-grid2 .vehiculo-datos {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    /* precio izquierda, 2ª mano derecha */
+    align-items: center;
+    gap: 6px 18px;
+    font-size: .95rem;
+}
+
+/* Estilo de etiquetas/datos */
+.vehiculos-grid2 .vehiculo-datos li {
+    color: #333;
+}
+
+/* Precio principal (izquierda) */
+.vehiculos-grid2 .vehiculo-datos li.precio {
+    font-weight: 600;
+}
+
+/* 2ª mano alineado a la derecha (cuando exista) */
+.vehiculos-grid2 .vehiculo-datos li.precio2 {
+    justify-self: end;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Suaviza el aspecto del label “Precio:” para parecerse a la captura */
+.vehiculos-grid2 .vehiculo-datos li strong {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+/* Responsive: a una columna en pantallas estrechas */
+@media (max-width: 620px) {
+    .vehiculos-grid2 {
+        margin-left: 0;
+        max-width: 100%;
+    }
+
+    .vehiculos-grid2 .vehiculo-card {
+        max-width: 100%;
+        padding: 14px 16px;
+    }
+
+    .vehiculos-grid2 .vehiculo-datos {
+        grid-template-columns: 1fr;
+        /* apila los datos */
+    }
+
+    .vehiculos-grid2 .vehiculo-datos li.precio2 {
+        justify-self: start;
+        /* ya no a la derecha en móvil */
+    }
+}
+
+
+/* ============================= */
+/*        COLLAPSIBLE / MODOS    */
+/* ============================= */
+.collapsible {
+    overflow: hidden;
+    max-height: 0;
+    display: block;
+}
+
+.collapsible.open {
+    max-height: 4000px;
+}
+
+/* ==== MODOS ==== */
+#seccion-mis-vehiculos.modo-valor .vehiculo-media,
+#seccion-mis-vehiculos.modo-km .vehiculo-media,
+#seccion-mis-vehiculos.modo-gastos .vehiculo-media,
+#seccion-mis-vehiculos.modo-calendario .vehiculo-media {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculo-titulo span,
+#seccion-mis-vehiculos.modo-km .vehiculo-titulo span,
+#seccion-mis-vehiculos.modo-gastos .vehiculo-titulo span,
+#seccion-mis-vehiculos.modo-calendario .vehiculo-titulo span {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculo-datos li,
+#seccion-mis-vehiculos.modo-km .vehiculo-datos li,
+#seccion-mis-vehiculos.modo-gastos .vehiculo-datos li,
+#seccion-mis-vehiculos.modo-calendario .vehiculo-datos li {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculo-datos li.precio,
+#seccion-mis-vehiculos.modo-valor .vehiculo-datos li.precio2 {
+    display: list-item;
+    font-size: .9rem;
+}
+
+#seccion-mis-vehiculos.modo-km .vehiculo-datos li.km {
+    display: list-item;
+    font-size: .9rem;
+}
+
+#seccion-mis-vehiculos.modo-gastos .vehiculo-datos li.gastos {
+    display: list-item;
+    font-size: .9rem;
+}
+
+#seccion-mis-vehiculos.modo-calendario .vehiculo-datos li.gastos {
+    display: list-item;
+    font-size: .9rem;
+}
+
+
+/* === VISTA VERTICAL PARA MODOS VALOR / KM / GASTOS === */
+#seccion-mis-vehiculos.modo-valor,
+#seccion-mis-vehiculos.modo-km,
+#seccion-mis-vehiculos.modo-gastos,
+#seccion-mis-vehiculos.modo-calendario {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculos-grid,
+#seccion-mis-vehiculos.modo-km .vehiculos-grid,
+#seccion-mis-vehiculos.modo-gastos .vehiculos-grid,
+#seccion-mis-vehiculos.modo-calendario .vehiculos-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculo-card,
+#seccion-mis-vehiculos.modo-km .vehiculo-card,
+#seccion-mis-vehiculos.modo-gastos .vehiculo-card,
+#seccion-mis-vehiculos.modo-calendario .vehiculo-card {
+
+    width: 100% !important;
+    max-width: var(--vehiculo-card-vertical-max) !important;
+    text-align: left !important;
+    margin-left: 5vh !important;
+}
+
+/* ============================= */
+/*     KILÓMETROS (Tablero)      */
+/* ============================= */
+/* ❗️ Eliminados mini-charts y contenedores de mini-charts.
+   ✅ Mantener solo el tablero grande de KM. */
+
+.km-board {
+    margin-top: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #fff;
+    padding: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+    width: 65%;
+    margin-left: auto;
+    margin-right: 3%;
+}
+
+.km-board-head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+/* ============================= */
+/*          MEDIA QUERIES        */
+/* ============================= */
+@media (max-width: 1200px) {
+    .cards {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .vehiculos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
+    }
+
+    /* Ajustes responsivos para el tablero de KM */
+    .km-board {
+        width: 85%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 820px) {
+    body {
+        flex-direction: column;
+    }
+
+    aside {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        box-shadow: none;
+        border-bottom: 2px solid #e8f0ff;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    aside::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    aside::-webkit-scrollbar-thumb {
+        background-color: #0d6efd;
+        border-radius: 4px;
+    }
+
+    .sidebar-menu {
+        flex-direction: row;
+        gap: 8px;
+        margin-bottom: 0;
+        padding-block: 4px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .btn-sidebar {
+        padding: 8px 10px;
+        font-size: .9rem;
+        white-space: nowrap;
+        flex: 0 0 auto;
+    }
+
+    .profile-pic img {
+        width: 56px;
+        height: 56px;
+        border-width: 2px;
+        margin: 0;
+    }
+
+    .vehiculo-card {
+        flex-direction: column;
+    }
+
+    .vehiculo-media {
+        max-width: 100%;
+        aspect-ratio: 16/9;
+    }
+
+    .vehiculo-datos {
+        grid-template-columns: 1fr;
+    }
+
+    /* Ajustes responsivos para el tablero de KM */
+    .km-board {
+        width: 100%;
+        margin: 12px 0 0 0;
+    }
+}
+
+@media (max-width: 520px) {
+    .vehiculos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    main {
+        padding: 14px;
+    }
+
+    main h1 {
+        font-size: clamp(1.4rem, 5vw, 1.7rem);
+    }
+
+    .vehiculo-body {
+        padding: 14px;
+    }
+}
+
+/* ============================= */
+/*          ANIMACIONES          */
+/* ============================= */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -10px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
