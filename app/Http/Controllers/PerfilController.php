@@ -3,42 +3,60 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PerfilController extends Controller
 {
     public function mostrarPerfil()
     {
+        // ✅ Usuario autenticado
         $user = Auth::user();
 
-        // --- Avatar (tu misma lógica) ---
+        // ✅ Comprobación del avatar
         if (empty($user->user_avatar) || $user->user_avatar === '0') {
             $avatarPath = asset('assets/images/user.png');
+        } elseif (preg_match('/^https?:\/\//', $user->user_avatar)) {
+            // Si es una URL completa (http o https)
+            $avatarPath = $user->user_avatar;
         } else {
-            if (preg_match('/^https?:\/\//', $user->user_avatar)) {
-                $avatarPath = $user->user_avatar;
+            // Si es una ruta en storage, comprobamos que exista el archivo
+            $relativePath = ltrim($user->user_avatar, '/');
+            if (Storage::disk('public')->exists($relativePath)) {
+                $avatarPath = asset('storage/' . $relativePath);
             } else {
-                $avatarPath = asset('storage/' . ltrim($user->user_avatar, '/'));
+                // Si no existe físicamente → imagen por defecto
+                $avatarPath = asset('assets/images/user.png');
             }
         }
 
-        // --- Vehículos del usuario ---
-        // Ajusta columnas si necesitas otras
+        // ✅ Vehículos del usuario
         $vehiculos = $user->vehiculos()
             ->select(
-                'id_vehiculo','id_usuario','marca','modelo','anio','matricula',
-                'km','cv','combustible','etiqueta','precio','precio_segunda_mano',
-                'fecha_compra','car_avatar'
+                'id_vehiculo',
+                'id_usuario',
+                'marca',
+                'modelo',
+                'anio',
+                'matricula',
+                'km',
+                'cv',
+                'combustible',
+                'etiqueta',
+                'precio',
+                'precio_segunda_mano',
+                'fecha_compra',
+                'car_avatar'
             )
-            ->orderBy('anio','desc')
+            ->orderBy('anio', 'desc')
             ->get();
 
-        // --- Totales que usas en el blade ---
+        // ✅ Totales del perfil
         $totalVehiculos = $vehiculos->count();
         $valorTotal     = $vehiculos->sum('precio');
         $kmTotal        = $vehiculos->sum('km');
         $gastosTotales  = 0; // si luego tiras de tabla "gastos", cámbialo
 
-        // ⚠️ Tu blade es resources/views/auth/perfil.blade.php => 'auth.perfil'
+        // ✅ Envío a la vista
         return view('auth.perfil', compact(
             'user',
             'avatarPath',

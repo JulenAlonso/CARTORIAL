@@ -16,9 +16,8 @@
 <body>
     <aside>
         <div class="profile-pic">
-            <img src="{{ asset('assets/images/user.png') }}" alt="Usuario">
+            <img src="{{ $avatarPath }}" alt="Usuario">
         </div>
-
         <!-- Información del perfil del usuario -->
         <div class="user-info">
             <p><strong>Nombre de usuario:</strong> {{ Auth::user()->user_name }}</p>
@@ -44,13 +43,13 @@
 
     <main>
         <h1>Mi Perfil</h1>
-    @php
-        $vehiculos = $vehiculos ?? collect();  
-        $totalVehiculos = $totalVehiculos ?? ($vehiculos->count() ?? 0);
-        $valorTotal = $valorTotal ?? ($vehiculos->sum('precio') ?? 0);
-        $kmTotal = $kmTotal ?? ($vehiculos->sum('km') ?? 0);
-        $gastosTotales = $gastosTotales ?? 0;
-    @endphp
+        @php
+            $vehiculos = $vehiculos ?? collect();
+            $totalVehiculos = $totalVehiculos ?? ($vehiculos->count() ?? 0);
+            $valorTotal = $valorTotal ?? ($vehiculos->sum('precio') ?? 0);
+            $kmTotal = $kmTotal ?? ($vehiculos->sum('km') ?? 0);
+            $gastosTotales = $gastosTotales ?? 0;
+        @endphp
 
         <div class="cards">
             <!-- 🚗 Vehículos -->
@@ -212,7 +211,7 @@
 
         {{-- Sección listado de vehículos (colapsable) --}}
         <section id="seccion-mis-vehiculos" class="collapsible" style="margin-top: 24px">
-            <h2  class="h2_mis_vehiculos">Mis vehículos</h2>
+            <h2 class="h2_mis_vehiculos">Mis vehículos</h2>
 
 
             @if ($vehiculos->isEmpty())
