@@ -29,11 +29,11 @@
 
         <div class="sidebar-menu">
             <a href="{{ route('editarPerfil.create') }}" class="btn-sidebar">Editar Perfil</a>
-            <a href="{{ route('vehiculo.create') }}" class="btn-sidebar">Añadir Vehículo</a>
+            <a href="{{ route('vehiculo.create') }}" class="btn-sidebar">➕ Añadir Vehículo</a>
+            <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">Editar Vehiculo</a>
             <a href="{{ route('perfil') }}" class="btn-sidebar">⚙️ Ajustes</a>
             <a href="#" class="btn-sidebar">❓ Ayuda</a>
         </div>
-
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
@@ -158,7 +158,7 @@
                 @endif
             </div>
 
-            <!-- 📅 Calendario (le añado id para coherencia con JS) -->
+            <!-- 📅 Calendario -->
             <div class="card" id="card-calendario" role="button" tabindex="0"
                 aria-controls="seccion-mis-vehiculos">
                 <h3>📅 Calendario</h3>
@@ -213,7 +213,6 @@
         <section id="seccion-mis-vehiculos" class="collapsible" style="margin-top: 24px">
             <h2 class="h2_mis_vehiculos">Mis vehículos</h2>
 
-
             @if ($vehiculos->isEmpty())
                 <p class="text-muted">Aún no has registrado ningún vehículo.
                     <a href="{{ route('vehiculo.create') }}">Añadir vehículo</a>.
@@ -222,13 +221,25 @@
                 <div class="vehiculos-grid">
                     @foreach ($vehiculos as $v)
                         @php
+                            // Fallback robusto para car_avatar
+                            if (empty($v->car_avatar)) {
+                                $carSrc = asset('assets/images/default-car.png');
+                            } elseif (preg_match('/^https?:\/\//', $v->car_avatar)) {
+                                $carSrc = $v->car_avatar;
+                            } else {
+                                $carSrc = asset('storage/' . ltrim($v->car_avatar, '/'));
+                            }
+
                             $gastoCalc = $v->gastos_total ?? $v->precio * 0.05;
                         @endphp
+
                         <article class="vehiculo-card">
                             <div class="vehiculo-media">
-                                <img src="{{ $v->car_avatar ? asset('storage/' . $v->car_avatar) : asset('assets/images/default-car.png') }}"
-                                    alt="Imagen de {{ $v->marca }} {{ $v->modelo }}">
+                                <img src="{{ $carSrc }}"
+                                    alt="Imagen de {{ $v->marca }} {{ $v->modelo }}"
+                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/default-car.png') }}';">
                             </div>
+
                             <div class="vehiculo-body">
                                 <h3 class="vehiculo-titulo">
                                     {{ $v->marca }} {{ $v->modelo }} <span>({{ $v->anio }})</span>
@@ -238,7 +249,6 @@
                                     <li><strong>Matrícula:</strong> {{ $v->matricula }}</li>
                                     <li class="km"><strong>Km:</strong> {{ number_format($v->km, 0, ',', '.') }}
                                         km</li>
-
                                     <li><strong>CV:</strong> {{ $v->cv }}</li>
                                     <li><strong>Combustible:</strong> {{ $v->combustible }}</li>
                                     <li><strong>Etiqueta:</strong> {{ $v->etiqueta }}</li>
@@ -263,6 +273,7 @@
             @endif
         </section>
     </main>
+
     <script src="{{ asset('assets/js/perfil/perfil.js') }}"></script>
 </body>
 

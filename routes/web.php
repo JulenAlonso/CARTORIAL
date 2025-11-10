@@ -22,7 +22,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/cartorial', function () {
     try {
-        // OJO: si tu tabla es "usuarios" en minúscula, usa 'usuarios'
         $usuarios = DB::table('usuarios')->get();
         return $usuarios;
     } catch (\Exception $e) {
@@ -31,31 +30,53 @@ Route::get('/cartorial', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    // ===== Usuarios =====
+
+    // ===== USUARIOS =====
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
     Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
     Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
-    Route::get('/usuarios/{id}', [UsuarioController::class, 'show'])->name('usuarios.show');
+    Route::get('/usuarios/{id}', [UsuarioController::class, 'show'])->name('usuarios.show')->whereNumber('id');
 
-    // ===== Perfil (¡solo una ruta!) =====
+    // ===== PERFIL =====
     Route::get('/perfil', [PerfilController::class, 'mostrarPerfil'])->name('perfil');
 
-    // ===== Vehículos =====
-    Route::get('/vehiculos', [VehiculoController::class, 'index'])->name('vehiculos.index');
-    Route::get('/vehiculos/{id}', [VehiculoController::class, 'show'])->name('vehiculos.show');
-    Route::get('/vehiculo/crear', [VehiculoController::class, 'create'])->name('vehiculo.create');
-    Route::post('/vehiculo/crear', [VehiculoController::class, 'store'])->name('vehiculo.store');
-
-    // ===== Notas =====
-    Route::get('/notas', [NotaCalendarioController::class, 'index'])->name('notas.index');
-    Route::get('/notas/{id}', [NotaCalendarioController::class, 'show'])->name('notas.show');
-
-    // ===== Editar Perfil =====
+    // ===== EDITAR PERFIL =====
     Route::get('/perfil/editar', [EditarPerfilController::class, 'create'])->name('editarPerfil.create');
     Route::put('/perfil', [EditarPerfilController::class, 'update'])->name('editarPerfil.update');
 
-    // ===== Registros KM =====
-    Route::get('/vehiculos/{vehiculo}/km', [RegistroKmController::class, 'index'])->name('km.index');
-    Route::get('/vehiculos/{vehiculo}/km/data', [RegistroKmController::class, 'data'])->name('km.data');
-    Route::post('/vehiculos/{vehiculo}/km', [RegistroKmController::class, 'store'])->name('km.store');
+    // ===== VEHÍCULOS =====
+    Route::get('/vehiculos', [VehiculoController::class, 'index'])->name('vehiculos.index');
+
+    // Selector para elegir vehículo a editar (misma página con ?vehiculo=ID)
+    // Debe ir ANTES de cualquier /vehiculos/{...}
+    Route::get('/vehiculos/editar', [VehiculoController::class, 'selectToEdit'])->name('editarVehiculo.create');
+
+    // Crear vehículo (singular para evitar colisiones con /vehiculos/{id})
+    Route::get('/vehiculo/crear', [VehiculoController::class, 'create'])->name('vehiculo.create');
+    Route::post('/vehiculo/crear', [VehiculoController::class, 'store'])->name('vehiculo.store');
+
+    // Editar vehículo (redirige al selector con ?vehiculo=ID desde el controller)
+    Route::get('/vehiculos/{vehiculo}/edit', [VehiculoController::class, 'edit'])
+        ->name('vehiculos.edit')->whereNumber('vehiculo');
+
+    Route::put('/vehiculos/{vehiculo}', [VehiculoController::class, 'update'])
+        ->name('vehiculos.update')->whereNumber('vehiculo');
+
+    // ===== REGISTROS KM =====
+    Route::get('/vehiculos/{vehiculo}/km', [RegistroKmController::class, 'index'])
+        ->name('km.index')->whereNumber('vehiculo');
+
+    Route::get('/vehiculos/{vehiculo}/km/data', [RegistroKmController::class, 'data'])
+        ->name('km.data')->whereNumber('vehiculo');
+
+    Route::post('/vehiculos/{vehiculo}/km', [RegistroKmController::class, 'store'])
+        ->name('km.store')->whereNumber('vehiculo');
+
+    // Mostrar vehículo (dejar al final y restringido a números para no chocar con /edit o /km)
+    Route::get('/vehiculos/{id}', [VehiculoController::class, 'show'])
+        ->name('vehiculos.show')->whereNumber('id');
+
+    // ===== NOTAS =====
+    Route::get('/notas', [NotaCalendarioController::class, 'index'])->name('notas.index');
+    Route::get('/notas/{id}', [NotaCalendarioController::class, 'show'])->name('notas.show')->whereNumber('id');
 });
