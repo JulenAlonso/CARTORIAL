@@ -62,6 +62,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/vehiculos/{vehiculo}', [VehiculoController::class, 'update'])
         ->name('vehiculos.update')->whereNumber('vehiculo');
 
+        // Eliminar vehiculo
+        Route::delete('/vehiculos/{vehiculo}', [VehiculoController::class, 'destroy'])
+    ->name('vehiculos.destroy')
+    ->whereNumber('vehiculo');
+
+
     // ===== REGISTROS KM =====
     Route::get('/vehiculos/{vehiculo}/km', [RegistroKmController::class, 'index'])
         ->name('km.index')->whereNumber('vehiculo');
