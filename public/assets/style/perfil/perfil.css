@@ -69,6 +69,13 @@ main h1 {
     animation: fadeInDown 1s ease both;
 }
 
+/* sección Mis vehículos: ocupa el mismo ancho que las cards */
+#seccion-mis-vehiculos {
+    width: 100%;
+    max-width: 1300px;
+    align-self: stretch;
+}
+
 /* ============================= */
 /*            SIDEBAR            */
 /* ============================= */
@@ -252,7 +259,6 @@ aside {
     grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
     gap: clamp(14px, 2vw, 25px);
     width: 100%;
-    max-width: 1500px;
     justify-content: center;
     align-items: stretch;
     animation: fadeInUp 1s ease both;
@@ -305,7 +311,6 @@ aside {
     outline: 3px solid rgba(13, 110, 253, .35);
     outline-offset: 2px;
 }
-
 
 .card .ver-detalles {
     margin-top: 8px;
@@ -401,25 +406,17 @@ aside {
 
 /* ====== LISTA COMPACTA TIPO FOTO (Mis vehículos) ====== */
 .vehiculos-grid2 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    /* alineado a la izquierda como en la imagen */
-    gap: 16px;
-    /* separación entre tarjetas */
+    display: grid;
+    grid-template-columns: 1fr;   /* una tarjeta por fila, 100% de ancho */
+    gap: clamp(16px, 2vw, 28px);
     width: 100%;
-    max-width: 720px;
-    /* ancho máximo del bloque */
+    max-width: 100%;
     margin-top: 16px;
-    /* sangría izquierda como en tu diseño */
     padding-bottom: 8px;
 }
 
-/* Tarjeta compacta */
 .vehiculos-grid2 .vehiculo-card {
     width: 100%;
-    max-width: 560px;
-    /* ancho visual de cada tarjeta */
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 8px 22px rgba(13, 110, 253, .08), 0 2px 6px rgba(0, 0, 0, .04);
@@ -428,7 +425,6 @@ aside {
     flex-direction: column;
     gap: 10px;
     margin: 0;
-    /* sin margen extra */
 }
 
 /* Oculta imagen en esta vista (en la foto no aparece) */
@@ -494,15 +490,12 @@ aside {
 
     .vehiculos-grid2 .vehiculo-datos {
         grid-template-columns: 1fr;
-        /* apila los datos */
     }
 
     .vehiculos-grid2 .vehiculo-datos li.precio2 {
         justify-self: start;
-        /* ya no a la derecha en móvil */
     }
 }
-
 
 /* ============================= */
 /*        COLLAPSIBLE / MODOS    */
@@ -560,27 +553,19 @@ aside {
     font-size: .9rem;
 }
 
-
-/* === VISTA VERTICAL PARA MODOS VALOR / KM / GASTOS === */
-#seccion-mis-vehiculos.modo-valor,
-#seccion-mis-vehiculos.modo-km,
-#seccion-mis-vehiculos.modo-gastos,
-#seccion-mis-vehiculos.modo-calendario {
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    padding-left: 0 !important;
-}
-
+/* vista vertical para modos valor / km / gastos / calendario */
 #seccion-mis-vehiculos.modo-valor .vehiculos-grid,
 #seccion-mis-vehiculos.modo-km .vehiculos-grid,
 #seccion-mis-vehiculos.modo-gastos .vehiculos-grid,
-#seccion-mis-vehiculos.modo-calendario .vehiculos-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
+#seccion-mis-vehiculos.modo-calendario .vehiculos-grid,
+#seccion-mis-vehiculos.modo-valor .vehiculos-grid2,
+#seccion-mis-vehiculos.modo-km .vehiculos-grid2,
+#seccion-mis-vehiculos.modo-gastos .vehiculos-grid2,
+#seccion-mis-vehiculos.modo-calendario .vehiculos-grid2 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
     gap: 12px !important;
+    width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -589,19 +574,15 @@ aside {
 #seccion-mis-vehiculos.modo-km .vehiculo-card,
 #seccion-mis-vehiculos.modo-gastos .vehiculo-card,
 #seccion-mis-vehiculos.modo-calendario .vehiculo-card {
-
     width: 100% !important;
-    max-width: var(--vehiculo-card-vertical-max) !important;
+    max-width: 100% !important;
     text-align: left !important;
-    margin-left: 5vh !important;
+    margin-left: 0 !important;
 }
 
 /* ============================= */
 /*     KILÓMETROS (Tablero)      */
 /* ============================= */
-/* ❗️ Eliminados mini-charts y contenedores de mini-charts.
-   ✅ Mantener solo el tablero grande de KM. */
-
 .km-board {
     margin-top: 16px;
     border: 1px solid #e5e7eb;
@@ -637,7 +618,6 @@ aside {
         grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
     }
 
-    /* Ajustes responsivos para el tablero de KM */
     .km-board {
         width: 85%;
         margin-right: auto;
@@ -715,7 +695,6 @@ aside {
         grid-template-columns: 1fr;
     }
 
-    /* Ajustes responsivos para el tablero de KM */
     .km-board {
         width: 100%;
         margin: 12px 0 0 0;
