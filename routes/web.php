@@ -62,10 +62,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/vehiculos/{vehiculo}', [VehiculoController::class, 'update'])
         ->name('vehiculos.update')->whereNumber('vehiculo');
 
-        // Eliminar vehiculo
-        Route::delete('/vehiculos/{vehiculo}', [VehiculoController::class, 'destroy'])
-    ->name('vehiculos.destroy')
-    ->whereNumber('vehiculo');
+    // Eliminar vehiculo
+    Route::delete('/vehiculos/{vehiculo}', [VehiculoController::class, 'destroy'])
+        ->name('vehiculos.destroy')
+        ->whereNumber('vehiculo');
 
 
     // ===== REGISTROS KM =====
@@ -85,4 +85,14 @@ Route::middleware(['auth'])->group(function () {
     // ===== NOTAS =====
     Route::get('/notas', [NotaCalendarioController::class, 'index'])->name('notas.index');
     Route::get('/notas/{id}', [NotaCalendarioController::class, 'show'])->name('notas.show')->whereNumber('id');
+
+    Route::get('/vehiculos/{vehiculo}/km', [RegistroKmController::class, 'index'])
+        ->name('km.index');
+
+    Route::post('/vehiculos/{vehiculo}/km', [RegistroKmController::class, 'store'])
+        ->name('km.store');
+
+    Route::get('/vehiculos/{vehiculo}/km/data', [RegistroKmController::class, 'data'])
+        ->name('km.data');
+
 });

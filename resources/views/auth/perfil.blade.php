@@ -245,28 +245,130 @@
                                     {{ $v->marca }} {{ $v->modelo }} <span>({{ $v->anio }})</span>
                                 </h3>
 
-                                <ul class="vehiculo-datos">
-                                    <li><strong>Matrícula:</strong> {{ $v->matricula }}</li>
-                                    <li class="km"><strong>Km:</strong> {{ number_format($v->km, 0, ',', '.') }}
-                                        km</li>
-                                    <li><strong>CV:</strong> {{ $v->cv }}</li>
-                                    <li><strong>Combustible:</strong> {{ $v->combustible }}</li>
-                                    <li><strong>Etiqueta:</strong> {{ $v->etiqueta }}</li>
+                                {{-- 🟩 VISTA COMPLETA → para tarjeta "Vehículos" --}}
+                                <div class="tarjeta-detalle">
+                                    <ul class="vehiculo-datos">
+                                        <li><strong>Matrícula:</strong> {{ $v->matricula }}</li>
+                                        <li class="km"><strong>Km:</strong>
+                                            {{ number_format($v->km, 0, ',', '.') }} km</li>
+                                        <li><strong>CV:</strong> {{ $v->cv }}</li>
+                                        <li><strong>Combustible:</strong> {{ $v->combustible }}</li>
+                                        <li><strong>Etiqueta:</strong> {{ $v->etiqueta }}</li>
 
-                                    <li class="precio"><strong>Precio:</strong>
-                                        {{ number_format($v->precio, 2, ',', '.') }} €</li>
-                                    @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
-                                        <li class="precio2"><strong>2ª mano:</strong>
-                                            {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €</li>
+                                        <li class="precio">
+                                            <strong>Precio:</strong>
+                                            {{ number_format($v->precio, 2, ',', '.') }} €
+                                        </li>
+
+                                        @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
+                                            <li class="precio2">
+                                                <strong>2ª mano:</strong>
+                                                {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €
+                                            </li>
+                                        @endif
+
+                                        <li class="gastos">
+                                            <strong>Gastos:</strong>
+                                            {{ number_format($gastoCalc, 2, ',', '.') }} €
+                                        </li>
+
+                                        <li>
+                                            <strong>Compra:</strong>
+                                            {{ \Carbon\Carbon::parse($v->fecha_compra)->format('d/m/Y') }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                {{-- 🟦 VISTA KM → para tarjeta "Kilómetros" --}}
+                                <div class="tarjeta-km">
+                                    <ul class="vehiculo-datos">
+                                        <li class="km">
+                                            <strong>Kilometraje actual:</strong>
+                                            {{ number_format($v->km, 0, ',', '.') }} km
+                                        </li>
+                                    </ul>
+
+                                    {{-- FORMULARIO: NUEVO REGISTRO DE KM --}}
+                                    <form action="{{ route('km.store', $v->id_vehiculo) }}" method="POST"
+                                        class="vehiculo-km-form mt-3">
+                                        @csrf
+
+                                        <div class="mb-2">
+                                            <label for="fecha_{{ $v->id_vehiculo }}" class="form-label">
+                                                Fecha del registro
+                                            </label>
+                                            <input type="date" id="fecha_{{ $v->id_vehiculo }}"
+                                                name="fecha_registro" class="form-control form-control-sm"
+                                                value="{{ now()->format('Y-m-d') }}" required>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label for="km_actual_{{ $v->id_vehiculo }}" class="form-label">
+                                                Kilómetros actuales
+                                            </label>
+                                            <input type="number" id="km_actual_{{ $v->id_vehiculo }}"
+                                                name="km_actual" class="form-control form-control-sm"
+                                                min="{{ $v->km ?? 0 }}" required
+                                                placeholder="Introduce los km actuales">
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label for="comentario_{{ $v->id_vehiculo }}" class="form-label">
+                                                Comentario (opcional)
+                                            </label>
+                                            <textarea id="comentario_{{ $v->id_vehiculo }}" name="comentario" class="form-control form-control-sm"
+                                                rows="2" placeholder="Ej: viaje, revisión, trayecto diario..."></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                                            Guardar registro de km
+                                        </button>
+                                    </form>
+
+                                    {{-- TABLA REGISTRO VEHÍCULOS CON SU ID --}}
+                                    @php
+                                        // Usamos la relación registrosKm si existe, y la ordenamos por fecha descendente
+                                        $registrosKm = $v->registrosKm->sortByDesc('fecha_registro') ?? collect();
+                                    @endphp
+
+                                    @if ($registrosKm->isNotEmpty())
+                                        <div class="tabla-registros-km-wrapper mt-3">
+                                            <table class="tabla-registros-km">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Km</th>
+                                                        <th>Comentario</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($registrosKm as $rk)
+                                                        <tr>
+                                                            <td>{{ \Carbon\Carbon::parse($rk->fecha_registro)->format('d/m/Y') }}
+                                                            </td>
+                                                            <td>{{ number_format($rk->km_actual, 0, ',', '.') }} km
+                                                            </td>
+                                                            <td>{{ $rk->comentario ?: '—' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <p class="text-muted mt-2">Aún no hay registros de kilómetros para este
+                                            vehículo.</p>
                                     @endif
 
-                                    <li class="gastos"><strong>Gastos:</strong>
-                                        {{ number_format($gastoCalc, 2, ',', '.') }} €</li>
-
-                                    <li><strong>Compra:</strong>
-                                        {{ \Carbon\Carbon::parse($v->fecha_compra)->format('d/m/Y') }}</li>
-                                </ul>
-                            </div>
+                                    {{-- 🟥 VISTA GASTOS → para tarjeta "Gastos" --}}
+                                    <div class="tarjeta-gastos">
+                                        <ul class="vehiculo-datos">
+                                            <li class="gastos">
+                                                <strong>Gastos totales:</strong>
+                                                {{ number_format($gastoCalc, 2, ',', '.') }} €
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                         </article>
                     @endforeach
                 </div>

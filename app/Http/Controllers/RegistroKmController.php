@@ -23,19 +23,20 @@ class RegistroKmController extends Controller
 
         // 🟢 Si no hay registros, mostramos el km inicial desde la tabla vehiculos
         if ($registros->isEmpty()) {
-            $registros->push((object)[
+            $registros->push((object) [
                 'fecha_registro' => $vehiculo->fecha_compra,
                 'km_actual' => $vehiculo->km,
                 'comentario' => 'Kilometraje inicial registrado automáticamente.',
             ]);
         } else {
             // Aseguramos que el primer registro mostrado siempre incluya el valor inicial
-            $primerKm = (object)[
+            $primerKm = (object) [
                 'fecha_registro' => $vehiculo->fecha_compra,
                 'km_actual' => $vehiculo->km,
                 'comentario' => 'Kilometraje inicial del vehículo.',
             ];
             $registros->push($primerKm);
+
             // Ordenamos por fecha descendente para mostrar los más recientes primero
             $registros = $registros->sortByDesc('fecha_registro')->values();
         }
@@ -83,27 +84,42 @@ class RegistroKmController extends Controller
     // Guardar un nuevo registro KM
     public function store(Request $request, Vehiculo $vehiculo)
     {
-        // Seguridad básica
+        // Seguridad
         abort_unless($vehiculo->id_usuario === Auth::user()->id_usuario, 403);
 
-        // Validación del formulario
+        // Validación
         $validated = $request->validate([
             'fecha_registro' => ['required', 'date'],
-            'km_actual'      => ['required', 'numeric', 'min:0'],
-            'comentario'     => ['nullable', 'string', 'max:255'],
+            'km_actual' => ['required', 'numeric', 'min:0'],
+            'comentario' => ['nullable', 'string', 'max:255'],
         ]);
 
-        // Guardamos el nuevo registro
+        $user = Auth::user();
+
+        // Registro COMPLETO según tu tabla
         RegistroKm::create([
-            'id_vehiculo'    => $vehiculo->id_vehiculo,
-            'id_usuario'     => Auth::user()->id_usuario,
+            'id_usuario' => $user->id_usuario,
+            'nombre_usuario' => $user->user_name ?? $user->nombre ?? 'SinNombre',
+            'email_usuario' => $user->email,
+
+            'id_vehiculo' => $vehiculo->id_vehiculo,
+            'matricula' => $vehiculo->matricula,
+            'modelo' => $vehiculo->modelo, // o marca + modelo si prefieres
+
+            'km_vehiculo' => $vehiculo->km, // ← km antes del registro
+
             'fecha_registro' => $validated['fecha_registro'],
-            'km_actual'      => $validated['km_actual'],
-            'comentario'     => $validated['comentario'] ?? null,
+            'km_actual' => $validated['km_actual'],
+            'comentario' => $validated['comentario'] ?? null,
         ]);
 
+        // Actualizar los km del vehículo
+        $vehiculo->km = $validated['km_actual'];
+        $vehiculo->save();
+
+        // Volver al perfil con alerta
         return redirect()
-            ->route('km.index', $vehiculo->id_vehiculo)
+            ->route('perfil')
             ->with('ok', 'Registro de KM añadido correctamente.');
     }
 }

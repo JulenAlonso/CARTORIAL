@@ -69,5 +69,11 @@ class Vehiculo extends Model
         }
 
         return asset('storage/' . ltrim($this->car_avatar, '/'));
+
+
+    }
+    public function registrosKm()
+    {
+        return $this->hasMany(\App\Models\RegistroKm::class, 'id_vehiculo', 'id_vehiculo');
     }
 }

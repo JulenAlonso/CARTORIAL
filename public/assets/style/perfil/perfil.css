@@ -407,7 +407,8 @@ aside {
 /* ====== LISTA COMPACTA TIPO FOTO (Mis vehículos) ====== */
 .vehiculos-grid2 {
     display: grid;
-    grid-template-columns: 1fr;   /* una tarjeta por fila, 100% de ancho */
+    grid-template-columns: 1fr;
+    /* una tarjeta por fila, 100% de ancho */
     gap: clamp(16px, 2vw, 28px);
     width: 100%;
     max-width: 100%;
@@ -603,6 +604,57 @@ aside {
     flex-wrap: wrap;
     margin-bottom: 10px;
 }
+
+/* Por defecto, oculta ambos bloques */
+.tarjeta-km,
+.tarjeta-gastos {
+    display: none;
+}
+
+/* Cuando el dashboard está en modo kilómetros → solo se ve tarjeta-km */
+.modo-km .tarjeta-km {
+    display: block;
+}
+
+/* Cuando está en modo gastos → solo se ve tarjeta-gastos */
+.modo-gastos .tarjeta-gastos {
+    display: block;
+}
+
+/* Opcional: que no quede espacio raro cuando se oculta el otro bloque */
+.modo-km .tarjeta-gastos,
+.modo-gastos .tarjeta-km {
+    display: none;
+}
+
+/* Por defecto mostramos la vista completa (tarjeta-detalle) */
+.tarjeta-detalle {
+    display: block;
+}
+
+.tarjeta-km,
+.tarjeta-gastos {
+    display: none;
+}
+
+/* Cuando estamos en modo-km → solo km */
+.modo-km .tarjeta-detalle {
+    display: none;
+}
+
+.modo-km .tarjeta-km {
+    display: block;
+}
+
+/* Cuando estamos en modo-gastos → solo gastos */
+.modo-gastos .tarjeta-detalle {
+    display: none;
+}
+
+.modo-gastos .tarjeta-gastos {
+    display: block;
+}
+
 
 /* ============================= */
 /*          MEDIA QUERIES        */
