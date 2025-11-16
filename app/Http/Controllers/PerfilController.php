@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class PerfilController extends Controller
 {
@@ -73,6 +74,52 @@ class PerfilController extends Controller
             return $v->gastoCalc;
         });
 
+        /* =======================================================
+         *  CALENDARIO: km, gastos y notas_calendario por fecha
+         * ======================================================= */
+
+        $calendarEvents = collect();
+
+        // 1) Registros de KM
+        foreach ($vehiculos as $vehiculo) {
+            foreach ($vehiculo->registrosKm as $rk) {
+                $calendarEvents->push([
+                    'fecha'   => optional($rk->fecha_registro)->toDateString(), // YYYY-MM-DD
+                    'km'      => (int) ($rk->km_actual ?? 0),
+                    'gastos'  => 0,
+                    'nota'    => trim(($rk->comentario ?? '') . ' [' . $vehiculo->marca . ' ' . $vehiculo->modelo . ']'),
+                ]);
+            }
+        }
+
+        // 2) Registros de GASTOS
+        foreach ($vehiculos as $vehiculo) {
+            foreach ($vehiculo->registrosGastos as $g) {
+                $calendarEvents->push([
+                    'fecha'   => optional($g->fecha_gasto)->toDateString(),
+                    'km'      => 0,
+                    'gastos'  => (float) ($g->importe ?? 0),
+                    'nota'    => trim(($g->descripcion ?? '') . ' [' . $vehiculo->marca . ' ' . $vehiculo->modelo . ']'),
+                ]);
+            }
+        }
+
+        // 3) notas_calendario → usamos fecha_evento + titulo + descripcion
+        $notasCalendario = DB::table('notas_calendario')
+            ->where('id_usuario', $user->id_usuario) // clave de usuario en esa tabla
+            ->whereNotNull('fecha_evento')
+            ->select('fecha_evento', 'titulo', 'descripcion')
+            ->get();
+
+        foreach ($notasCalendario as $n) {
+            $calendarEvents->push([
+                'fecha'   => (string) $n->fecha_evento, // viene formato YYYY-MM-DD del tipo DATE
+                'km'      => 0,
+                'gastos'  => 0,
+                'nota'    => trim($n->titulo . ' — ' . ($n->descripcion ?? '')),
+            ]);
+        }
+
         // ✅ Envío a la vista
         return view('auth.perfil', compact(
             'user',
@@ -81,7 +128,8 @@ class PerfilController extends Controller
             'totalVehiculos',
             'valorTotal',
             'kmTotal',
-            'gastosTotales'
+            'gastosTotales',
+            'calendarEvents'
         ));
     }
 }

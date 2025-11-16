@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VehiculoController;
-use App\Http\Controllers\NotaCalendarioController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\EditarPerfilController;
 use App\Http\Controllers\RegistroKmController;
 use App\Http\Controllers\GastoController;
+use App\Http\Controllers\NotaCalendarioController;
 
 
 Route::get('/', function () {
@@ -102,4 +102,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('gastos.store')
         ->middleware('auth');
 
+    Route::post('/notas-calendario', [NotaCalendarioController::class, 'store'])
+        ->name('notas-calendario.store')
+        ->middleware('auth');
 });
