@@ -37,5 +37,8 @@ class NotaCalendarioController extends Controller
         return redirect()
             ->route('perfil')
             ->with('success', 'Nota guardada correctamente.');
-    }
+    
+    
+    
+        }
 }

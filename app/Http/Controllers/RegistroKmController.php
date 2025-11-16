@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegistroKm;
 use App\Models\Vehiculo;
+use Carbon\Carbon; // ⬅️ IMPORTANTE: para trabajar cómodo con fechas
 
 class RegistroKmController extends Controller
 {
@@ -25,15 +26,15 @@ class RegistroKmController extends Controller
         if ($registros->isEmpty()) {
             $registros->push((object) [
                 'fecha_registro' => $vehiculo->fecha_compra,
-                'km_actual' => $vehiculo->km,
-                'comentario' => 'Kilometraje inicial registrado automáticamente.',
+                'km_actual'      => $vehiculo->km,
+                'comentario'     => 'Kilometraje inicial registrado automáticamente.',
             ]);
         } else {
             // Aseguramos que el primer registro mostrado siempre incluya el valor inicial
             $primerKm = (object) [
                 'fecha_registro' => $vehiculo->fecha_compra,
-                'km_actual' => $vehiculo->km,
-                'comentario' => 'Kilometraje inicial del vehículo.',
+                'km_actual'      => $vehiculo->km,
+                'comentario'     => 'Kilometraje inicial del vehículo.',
             ];
             $registros->push($primerKm);
 
@@ -89,28 +90,35 @@ class RegistroKmController extends Controller
 
         // Validación
         $validated = $request->validate([
-            'fecha_registro' => ['required', 'date'],
-            'km_actual' => ['required', 'numeric', 'min:0'],
-            'comentario' => ['nullable', 'string', 'max:255'],
+            'fecha_registro' => ['required', 'date'],   // solo viene YYYY-MM-DD del input
+            'km_actual'      => ['required', 'numeric', 'min:0'],
+            'comentario'     => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = Auth::user();
 
+        // 👇 Aquí montamos la fecha con hora actual
+        // El input trae solo la fecha (ej: 2025-02-10)
+        // Le añadimos la hora actual del servidor (ej: 14:32:10)
+        $fechaConHora = Carbon::parse($validated['fecha_registro'])
+            ->setTimeFromTimeString(now()->format('H:i:s'));
+
         // Registro COMPLETO según tu tabla
         RegistroKm::create([
-            'id_usuario' => $user->id_usuario,
-            'nombre_usuario' => $user->user_name ?? $user->nombre ?? 'SinNombre',
-            'email_usuario' => $user->email,
+            'id_usuario'      => $user->id_usuario,
+            'nombre_usuario'  => $user->user_name ?? $user->nombre ?? 'SinNombre',
+            'email_usuario'   => $user->email,
 
-            'id_vehiculo' => $vehiculo->id_vehiculo,
-            'matricula' => $vehiculo->matricula,
-            'modelo' => $vehiculo->modelo, // o marca + modelo si prefieres
+            'id_vehiculo'     => $vehiculo->id_vehiculo,
+            'matricula'       => $vehiculo->matricula,
+            'modelo'          => $vehiculo->modelo, // o marca + modelo si prefieres
 
-            'km_vehiculo' => $vehiculo->km, // ← km antes del registro
+            'km_vehiculo'     => $vehiculo->km, // ← km antes del registro
 
-            'fecha_registro' => $validated['fecha_registro'],
-            'km_actual' => $validated['km_actual'],
-            'comentario' => $validated['comentario'] ?? null,
+            // ⬅️ Aquí ya va con fecha + hora
+            'fecha_registro'  => $fechaConHora,
+            'km_actual'       => $validated['km_actual'],
+            'comentario'      => $validated['comentario'] ?? null,
         ]);
 
         // Actualizar los km del vehículo

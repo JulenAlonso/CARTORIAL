@@ -12,6 +12,7 @@ use App\Http\Controllers\EditarPerfilController;
 use App\Http\Controllers\RegistroKmController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\NotaCalendarioController;
+use App\Http\Controllers\AyudaController;
 
 
 Route::get('/', function () {
@@ -105,4 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notas-calendario', [NotaCalendarioController::class, 'store'])
         ->name('notas-calendario.store')
         ->middleware('auth');
+
+    Route::get('/ayuda', [AyudaController::class, 'index'])->name('ayuda');
+
 });

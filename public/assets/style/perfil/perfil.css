@@ -195,7 +195,7 @@ aside {
     gap: 4px;
 }
 
-.mc-days > div {
+.mc-days>div {
     text-align: center;
     font-size: .65rem;
     color: #6c757d;
@@ -530,16 +530,6 @@ aside {
     margin-right: 6px;
 }
 
-.legend-km {
-    background: #60a5fa;
-}
-.legend-gastos {
-    background: #f97373;
-}
-.legend-notas {
-    background: #facc15;
-}
-
 .calendar-card-body {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -617,6 +607,7 @@ aside {
     background-color: #dbeafe;
     color: #1d4ed8;
 }
+
 .badge-gastos {
     background-color: #fee2e2;
     color: #b91c1c;
@@ -632,6 +623,7 @@ aside {
 
 /* Panel lateral detalles */
 .calendar-details {
+    width: 100%;
     background-color: #f9fafb;
     border-radius: 14px;
     padding: 16px 18px;
@@ -656,9 +648,11 @@ aside {
     padding: 8px 0;
     border-bottom: 1px solid #e5e7eb;
 }
+
 .detail-item:last-child {
     border-bottom: none;
 }
+
 .detail-item strong {
     font-weight: 600;
 }
@@ -670,13 +664,14 @@ aside {
 }
 
 .badge-nota {
-    background: #6f42c1;
+    background: #2c57d8;
     color: #fff;
     border-radius: 4px;
     padding: 0 4px;
     font-size: 0.7rem;
     margin-left: 2px;
 }
+
 /* ============================= */
 /*        COLLAPSIBLE / MODOS    */
 /* ============================= */
@@ -775,10 +770,10 @@ aside {
 .vehiculo-gastos-form .form-select {
     font-size: 0.85rem;
     border-radius: 8px;
-    
+
 }
 
-.cometarioText{
+.cometarioText {
     height: 10vh;
     border-radius: 8px;
     font-size: 0.85rem;
@@ -787,6 +782,7 @@ aside {
     width: 100%;
 
 }
+
 .vehiculo-km-form .row,
 .vehiculo-gastos-form .row {
     display: flex;
@@ -830,6 +826,7 @@ aside {
 }
 
 @media (max-width: 768px) {
+
     .vehiculo-km-form .row,
     .vehiculo-gastos-form .row {
         flex-direction: column;
@@ -844,6 +841,7 @@ aside {
 .tarjeta-detalle {
     display: block;
 }
+
 .tarjeta-km,
 .tarjeta-gastos {
     display: none;
@@ -853,6 +851,7 @@ aside {
 #seccion-mis-vehiculos.modo-km .tarjeta-detalle {
     display: none;
 }
+
 #seccion-mis-vehiculos.modo-km .tarjeta-km {
     display: block;
 }
@@ -861,8 +860,34 @@ aside {
 #seccion-mis-vehiculos.modo-gastos .tarjeta-detalle {
     display: none;
 }
+
 #seccion-mis-vehiculos.modo-gastos .tarjeta-gastos {
     display: block;
+}
+
+
+
+
+/* ============================= */
+/*          MODAL       */
+/* ============================= */
+
+dialog.chart-dialog {
+    border: none;
+    border-radius: 12px;
+    padding: 20px 30px;
+    width: 90%;
+    /* max-width: 900px; */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.dialog-buttons {
+    margin-top: 20px;
+    text-align: right;
 }
 
 /* ============================= */
@@ -978,6 +1003,7 @@ aside {
         opacity: 0;
         transform: translate3d(0, -10px, 0);
     }
+
     to {
         opacity: 1;
         transform: translate3d(0, 0, 0);
@@ -989,6 +1015,7 @@ aside {
         opacity: 0;
         transform: translate3d(0, 10px, 0);
     }
+
     to {
         opacity: 1;
         transform: translate3d(0, 0, 0);

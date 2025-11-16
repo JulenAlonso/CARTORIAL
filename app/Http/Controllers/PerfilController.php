@@ -10,117 +10,94 @@ class PerfilController extends Controller
 {
     public function mostrarPerfil()
     {
-        // ✅ Usuario autenticado
+        // ============================
+        // AVATAR
+        // ============================
         $user = Auth::user();
 
-        // ✅ Comprobación del avatar
         if (empty($user->user_avatar) || $user->user_avatar === '0') {
             $avatarPath = asset('assets/images/user.png');
         } elseif (preg_match('/^https?:\/\//', $user->user_avatar)) {
-            // Si es una URL completa (http o https)
             $avatarPath = $user->user_avatar;
         } else {
-            // Si es una ruta en storage, comprobamos que exista el archivo
             $relativePath = ltrim($user->user_avatar, '/');
-            if (Storage::disk('public')->exists($relativePath)) {
-                $avatarPath = asset('storage/' . $relativePath);
-            } else {
-                // Si no existe físicamente → imagen por defecto
-                $avatarPath = asset('assets/images/user.png');
-            }
+            $avatarPath = Storage::disk('public')->exists($relativePath)
+                ? asset('storage/' . $relativePath)
+                : asset('assets/images/user.png');
         }
 
-        // ✅ Vehículos del usuario + registros de km + registros de gastos
+        // ============================
+        // VEHÍCULOS + KM + GASTOS
+        // ============================
         $vehiculos = $user->vehiculos()
             ->with([
-                'registrosKm' => function ($q) {
-                    $q->orderBy('fecha_registro', 'desc');
-                },
-                'registrosGastos' => function ($q) {
-                    $q->orderBy('fecha_gasto', 'desc');
-                },
+                'registrosKm' => fn($q) => $q->orderBy('fecha_registro', 'desc'),
+                'registrosGastos' => fn($q) => $q->orderBy('fecha_gasto', 'desc'),
             ])
-            ->select(
-                'id_vehiculo',
-                'id_usuario',
-                'marca',
-                'modelo',
-                'anio',
-                'matricula',
-                'km',
-                'cv',
-                'combustible',
-                'etiqueta',
-                'precio',
-                'precio_segunda_mano',
-                'fecha_compra',
-                'car_avatar'
-            )
             ->orderBy('anio', 'desc')
             ->get();
 
-        // ✅ Cálculo de gasto total por vehículo (propiedad auxiliar)
+        // 👇 aquí calculas el gasto total de CADA vehículo
         $vehiculos->each(function ($v) {
             $v->gastoCalc = $v->registrosGastos->sum('importe');
         });
 
-        // ✅ Totales del perfil
         $totalVehiculos = $vehiculos->count();
         $valorTotal     = $vehiculos->sum('precio');
         $kmTotal        = $vehiculos->sum('km');
-
-        // suma de todos los gastos de todos los vehículos
-        $gastosTotales  = $vehiculos->sum(function ($v) {
-            return $v->gastoCalc;
-        });
+        $gastosTotales  = $vehiculos->sum(fn($v) => $v->gastoCalc);
 
         /* =======================================================
-         *  CALENDARIO: km, gastos y notas_calendario por fecha
+         *   CALENDARIO (KM + GASTOS + NOTAS CON HORA)
          * ======================================================= */
 
         $calendarEvents = collect();
 
-        // 1) Registros de KM
+        // --- 1) KM ---
         foreach ($vehiculos as $vehiculo) {
             foreach ($vehiculo->registrosKm as $rk) {
                 $calendarEvents->push([
-                    'fecha'   => optional($rk->fecha_registro)->toDateString(), // YYYY-MM-DD
-                    'km'      => (int) ($rk->km_actual ?? 0),
-                    'gastos'  => 0,
-                    'nota'    => trim(($rk->comentario ?? '') . ' [' . $vehiculo->marca . ' ' . $vehiculo->modelo . ']'),
+                    'fecha'       => optional($rk->fecha_registro)->toDateString(),
+                    'km'          => (int) ($rk->km_actual ?? 0),
+                    'gastos'      => 0,
+                    'nota'        => trim(($rk->comentario ?? '') . ' [' . $vehiculo->marca . ' ' . $vehiculo->modelo . ']'),
+                    'hora_evento' => null,
                 ]);
             }
         }
 
-        // 2) Registros de GASTOS
+        // --- 2) GASTOS ---
         foreach ($vehiculos as $vehiculo) {
             foreach ($vehiculo->registrosGastos as $g) {
                 $calendarEvents->push([
-                    'fecha'   => optional($g->fecha_gasto)->toDateString(),
-                    'km'      => 0,
-                    'gastos'  => (float) ($g->importe ?? 0),
-                    'nota'    => trim(($g->descripcion ?? '') . ' [' . $vehiculo->marca . ' ' . $vehiculo->modelo . ']'),
+                    'fecha'       => optional($g->fecha_gasto)->toDateString(),
+                    'km'          => 0,
+                    'gastos'      => (float) ($g->importe ?? 0),
+                    'nota'        => trim(($g->descripcion ?? '') . ' [' . $vehiculo->marca . ' ' . $vehiculo->modelo . ']'),
+                    'hora_evento' => null,
                 ]);
             }
         }
 
-        // 3) notas_calendario → usamos fecha_evento + titulo + descripcion
-        $notasCalendario = DB::table('notas_calendario')
-            ->where('id_usuario', $user->id_usuario) // clave de usuario en esa tabla
+        // --- 3) NOTAS DEL CALENDARIO (CON HORA) ---
+        $userId = $user->id_usuario ?? $user->id;
+
+        $notas = DB::table('notas_calendario')
+            ->where('id_usuario', $userId)
             ->whereNotNull('fecha_evento')
-            ->select('fecha_evento', 'titulo', 'descripcion')
+            ->select('fecha_evento', 'hora_evento', 'titulo', 'descripcion')
             ->get();
 
-        foreach ($notasCalendario as $n) {
+        foreach ($notas as $n) {
             $calendarEvents->push([
-                'fecha'   => (string) $n->fecha_evento, // viene formato YYYY-MM-DD del tipo DATE
-                'km'      => 0,
-                'gastos'  => 0,
-                'nota'    => trim($n->titulo . ' — ' . ($n->descripcion ?? '')),
+                'fecha'       => $n->fecha_evento,
+                'km'          => 0,
+                'gastos'      => 0,
+                'nota'        => trim($n->titulo . ' — ' . ($n->descripcion ?? '')),
+                'hora_evento' => $n->hora_evento,
             ]);
         }
 
-        // ✅ Envío a la vista
         return view('auth.perfil', compact(
             'user',
             'avatarPath',

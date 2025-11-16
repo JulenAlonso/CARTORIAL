@@ -32,7 +32,7 @@
             <a href="{{ route('vehiculo.create') }}" class="btn-sidebar">➕ Añadir Vehículo</a>
             <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">Editar Vehiculo</a>
             <a href="{{ route('perfil') }}" class="btn-sidebar">⚙️ Ajustes</a>
-            <a href="#" class="btn-sidebar">❓ Ayuda</a>
+            <a href="{{ route('ayuda') }}" class="btn-sidebar">❓ Ayuda</a>
         </div>
 
         <form method="POST" action="{{ route('logout') }}">
@@ -141,7 +141,7 @@
                     <div class="vehiculos-lista">
                         @foreach ($vehiculos as $v)
                             @php
-                                $gastoCalc = $v->gastos_total ?? $v->precio * 0.05;
+                                $gastoCalc = $v->gastoCalc; // ← viene calculado del controlador
                             @endphp
                             <div class="vehiculo-mini">
                                 <div>
@@ -311,7 +311,6 @@
                                                     min="{{ $v->km ?? 0 }}" required
                                                     placeholder="Introduce los km actuales">
                                                 <br>
-
                                             </div>
 
                                             <!-- COLUMNA 2 — KM + COMENTARIO DEBAJO -->
@@ -368,9 +367,28 @@
                                                 </div>
 
                                                 <p></p>
-                                                <button type="submit" class="btn btn-primary btn-sm w-100 mt-3">
-                                                    Graficos gastos
+                                                {{-- BOTON GRAFICO --}}
+                                                <button class="btn btn-primary btn-sm w-100 mt-3"
+                                                    onclick="document.getElementById('modalKm_{{ $v->id_vehiculo }}').showModal();">
+                                                    Gráficos Kilómetros
                                                 </button>
+
+                                                <dialog id="modalKm_{{ $v->id_vehiculo }}" class="chart-dialog">
+                                                    <h3>📈 Kilómetros — {{ $v->marca }} {{ $v->modelo }}</h3>
+
+                                                    <div id="chartKm_{{ $v->id_vehiculo }}"
+                                                        style="height: 420px; width: 100%;"></div>
+
+                                                    <div class="dialog-buttons">
+                                                        <button
+                                                            onclick="document.getElementById('modalKm_{{ $v->id_vehiculo }}').close();"
+                                                            class="btn btn-secondary">
+                                                            Cerrar
+                                                        </button>
+                                                    </div>
+                                                </dialog>
+
+                                                {{--  --}}
                                             </div>
                                         </div>
 
@@ -508,12 +526,6 @@
                         <h4 id="cal-month-label" class="calendar-month-label"></h4>
                         <button id="cal-next" type="button" class="calendar-nav-btn">&raquo;</button>
                     </div>
-
-                    <div class="calendar-legend">
-                        <span><span class="legend-dot legend-km"></span> Kilómetros</span>
-                        <span><span class="legend-dot legend-gastos"></span> Gastos</span>
-                        <span><span class="legend-dot legend-notas"></span> Notas</span>
-                    </div>
                 </div>
 
                 <div class="calendar-card-body">
@@ -617,196 +629,285 @@
     <script src="{{ asset('assets/js/perfil/perfil.js') }}"></script>
 
     {{-- Script específico del calendario grande --}}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-    const panelCalendario = document.getElementById('panel-calendario');
+            const panelCalendario = document.getElementById('panel-calendario');
 
-    const monthLabel = document.getElementById('cal-month-label');
-    const calBody = document.getElementById('cal-body');
-    const prevBtn = document.getElementById('cal-prev');
-    const nextBtn = document.getElementById('cal-next');
-    const detailsTitle = document.getElementById('cal-details-title');
-    const detailsContent = document.getElementById('cal-details-content');
+            const monthLabel = document.getElementById('cal-month-label');
+            const calBody = document.getElementById('cal-body');
+            const prevBtn = document.getElementById('cal-prev');
+            const nextBtn = document.getElementById('cal-next');
+            const detailsTitle = document.getElementById('cal-details-title');
+            const detailsContent = document.getElementById('cal-details-content');
 
-    // inputs del formulario de nota
-    const notaFechaInput = document.getElementById('nota_fecha_evento');
+            // inputs del formulario de nota
+            const notaFechaInput = document.getElementById('nota_fecha_evento');
 
-    // Indexar eventos por fecha YYYY-MM-DD
-    const eventsByDate = {};
-    (CALENDAR_EVENTS || []).forEach(e => {
-        if (!e.fecha) return;
-        eventsByDate[e.fecha] = eventsByDate[e.fecha] || [];
-        eventsByDate[e.fecha].push(e);
-    });
+            // Indexar eventos por fecha YYYY-MM-DD
+            const eventsByDate = {};
+            (CALENDAR_EVENTS || []).forEach(e => {
+                if (!e.fecha) return;
+                eventsByDate[e.fecha] = eventsByDate[e.fecha] || [];
+                eventsByDate[e.fecha].push(e);
+            });
 
-    let current = new Date(); // mes actual
+            let current = new Date(); // mes actual
 
-    const monthNames = [
-        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
-    ];
+            const monthNames = [
+                'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+            ];
 
-    // para resaltar el día seleccionado
-    let selectedCell = null;
-    let selectedDate = null;
+            // para resaltar el día seleccionado
+            let selectedCell = null;
+            let selectedDate = null;
 
-    function formatDateISO(date) {
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, '0');
-        const d = String(date.getDate()).padStart(2, '0');
-        return `${y}-${m}-${d}`;
-    }
-
-    function renderCalendar() {
-        const year = current.getFullYear();
-        const month = current.getMonth();
-
-        monthLabel.textContent =
-            `${monthNames[month].charAt(0).toUpperCase() + monthNames[month].slice(1)} ${year}`;
-
-        calBody.innerHTML = '';
-
-        // Primer día del mes (Lunes=1... Domingo=7)
-        const first = new Date(year, month, 1);
-        let startDay = first.getDay(); // 0 domingo, 1 lunes...
-        if (startDay === 0) startDay = 7;
-
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        let day = 1;
-        for (let week = 0; week < 6; week++) {
-            const tr = document.createElement('tr');
-
-            for (let dow = 1; dow <= 7; dow++) {
-                const td = document.createElement('td');
-
-                if ((week === 0 && dow < startDay) || day > daysInMonth) {
-                    td.classList.add('empty');
-                    tr.appendChild(td);
-                    continue;
-                }
-
-                const cellDate = new Date(year, month, day);
-                const iso = formatDateISO(cellDate);
-
-                td.dataset.date = iso;
-                td.classList.add('calendar-day');
-
-                const dayNumber = document.createElement('div');
-                dayNumber.classList.add('day-number');
-                dayNumber.textContent = day;
-                td.appendChild(dayNumber);
-
-                // Si hay datos para este día
-                const items = eventsByDate[iso];
-                if (items && items.length) {
-                    td.classList.add('has-data');
-
-                    const badges = document.createElement('div');
-                    badges.classList.add('day-badges');
-
-                    const totalKm = items.reduce((acc, e) => acc + (Number(e.km) || 0), 0);
-                    const totalGastos = items.reduce((acc, e) => acc + (Number(e.gastos) || 0), 0);
-                    const hasNota = items.some(e => e.nota);
-
-                    if (totalKm > 0) {
-                        const kmBadge = document.createElement('span');
-                        kmBadge.classList.add('badge', 'badge-km');
-                        kmBadge.textContent = `${totalKm} km`;
-                        badges.appendChild(kmBadge);
-                    }
-
-                    if (totalGastos > 0) {
-                        const gastoBadge = document.createElement('span');
-                        gastoBadge.classList.add('badge', 'badge-gastos');
-                        gastoBadge.textContent = `${totalGastos.toFixed(2)} €`;
-                        badges.appendChild(gastoBadge);
-                    }
-
-                    if (hasNota) {
-                        const notaBadge = document.createElement('span');
-                        notaBadge.classList.add('badge', 'badge-nota');
-                        notaBadge.textContent = '📝';
-                        badges.appendChild(notaBadge);
-                    }
-
-                    td.appendChild(badges);
-                }
-
-                // si este día es el seleccionado, mantén la clase al re-renderizar
-                if (iso === selectedDate) {
-                    td.classList.add('selected-day');
-                    selectedCell = td;
-                }
-
-                td.addEventListener('click', function() {
-                    // resaltar el día seleccionado
-                    if (selectedCell) {
-                        selectedCell.classList.remove('selected-day');
-                    }
-                    selectedCell = td;
-                    selectedDate = iso;
-                    td.classList.add('selected-day');
-
-                    showDetails(iso);
-                });
-
-                tr.appendChild(td);
-                day++;
+            function formatDateISO(date) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
             }
 
-            calBody.appendChild(tr);
-            if (day > daysInMonth) break;
-        }
-    }
+            function renderCalendar() {
+                const year = current.getFullYear();
+                const month = current.getMonth();
 
-    function showDetails(iso) {
-        const items = eventsByDate[iso] || [];
-        const [year, month, day] = iso.split('-');
-        detailsTitle.textContent = `Detalles del ${day}/${month}/${year}`;
+                monthLabel.textContent =
+                    `${monthNames[month].charAt(0).toUpperCase() + monthNames[month].slice(1)} ${year}`;
 
-        // Sincronizar fecha seleccionada con el formulario de nota
-        if (notaFechaInput) {
-            notaFechaInput.value = iso;
-        }
+                calBody.innerHTML = '';
 
-        if (!items.length) {
-            detailsContent.textContent = 'No hay datos registrados para este día.';
-            return;
-        }
+                // Primer día del mes (Lunes=1... Domingo=7)
+                const first = new Date(year, month, 1);
+                let startDay = first.getDay(); // 0 domingo, 1 lunes...
+                if (startDay === 0) startDay = 7;
 
-        let html = '';
-        items.forEach(e => {
-            html += `
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                let day = 1;
+                for (let week = 0; week < 6; week++) {
+                    const tr = document.createElement('tr');
+
+                    for (let dow = 1; dow <= 7; dow++) {
+                        const td = document.createElement('td');
+
+                        if ((week === 0 && dow < startDay) || day > daysInMonth) {
+                            td.classList.add('empty');
+                            tr.appendChild(td);
+                            continue;
+                        }
+
+                        const cellDate = new Date(year, month, day);
+                        const iso = formatDateISO(cellDate);
+
+                        td.dataset.date = iso;
+                        td.classList.add('calendar-day');
+
+                        const dayNumber = document.createElement('div');
+                        dayNumber.classList.add('day-number');
+                        dayNumber.textContent = day;
+                        td.appendChild(dayNumber);
+
+                        // Si hay datos para este día
+                        const items = eventsByDate[iso];
+                        if (items && items.length) {
+                            td.classList.add('has-data');
+
+                            const badges = document.createElement('div');
+                            badges.classList.add('day-badges');
+
+                            const totalKm = items.reduce((acc, e) => acc + (Number(e.km) || 0), 0);
+                            const totalGastos = items.reduce((acc, e) => acc + (Number(e.gastos) || 0), 0);
+                            const hasNota = items.some(e => e.nota);
+
+                            if (totalKm > 0) {
+                                const kmBadge = document.createElement('span');
+                                kmBadge.classList.add('badge', 'badge-km');
+                                kmBadge.textContent = `${totalKm} km`;
+                                badges.appendChild(kmBadge);
+                            }
+
+                            if (totalGastos > 0) {
+                                const gastoBadge = document.createElement('span');
+                                gastoBadge.classList.add('badge', 'badge-gastos');
+                                gastoBadge.textContent = `${totalGastos.toFixed(2)} €`;
+                                badges.appendChild(gastoBadge);
+                            }
+                            // Muestra hora de la primera nota si existe
+                            if (hasNota) {
+                                const notaBadge = document.createElement('span');
+                                notaBadge.classList.add('badge', 'badge-nota');
+
+                                // buscar la primera nota del día
+                                const firstNota = items.find(i => i.nota);
+
+                                // extraer la hora si existe
+                                let hora = firstNota?.hora_evento || '';
+
+                                // Formato bonito HH:MM
+                                if (hora && hora.length >= 5) {
+                                    hora = hora.slice(0, 5);
+                                }
+
+                                // Texto final
+                                notaBadge.textContent = hora ? `📝 ${hora}` : '📝';
+
+                                badges.appendChild(notaBadge);
+                            }
+
+                            td.appendChild(badges);
+                        }
+
+                        // si este día es el seleccionado, mantén la clase al re-renderizar
+                        if (iso === selectedDate) {
+                            td.classList.add('selected-day');
+                            selectedCell = td;
+                        }
+
+                        td.addEventListener('click', function() {
+                            // resaltar el día seleccionado
+                            if (selectedCell) {
+                                selectedCell.classList.remove('selected-day');
+                            }
+                            selectedCell = td;
+                            selectedDate = iso;
+                            td.classList.add('selected-day');
+
+                            showDetails(iso);
+                        });
+
+                        tr.appendChild(td);
+                        day++;
+                    }
+
+                    calBody.appendChild(tr);
+                    if (day > daysInMonth) break;
+                }
+            }
+
+            function showDetails(iso) {
+                const items = eventsByDate[iso] || [];
+                const [year, month, day] = iso.split('-');
+                detailsTitle.textContent = `Detalles del ${day}/${month}/${year}`;
+
+                // Sincronizar fecha seleccionada con el formulario de nota
+                if (notaFechaInput) {
+                    notaFechaInput.value = iso;
+                }
+
+                if (!items.length) {
+                    detailsContent.textContent = 'No hay datos registrados para este día.';
+                    return;
+                }
+
+                let html = '';
+                items.forEach(e => {
+                    html += `
                 <div class="detail-item">
-                    ${e.hora ? `<div class="detail-line"><strong>Hora:</strong> ${e.hora}</div>` : ''}
                     ${e.nota ? `<div class="detail-line"><strong>Nota:</strong> ${e.nota}</div>` : ''}
+                    ${e.hora_evento ? `<div class="detail-line"><strong>Hora:</strong> ${e.hora_evento}</div>` : ''}
                     ${e.km ? `<div class="detail-line"><strong>Kilómetros:</strong> ${e.km}</div>` : ''}
                     ${e.gastos ? `<div class="detail-line"><strong>Gastos:</strong> ${e.gastos.toFixed(2)} €</div>` : ''}
                 </div>
             `;
+                });
+
+                detailsContent.innerHTML = html;
+            }
+
+            // Navegación meses
+            prevBtn.addEventListener('click', function() {
+                current.setMonth(current.getMonth() - 1);
+                renderCalendar();
+            });
+
+            nextBtn.addEventListener('click', function() {
+                current.setMonth(current.getMonth() + 1);
+                renderCalendar();
+            });
+
+            // Pintar la primera vez
+            renderCalendar();
+
         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
 
-        detailsContent.innerHTML = html;
-    }
+            @foreach ($vehiculos as $v)
+                @php
+                    $kmPoints = [];
+                    foreach ($v->registrosKm as $rk) {
+                        $ts = $rk->fecha_registro instanceof \Carbon\Carbon ? $rk->fecha_registro->timestamp : strtotime($rk->fecha_registro);
+                        if ($ts) {
+                            $kmPoints[] = [
+                                'x' => $ts * 1000,
+                                'y' => (int) $rk->km_actual,
+                            ];
+                        }
+                    }
+                @endphp
 
-    // Navegación meses
-    prevBtn.addEventListener('click', function() {
-        current.setMonth(current.getMonth() - 1);
-        renderCalendar();
-    });
+                    (function() {
+                        const dialog = document.getElementById("modalKm_{{ $v->id_vehiculo }}");
+                        let chartRendered = false;
 
-    nextBtn.addEventListener('click', function() {
-        current.setMonth(current.getMonth() + 1);
-        renderCalendar();
-    });
+                        dialog.addEventListener("show", function() {
+                            // por compatibilidad (algunos navegadores disparan 'show', otros 'showmodal')
+                        });
 
-    // Pintar la primera vez
-    renderCalendar();
+                        dialog.addEventListener("shown", function() {
+                            // (Chrome lo dispara automáticamente)
+                        });
 
-});
-</script>
+                        dialog.addEventListener("close", function() {
+                            // Nada adicional
+                        });
+
+                        dialog.addEventListener("close", function() {});
+
+                        // Evento correcto que se dispara al abrir el dialog:
+                        dialog.addEventListener("toggle", function() {
+                            if (!dialog.open) return;
+
+                            if (!chartRendered) {
+                                chartRendered = true;
+
+                                let chart = new CanvasJS.Chart("chartKm_{{ $v->id_vehiculo }}", {
+                                    animationEnabled: true,
+                                    theme: "light2",
+                                    title: {
+                                        text: "Evolución de kilómetros"
+                                    },
+                                    axisX: {
+                                        valueFormatString: "DD/MM/YYYY"
+                                    },
+                                    axisY: {
+                                        title: "Kilómetros",
+                                        includeZero: false
+                                    },
+                                    data: [{
+                                        type: "line",
+                                        xValueType: "dateTime",
+                                        markerSize: 5,
+                                        dataPoints: {!! json_encode($kmPoints, JSON_NUMERIC_CHECK) !!}
+                                    }]
+                                });
+
+                                chart.render();
+                            }
+                        });
+                    })();
+            @endforeach
+
+        });
+    </script>
+
+    <!-- Bootstrap JS necesario para los modales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
