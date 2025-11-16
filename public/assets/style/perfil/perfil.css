@@ -8,7 +8,6 @@
 }
 
 :root {
-    /* Ajusta el tamaño base de las tarjetas */
     --vehiculo-card-min: 420px;
     --vehiculo-card-vertical-max: 420px;
 }
@@ -69,10 +68,8 @@ main h1 {
     animation: fadeInDown 1s ease both;
 }
 
-/* sección Mis vehículos: ocupa el mismo ancho que las cards */
 #seccion-mis-vehiculos {
     width: 100%;
-    max-width: 1300px;
     align-self: stretch;
 }
 
@@ -166,7 +163,7 @@ aside {
 }
 
 /* ============================= */
-/*         MINI CALENDARIO       */
+/*   MINI CALENDARIO (cards)    */
 /* ============================= */
 .mini-calendar.small {
     background: #fff;
@@ -198,7 +195,7 @@ aside {
     gap: 4px;
 }
 
-.mc-days>div {
+.mc-days > div {
     text-align: center;
     font-size: .65rem;
     color: #6c757d;
@@ -240,7 +237,6 @@ aside {
     border-radius: 50%;
 }
 
-/* Calendario dentro de card consistente */
 .card .mini-calendar.small {
     max-width: 220px;
     padding: 8px 10px;
@@ -350,7 +346,6 @@ aside {
     box-shadow: 0 6px 20px rgba(13, 110, 253, .1);
 }
 
-/* Imagen izquierda */
 .vehiculo-media {
     flex: 0 0 40%;
     max-width: 40%;
@@ -359,7 +354,7 @@ aside {
     align-items: center;
     justify-content: center;
     background-color: #f4f6f9;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16/9;
 }
 
 .vehiculo-media img {
@@ -368,7 +363,6 @@ aside {
     object-fit: cover;
 }
 
-/* Cuerpo derecha */
 .vehiculo-body {
     flex: 1;
     padding: clamp(16px, 2vw, 20px);
@@ -404,11 +398,10 @@ aside {
     color: #333;
 }
 
-/* ====== LISTA COMPACTA TIPO FOTO (Mis vehículos) ====== */
+/* ====== Vista compacta (modo tarjetas) ====== */
 .vehiculos-grid2 {
     display: grid;
     grid-template-columns: 1fr;
-    /* una tarjeta por fila, 100% de ancho */
     gap: clamp(16px, 2vw, 28px);
     width: 100%;
     max-width: 100%;
@@ -425,15 +418,12 @@ aside {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin: 0;
 }
 
-/* Oculta imagen en esta vista (en la foto no aparece) */
 .vehiculos-grid2 .vehiculo-media {
     display: none !important;
 }
 
-/* Título azul, con aspecto de enlace */
 .vehiculos-grid2 .vehiculo-titulo {
     margin: 0;
     color: #0d6efd;
@@ -441,54 +431,28 @@ aside {
     font-size: 1rem;
 }
 
-/* Grid de datos compacto: 2 columnas para poder alinear 2ª mano a la derecha */
 .vehiculos-grid2 .vehiculo-datos {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
     grid-template-columns: 1fr auto;
-    /* precio izquierda, 2ª mano derecha */
     align-items: center;
     gap: 6px 18px;
     font-size: .95rem;
 }
 
-/* Estilo de etiquetas/datos */
-.vehiculos-grid2 .vehiculo-datos li {
-    color: #333;
-}
-
-/* Precio principal (izquierda) */
-.vehiculos-grid2 .vehiculo-datos li.precio {
+.vehiculos-grid2 .vehiculo-datos li.precio,
+.vehiculos-grid2 .vehiculo-datos li.precio2 {
     font-weight: 600;
 }
 
-/* 2ª mano alineado a la derecha (cuando exista) */
 .vehiculos-grid2 .vehiculo-datos li.precio2 {
     justify-self: end;
-    color: #333;
-    font-weight: 600;
 }
 
-/* Suaviza el aspecto del label “Precio:” para parecerse a la captura */
 .vehiculos-grid2 .vehiculo-datos li strong {
     color: #6b7280;
     font-weight: 600;
 }
 
-/* Responsive: a una columna en pantallas estrechas */
 @media (max-width: 620px) {
-    .vehiculos-grid2 {
-        margin-left: 0;
-        max-width: 100%;
-    }
-
-    .vehiculos-grid2 .vehiculo-card {
-        max-width: 100%;
-        padding: 14px 16px;
-    }
-
     .vehiculos-grid2 .vehiculo-datos {
         grid-template-columns: 1fr;
     }
@@ -511,18 +475,11 @@ aside {
     max-height: 4000px;
 }
 
-/* ==== MODOS ==== */
+/* Ocultar datos por modo */
 #seccion-mis-vehiculos.modo-valor .vehiculo-media,
 #seccion-mis-vehiculos.modo-km .vehiculo-media,
 #seccion-mis-vehiculos.modo-gastos .vehiculo-media,
 #seccion-mis-vehiculos.modo-calendario .vehiculo-media {
-    display: none;
-}
-
-#seccion-mis-vehiculos.modo-valor .vehiculo-titulo span,
-#seccion-mis-vehiculos.modo-km .vehiculo-titulo span,
-#seccion-mis-vehiculos.modo-gastos .vehiculo-titulo span,
-#seccion-mis-vehiculos.modo-calendario .vehiculo-titulo span {
     display: none;
 }
 
@@ -536,25 +493,21 @@ aside {
 #seccion-mis-vehiculos.modo-valor .vehiculo-datos li.precio,
 #seccion-mis-vehiculos.modo-valor .vehiculo-datos li.precio2 {
     display: list-item;
-    font-size: .9rem;
 }
 
 #seccion-mis-vehiculos.modo-km .vehiculo-datos li.km {
     display: list-item;
-    font-size: .9rem;
 }
 
 #seccion-mis-vehiculos.modo-gastos .vehiculo-datos li.gastos {
     display: list-item;
-    font-size: .9rem;
 }
 
 #seccion-mis-vehiculos.modo-calendario .vehiculo-datos li.gastos {
     display: list-item;
-    font-size: .9rem;
 }
 
-/* vista vertical para modos valor / km / gastos / calendario */
+/* Vista vertical en modos */
 #seccion-mis-vehiculos.modo-valor .vehiculos-grid,
 #seccion-mis-vehiculos.modo-km .vehiculos-grid,
 #seccion-mis-vehiculos.modo-gastos .vehiculos-grid,
@@ -578,83 +531,124 @@ aside {
     width: 100% !important;
     max-width: 100% !important;
     text-align: left !important;
-    margin-left: 0 !important;
 }
 
 /* ============================= */
-/*     KILÓMETROS (Tablero)      */
+/*          FORMULARIOS          */
 /* ============================= */
-.km-board {
-    margin-top: 16px;
+.vehiculo-km-form,
+.vehiculo-gastos-form {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    background: #fff;
-    padding: 16px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
-    width: 65%;
-    margin-left: auto;
-    margin-right: 3%;
 }
 
-.km-board-head {
+.vehiculo-km-form .form-label,
+.vehiculo-gastos-form .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.vehiculo-km-form .form-control,
+.vehiculo-gastos-form .form-control,
+.vehiculo-km-form textarea,
+.vehiculo-gastos-form textarea,
+.vehiculo-gastos-form .form-select {
+    font-size: 0.85rem;
+    border-radius: 8px;
+    
+}
+
+.cometarioText{
+    height: 10vh;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    border: 1px solid #ced4da;
+    padding: 8px;
+    width: 100%;
+
+}
+.vehiculo-km-form .row,
+.vehiculo-gastos-form .row {
     display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
+    gap: 16px;
 }
 
-/* Por defecto, oculta ambos bloques */
-.tarjeta-km,
-.tarjeta-gastos {
-    display: none;
+.vehiculo-km-form .col-md-4,
+.vehiculo-gastos-form .col-md-4 {
+    flex: 1;
 }
 
-/* Cuando el dashboard está en modo kilómetros → solo se ve tarjeta-km */
-.modo-km .tarjeta-km {
-    display: block;
+.km-tabla,
+.gastos-tabla {
+    width: 100%;
+    min-height: 80px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 10px;
 }
 
-/* Cuando está en modo gastos → solo se ve tarjeta-gastos */
-.modo-gastos .tarjeta-gastos {
-    display: block;
+.tabla-registros-gastos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
 }
 
-/* Opcional: que no quede espacio raro cuando se oculta el otro bloque */
-.modo-km .tarjeta-gastos,
-.modo-gastos .tarjeta-km {
-    display: none;
+.tabla-registros-gastos th,
+.tabla-registros-gastos td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 4px 6px;
+    text-align: left;
 }
 
-/* Por defecto mostramos la vista completa (tarjeta-detalle) */
+.tabla-registros-gastos th {
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.tabla-registros-gastos tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .vehiculo-km-form .row,
+    .vehiculo-gastos-form .row {
+        flex-direction: column;
+    }
+}
+
+/* ============================= */
+/*   VISIBILIDAD KM / GASTOS     */
+/* ============================= */
+
+/* Por defecto: mostrar solo tarjeta-detalle */
 .tarjeta-detalle {
     display: block;
 }
-
 .tarjeta-km,
 .tarjeta-gastos {
     display: none;
 }
 
-/* Cuando estamos en modo-km → solo km */
-.modo-km .tarjeta-detalle {
+/* MODO KM */
+#seccion-mis-vehiculos.modo-km .tarjeta-detalle {
     display: none;
 }
-
-.modo-km .tarjeta-km {
+#seccion-mis-vehiculos.modo-km .tarjeta-km {
     display: block;
 }
 
-/* Cuando estamos en modo-gastos → solo gastos */
-.modo-gastos .tarjeta-detalle {
+/* MODO GASTOS */
+#seccion-mis-vehiculos.modo-gastos .tarjeta-detalle {
     display: none;
 }
-
-.modo-gastos .tarjeta-gastos {
+#seccion-mis-vehiculos.modo-gastos .tarjeta-gastos {
     display: block;
 }
-
 
 /* ============================= */
 /*          MEDIA QUERIES        */
@@ -696,17 +690,7 @@ aside {
         z-index: 10;
         overflow-x: auto;
         overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
         scrollbar-width: thin;
-    }
-
-    aside::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    aside::-webkit-scrollbar-thumb {
-        background-color: #0d6efd;
-        border-radius: 4px;
     }
 
     .sidebar-menu {
@@ -716,8 +700,6 @@ aside {
         padding-block: 4px;
         flex-wrap: nowrap;
         overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
     }
 
     .btn-sidebar {
@@ -781,7 +763,6 @@ aside {
         opacity: 0;
         transform: translate3d(0, -10px, 0);
     }
-
     to {
         opacity: 1;
         transform: translate3d(0, 0, 0);
@@ -793,7 +774,6 @@ aside {
         opacity: 0;
         transform: translate3d(0, 10px, 0);
     }
-
     to {
         opacity: 1;
         transform: translate3d(0, 0, 0);

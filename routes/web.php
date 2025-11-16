@@ -11,6 +11,8 @@ use App\Http\Controllers\NotaCalendarioController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\EditarPerfilController;
 use App\Http\Controllers\RegistroKmController;
+use App\Http\Controllers\GastoController;
+
 
 Route::get('/', function () {
     return Auth::check() ? redirect()->route('perfil') : view('inicio');
@@ -94,5 +96,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/vehiculos/{vehiculo}/km/data', [RegistroKmController::class, 'data'])
         ->name('km.data');
+
+
+    Route::post('/vehiculos/{vehiculo}/gastos', [GastoController::class, 'store'])
+        ->name('gastos.store')
+        ->middleware('auth');
 
 });

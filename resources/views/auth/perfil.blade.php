@@ -131,7 +131,7 @@
                 @endif
             </div>
 
-            <!-- 🧾 Gastos (sin gráfico) -->
+            <!-- 🧾 Gastos -->
             <div class="card" id="card-gastos" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
                 <h3>🧾 Gastos</h3>
 
@@ -287,88 +287,205 @@
                                             {{ number_format($v->km, 0, ',', '.') }} km
                                         </li>
                                     </ul>
-
+                                    <p></p>
                                     {{-- FORMULARIO: NUEVO REGISTRO DE KM --}}
                                     <form action="{{ route('km.store', $v->id_vehiculo) }}" method="POST"
                                         class="vehiculo-km-form mt-3">
                                         @csrf
 
-                                        <div class="mb-2">
-                                            <label for="fecha_{{ $v->id_vehiculo }}" class="form-label">
-                                                Fecha del registro
-                                            </label>
-                                            <input type="date" id="fecha_{{ $v->id_vehiculo }}"
-                                                name="fecha_registro" class="form-control form-control-sm"
-                                                value="{{ now()->format('Y-m-d') }}" required>
+                                        <div class="row g-3">
+
+                                            <!-- COLUMNA 1 — FECHA -->
+                                            <div class="col-md-4">
+                                                <label for="fecha_{{ $v->id_vehiculo }}" class="form-label">
+                                                    Fecha del registro
+                                                </label>
+                                                <input type="date" id="fecha_{{ $v->id_vehiculo }}"
+                                                    name="fecha_registro" class="form-control form-control-sm"
+                                                    value="{{ now()->format('Y-m-d') }}" required>
+                                                <p></p>
+                                                <label for="km_actual_{{ $v->id_vehiculo }}" class="form-label">
+                                                    Kilómetros actuales
+                                                </label>
+                                                <input type="number" id="km_actual_{{ $v->id_vehiculo }}"
+                                                    name="km_actual" class="form-control form-control-sm"
+                                                    min="{{ $v->km ?? 0 }}" required
+                                                    placeholder="Introduce los km actuales">
+                                                <br>
+
+                                            </div>
+
+                                            <!-- COLUMNA 2 — KM + COMENTARIO DEBAJO -->
+                                            <div class="col-md-4">
+                                                <label for="comentario_{{ $v->id_vehiculo }}"
+                                                    class="form-label mt-3">
+                                                    Comentario (opcional)
+                                                </label>
+                                                <p></p>
+                                                <textarea id="comentario_{{ $v->id_vehiculo }}" name="comentario" class="cometarioText" rows="2"
+                                                    placeholder="Ej: viaje, revisión, trayecto diario..."></textarea>
+                                            </div>
+
+                                            <!-- COLUMNA 3 — VACÍA (TUS TABLAS VAN AQUÍ) -->
+                                            <div class="col-md-4">
+                                                {{-- Aquí metes tu tabla --}}
+                                                <div class="km-tabla">
+                                                    {{-- TABLA REGISTRO VEHÍCULOS CON SU ID --}}
+                                                    @php
+                                                        // Usamos la relación registrosKm si existe, y la ordenamos por fecha descendente
+                                                        $registrosKm =
+                                                            $v->registrosKm->sortByDesc('fecha_registro') ?? collect();
+                                                    @endphp
+
+                                                    @if ($registrosKm->isNotEmpty())
+                                                        <div class="tabla-registros-km-wrapper mt-3">
+                                                            <table class="tabla-registros-km">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Fecha</th>
+                                                                        <th>Km</th>
+                                                                        <th>Comentario</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach ($registrosKm as $rk)
+                                                                        <tr>
+                                                                            <td>{{ \Carbon\Carbon::parse($rk->fecha_registro)->format('d/m/Y') }}
+                                                                            </td>
+                                                                            <td>{{ number_format($rk->km_actual, 0, ',', '.') }}
+                                                                                km
+                                                                            </td>
+                                                                            <td>{{ $rk->comentario ?: '—' }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    @else
+                                                        <p class="text-muted mt-2">Aún no hay registros de kilómetros
+                                                            para este
+                                                            vehículo.</p>
+                                                    @endif
+
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div class="mb-2">
-                                            <label for="km_actual_{{ $v->id_vehiculo }}" class="form-label">
-                                                Kilómetros actuales
-                                            </label>
-                                            <input type="number" id="km_actual_{{ $v->id_vehiculo }}"
-                                                name="km_actual" class="form-control form-control-sm"
-                                                min="{{ $v->km ?? 0 }}" required
-                                                placeholder="Introduce los km actuales">
-                                        </div>
-
-                                        <div class="mb-2">
-                                            <label for="comentario_{{ $v->id_vehiculo }}" class="form-label">
-                                                Comentario (opcional)
-                                            </label>
-                                            <textarea id="comentario_{{ $v->id_vehiculo }}" name="comentario" class="form-control form-control-sm"
-                                                rows="2" placeholder="Ej: viaje, revisión, trayecto diario..."></textarea>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                                        <button type="submit" class="btn btn-primary btn-sm w-100 mt-3">
                                             Guardar registro de km
                                         </button>
                                     </form>
-
-                                    {{-- TABLA REGISTRO VEHÍCULOS CON SU ID --}}
-                                    @php
-                                        // Usamos la relación registrosKm si existe, y la ordenamos por fecha descendente
-                                        $registrosKm = $v->registrosKm->sortByDesc('fecha_registro') ?? collect();
-                                    @endphp
-
-                                    @if ($registrosKm->isNotEmpty())
-                                        <div class="tabla-registros-km-wrapper mt-3">
-                                            <table class="tabla-registros-km">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Fecha</th>
-                                                        <th>Km</th>
-                                                        <th>Comentario</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($registrosKm as $rk)
-                                                        <tr>
-                                                            <td>{{ \Carbon\Carbon::parse($rk->fecha_registro)->format('d/m/Y') }}
-                                                            </td>
-                                                            <td>{{ number_format($rk->km_actual, 0, ',', '.') }} km
-                                                            </td>
-                                                            <td>{{ $rk->comentario ?: '—' }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    @else
-                                        <p class="text-muted mt-2">Aún no hay registros de kilómetros para este
-                                            vehículo.</p>
-                                    @endif
-
-                                    {{-- 🟥 VISTA GASTOS → para tarjeta "Gastos" --}}
-                                    <div class="tarjeta-gastos">
-                                        <ul class="vehiculo-datos">
-                                            <li class="gastos">
-                                                <strong>Gastos totales:</strong>
-                                                {{ number_format($gastoCalc, 2, ',', '.') }} €
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
+
+                                {{-- 🟥 VISTA GASTOS → para tarjeta "Gastos" --}}
+                                <div class="tarjeta-gastos mt-4">
+                                    <ul class="vehiculo-datos">
+                                        <li class="gastos">
+                                            <strong>Gastos totales:</strong>
+                                            {{ number_format($gastoCalc, 2, ',', '.') }} €
+                                        </li>
+                                    </ul>
+
+                                    {{-- FORMULARIO: NUEVO GASTO --}}
+                                    <form action="{{ route('gastos.store', $v->id_vehiculo) }}" method="POST"
+                                        class="vehiculo-gastos-form mt-3">
+                                        @csrf
+
+                                        <div class="row g-3">
+
+                                            <!-- COLUMNA 1 — FECHA GASTO -->
+                                            <div class="col-md-4">
+                                                <label for="fecha_gasto_{{ $v->id_vehiculo }}" class="form-label">
+                                                    Fecha del gasto
+                                                </label>
+                                                <input type="date" id="fecha_gasto_{{ $v->id_vehiculo }}"
+                                                    name="fecha_gasto" class="form-control form-control-sm"
+                                                    value="{{ now()->format('Y-m-d') }}" required>
+                                                <p></p>
+                                                <label for="importe_{{ $v->id_vehiculo }}" class="form-label">
+                                                    Importe (€)
+                                                </label>
+                                                <input type="number" id="importe_{{ $v->id_vehiculo }}"
+                                                    name="importe" class="form-control form-control-sm"
+                                                    step="0.01" min="0" placeholder="Ej: 45.90" required>
+                                                <p></p>
+                                                {{-- Si quieres también el tipo, puedes meterlo aquí arriba o debajo de importe --}}
+                                                <label for="tipo_gasto_{{ $v->id_vehiculo }}"
+                                                    class="form-label mt-3">
+                                                    Tipo de gasto
+                                                </label>
+                                                <select id="tipo_gasto_{{ $v->id_vehiculo }}" name="tipo_gasto"
+                                                    class="form-select form-select-sm" required>
+                                                    <option value="">Selecciona tipo...</option>
+                                                    <option value="combustible">Combustible</option>
+                                                    <option value="mantenimiento">Mantenimiento</option>
+                                                    <option value="seguro">Seguro</option>
+                                                    <option value="impuestos">Impuestos</option>
+                                                    <option value="peajes">Peajes</option>
+                                                    <option value="otros">Otros</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- COLUMNA 2 — IMPORTE + COMENTARIO/ DESCRIPCIÓN DEBAJO -->
+                                            <div class="col-md-4">
+                                                <label for="descripcion_gasto_{{ $v->id_vehiculo }}"
+                                                    class="form-label mt-3">
+                                                    Descripción (opcional)
+                                                </label>
+                                                <textarea id="descripcion_gasto_{{ $v->id_vehiculo }}" name="descripcion" class="cometarioText" rows="2"
+                                                    placeholder="Ej: gasolina, peaje, revisión, seguro..."></textarea>
+                                            </div>
+
+                                            <!-- COLUMNA 3 — TABLA GASTOS -->
+                                            <div class="col-md-4">
+                                                <div class="gastos-tabla">
+                                                    @php
+                                                        // Relación registrosGastos ordenada por fecha descendente
+                                                        $registrosGastos =
+                                                            $v->registrosGastos->sortByDesc('fecha_gasto') ?? collect();
+                                                    @endphp
+
+                                                    @if ($registrosGastos->isNotEmpty())
+                                                        <div class="tabla-registros-gastos-wrapper mt-3">
+                                                            <table class="tabla-registros-gastos">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Fecha</th>
+                                                                        <th>Tipo</th>
+                                                                        <th>Importe</th>
+                                                                        <th>Descripción</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach ($registrosGastos as $g)
+                                                                        <tr>
+                                                                            <td>{{ \Carbon\Carbon::parse($g->fecha_gasto)->format('d/m/Y') }}
+                                                                            </td>
+                                                                            <td>{{ $g->tipo_gasto }}</td>
+                                                                            <td>{{ number_format($g->importe, 2, ',', '.') }}
+                                                                                €</td>
+                                                                            <td>{{ $g->descripcion ?: '—' }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    @else
+                                                        <p class="text-muted mt-2">
+                                                            Aún no hay registros de gastos para este vehículo.
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-sm w-100 mt-3">
+                                            Guardar gasto
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </article>
                     @endforeach
                 </div>

@@ -29,12 +29,15 @@ class PerfilController extends Controller
             }
         }
 
-        // ✅ Vehículos del usuario + registros de km
+        // ✅ Vehículos del usuario + registros de km + registros de gastos
         $vehiculos = $user->vehiculos()
             ->with([
                 'registrosKm' => function ($q) {
                     $q->orderBy('fecha_registro', 'desc');
-                }
+                },
+                'registrosGastos' => function ($q) {
+                    $q->orderBy('fecha_gasto', 'desc');
+                },
             ])
             ->select(
                 'id_vehiculo',
@@ -55,12 +58,20 @@ class PerfilController extends Controller
             ->orderBy('anio', 'desc')
             ->get();
 
+        // ✅ Cálculo de gasto total por vehículo (propiedad auxiliar)
+        $vehiculos->each(function ($v) {
+            $v->gastoCalc = $v->registrosGastos->sum('importe');
+        });
 
         // ✅ Totales del perfil
         $totalVehiculos = $vehiculos->count();
-        $valorTotal = $vehiculos->sum('precio');
-        $kmTotal = $vehiculos->sum('km');
-        $gastosTotales = 0; // si luego tiras de tabla "gastos", cámbialo
+        $valorTotal     = $vehiculos->sum('precio');
+        $kmTotal        = $vehiculos->sum('km');
+
+        // suma de todos los gastos de todos los vehículos
+        $gastosTotales  = $vehiculos->sum(function ($v) {
+            return $v->gastoCalc;
+        });
 
         // ✅ Envío a la vista
         return view('auth.perfil', compact(
@@ -72,7 +83,5 @@ class PerfilController extends Controller
             'kmTotal',
             'gastosTotales'
         ));
-
-
     }
 }

@@ -76,4 +76,10 @@ class Vehiculo extends Model
     {
         return $this->hasMany(\App\Models\RegistroKm::class, 'id_vehiculo', 'id_vehiculo');
     }
+
+public function registrosGastos()
+{
+    return $this->hasMany(\App\Models\Gasto::class, 'id_vehiculo', 'id_vehiculo');
+}
+
 }
