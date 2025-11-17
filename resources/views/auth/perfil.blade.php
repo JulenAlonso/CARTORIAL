@@ -31,8 +31,9 @@
             <a href="{{ route('editarPerfil.create') }}" class="btn-sidebar">Editar Perfil</a>
             <a href="{{ route('vehiculo.create') }}" class="btn-sidebar">➕ Añadir Vehículo</a>
             <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">Editar Vehiculo</a>
-            <a href="{{ route('perfil') }}" class="btn-sidebar">⚙️ Ajustes</a>
             <a href="{{ route('ayuda') }}" class="btn-sidebar">❓ Ayuda</a>
+            <p></p>
+            <a href="{{ route('perfil') }}" class="btn-sidebar-adminzone">⚙️ Admin Zone</a>
         </div>
 
         <form method="POST" action="{{ route('logout') }}">
@@ -403,9 +404,16 @@
                                     <ul class="vehiculo-datos">
                                         <li class="gastos">
                                             <strong>Gastos totales:</strong>
+
+                                            @php
+                                                // Igual que arriba: gasto por vehículo
+                                                $gastoCalc = $v->gastoCalc ?? 0;
+                                            @endphp
+
                                             {{ number_format($gastoCalc, 2, ',', '.') }} €
                                         </li>
                                     </ul>
+
 
                                     {{-- FORMULARIO: NUEVO GASTO --}}
                                     <form action="{{ route('gastos.store', $v->id_vehiculo) }}" method="POST"
