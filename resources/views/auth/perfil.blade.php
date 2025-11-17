@@ -438,8 +438,7 @@
 
                                     {{-- FORMULARIO: NUEVO GASTO --}}
                                     <form action="{{ route('gastos.store', $v->id_vehiculo) }}" method="POST"
-                                        class="vehiculo-gastos-form mt-3">
-                                        @csrf
+                                        enctype="multipart/form-data" class="vehiculo-gastos-form mt-3"> @csrf
 
                                         <div class="row g-3">
 
@@ -484,6 +483,14 @@
                                                 </label>
                                                 <textarea id="descripcion_gasto_{{ $v->id_vehiculo }}" name="descripcion" class="cometarioText" rows="2"
                                                     placeholder="Ej: gasolina, peaje, revisión, seguro..."></textarea>
+
+                                                <p></p>
+                                                <label for="archivo_{{ $v->id_vehiculo }}" class="form-label mt-3">
+                                                    Archivo adjunto (opcional)
+                                                </label>
+                                                <input type="file" id="archivo_{{ $v->id_vehiculo }}"
+                                                    name="archivo" class="form-control form-control-sm"
+                                                    style="border-radius: 0px;">
                                             </div>
 
                                             <!-- COLUMNA 3 — TABLA GASTOS -->
@@ -504,10 +511,37 @@
                                                                         <th>Tipo</th>
                                                                         <th>Importe</th>
                                                                         <th>Descripción</th>
+                                                                        <th>Archivo</th>
                                                                     </tr>
                                                                 </thead>
+
                                                                 <tbody>
                                                                     @foreach ($registrosGastos as $g)
+                                                                        @php
+                                                                            // Soportar tanto 'archivo_path' como 'archivo' por si en la BD se usó otro nombre
+                                                                            $rawPath =
+                                                                                $g->archivo_path ??
+                                                                                ($g->archivo ?? null);
+                                                                            $archivoUrl = null;
+
+                                                                            if (!empty($rawPath)) {
+                                                                                // Normalizamos cualquier cosa:
+                                                                                // puede venir como "gastos/...", "storage/gastos/...", "public/storage/gastos/..."
+                                                                                $path = ltrim($rawPath, '/');
+
+                                                                                if (strpos($path, 'public/') === 0) {
+                                                                                    $path = substr($path, 7); // quitamos "public/"
+                                                                                }
+
+                                                                                if (strpos($path, 'storage/') === 0) {
+                                                                                    $path = substr($path, 8); // quitamos "storage/"
+                                                                                }
+
+                                                                                // Resultado final: siempre servimos desde /storage/...
+                                                                                $archivoUrl = asset('storage/' . $path);
+                                                                            }
+                                                                        @endphp
+
                                                                         <tr>
                                                                             <td>{{ \Carbon\Carbon::parse($g->fecha_gasto)->format('d/m/Y') }}
                                                                             </td>
@@ -515,6 +549,32 @@
                                                                             <td>{{ number_format($g->importe, 2, ',', '.') }}
                                                                                 €</td>
                                                                             <td>{{ $g->descripcion ?: '—' }}</td>
+                                                                            <td>
+                                                                                @if (!empty($g->archivo_path))
+                                                                                    @php
+                                                                                        // Normalizamos la ruta por si viene con o sin "storage/"
+                                                                                        $path = ltrim(
+                                                                                            $g->archivo_path,
+                                                                                            '/',
+                                                                                        );
+                                                                                        if (
+                                                                                            strpos(
+                                                                                                $path,
+                                                                                                'storage/',
+                                                                                            ) === 0
+                                                                                        ) {
+                                                                                            $path = substr($path, 8);
+                                                                                        }
+                                                                                    @endphp
+
+                                                                                    <a href="{{ asset('storage/' . $path) }}"
+                                                                                        target="_blank">
+                                                                                        Ver archivo
+                                                                                    </a>
+                                                                                @else
+                                                                                    Sin archivo.
+                                                                                @endif
+                                                                            </td>
                                                                         </tr>
                                                                     @endforeach
                                                                 </tbody>

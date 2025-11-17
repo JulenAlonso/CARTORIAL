@@ -8,7 +8,7 @@ class Gasto extends Model
 {
     protected $table = 'gastos';
     protected $primaryKey = 'id_gasto';
-    public $timestamps = false; // si tu tabla no tiene created_at / updated_at
+    public $timestamps = false; // tu tabla no usa created_at / updated_at
 
     protected $fillable = [
         'id_vehiculo',
@@ -17,6 +17,12 @@ class Gasto extends Model
         'tipo_gasto',
         'importe',
         'descripcion',
+
+        // 📎 NUEVOS CAMPOS PARA ARCHIVO
+        'archivo_path',
+        'archivo_nombre',
+        'archivo_mime',
+        'archivo_size',
     ];
 
     // 🔗 Relación con Vehiculo
@@ -25,7 +31,7 @@ class Gasto extends Model
         return $this->belongsTo(\App\Models\Vehiculo::class, 'id_vehiculo', 'id_vehiculo');
     }
 
-    // 🔗 Relación con User (si la necesitas)
+    // 🔗 Relación con User
     public function usuario()
     {
         return $this->belongsTo(\App\Models\User::class, 'id_usuario', 'id');

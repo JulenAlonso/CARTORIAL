@@ -11,30 +11,49 @@ class GastoController extends Controller
 {
     public function store(Request $request, $idVehiculo)
     {
-        // 1) Buscar el vehículo y asegurar que pertenece al usuario autenticado (si aplica)
+        // 1) Vehículo del usuario
         $vehiculo = Vehiculo::where('id_vehiculo', $idVehiculo)
-            ->where('id_usuario', Auth::id()) // si tu tabla Vehiculo tiene id_usuario
+            ->where('id_usuario', Auth::id())
             ->firstOrFail();
 
-        // 2) Validar datos
+        // 2) Validación (archivo opcional)
         $validated = $request->validate([
-            'fecha_gasto' => ['required', 'date'],
-            'tipo_gasto' => ['required', 'string', 'max:50'],
-            'importe' => ['required', 'numeric', 'min:0'],
-            'descripcion' => ['nullable', 'string'],
+            'fecha_gasto' => 'required|date',
+            'tipo_gasto' => 'required|string|max:50',
+            'importe' => 'required|numeric|min:0',
+            'descripcion' => 'nullable|string',
+            'archivo' => 'nullable|file|max:20480', // 20 MB
         ]);
 
         // 3) Crear gasto
-        Gasto::create([
-            'id_vehiculo' => $vehiculo->id_vehiculo,
-            'id_usuario' => Auth::id(),
-            'fecha_gasto' => $validated['fecha_gasto'],
-            'tipo_gasto' => $validated['tipo_gasto'],
-            'importe' => $validated['importe'],
-            'descripcion' => $validated['descripcion'] ?? null,
-        ]);
+        $gasto = new Gasto();
+        $gasto->id_vehiculo = $vehiculo->id_vehiculo;
+        $gasto->id_usuario = Auth::id();
+        $gasto->fecha_gasto = $validated['fecha_gasto'];
+        $gasto->tipo_gasto = $validated['tipo_gasto'];
+        $gasto->importe = $validated['importe'];
+        $gasto->descripcion = $validated['descripcion'] ?? null;
 
-        // 4) Redirigir de vuelta a la vista del vehículo con mensaje
+        // 4) Guardar archivo si existe
+        if ($request->hasFile('archivo')) {
+            $file = $request->file('archivo');
+
+            // Se guarda en storage/app/public/gastos
+            $path = $file->store('gastos', 'public'); // "gastos/xxxx.ext"
+
+            // Ruta relativa que luego usaremos con asset('storage/' . ...)
+            $gasto->archivo_path = $path;
+
+            // Si tienes estas columnas en la tabla, puedes usarlas también:
+            // $gasto->archivo_nombre = $file->getClientOriginalName();
+            // $gasto->archivo_mime   = $file->getClientMimeType();
+            // $gasto->archivo_size   = $file->getSize();
+        }
+
+        // 5) Guardar gasto en BD
+        $gasto->save();
+
+        // 6) Volver con mensaje
         return back()->with('success', 'Gasto registrado correctamente.');
     }
 }
