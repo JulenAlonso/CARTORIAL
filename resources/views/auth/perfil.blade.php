@@ -53,6 +53,10 @@
         @endphp
 
         <div class="cards">
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
             <!-- 🚗 Vehículos -->
             <div class="card" id="card-vehiculos-registrados" role="button" tabindex="0" aria-expanded="false"
                 aria-controls="seccion-mis-vehiculos">
@@ -77,7 +81,10 @@
                     <p class="text-muted ver-detalles">Ver detalles</p>
                 @endif
             </div>
-
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
             <!-- 💰 Valor  -->
             <div class="card" id="card-valor" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
                 <h3>💰 Valor</h3>
@@ -107,7 +114,10 @@
                     <p class="text-muted ver-detalles">Ver detalles</p>
                 @endif
             </div>
-
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
             <!-- 📍 Kilometraje (ÚNICO con gráfico) -->
             <div class="card" id="card-km" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
                 <h3>📍 Kilómetros</h3>
@@ -131,7 +141,10 @@
                     <p class="text-muted ver-detalles">Ver detalles</p>
                 @endif
             </div>
-
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
             <!-- 🧾 Gastos -->
             <div class="card" id="card-gastos" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
                 <h3>🧾 Gastos</h3>
@@ -158,7 +171,10 @@
                     <p class="text-muted ver-detalles">Ver detalles</p>
                 @endif
             </div>
-
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
+            {{--  --}}
             <!-- 📅 Calendario -->
             <div class="card" id="card-calendario" role="button" tabindex="0" aria-controls="panel-calendario">
                 <h3>📅 Calendario</h3>
@@ -278,7 +294,10 @@
                                         </li>
                                     </ul>
                                 </div>
-
+                                {{--  --}}
+                                {{--  --}}
+                                {{--  --}}
+                                {{--  --}}
                                 {{-- 🟦 VISTA KM → para tarjeta "Kilómetros" --}}
                                 <div class="tarjeta-km">
                                     <ul class="vehiculo-datos">
@@ -398,7 +417,10 @@
                                         </button>
                                     </form>
                                 </div>
-
+                                {{--  --}}
+                                {{--  --}}
+                                {{--  --}}
+                                {{--  --}}
                                 {{-- 🟥 VISTA GASTOS → para tarjeta "Gastos" --}}
                                 <div class="tarjeta-gastos mt-4">
                                     <ul class="vehiculo-datos">
@@ -413,7 +435,6 @@
                                             {{ number_format($gastoCalc, 2, ',', '.') }} €
                                         </li>
                                     </ul>
-
 
                                     {{-- FORMULARIO: NUEVO GASTO --}}
                                     <form action="{{ route('gastos.store', $v->id_vehiculo) }}" method="POST"
@@ -506,9 +527,26 @@
                                                     @endif
                                                 </div>
                                                 <p></p>
-                                                <button type="submit" class="btn btn-primary btn-sm w-100 mt-3">
-                                                    Graficos gastos
+                                                {{-- BOTÓN + MODAL GRÁFICO GASTOS --}}
+                                                <button type="button" class="btn btn-primary btn-sm w-100 mt-3"
+                                                    onclick="document.getElementById('modalGastos_{{ $v->id_vehiculo }}').showModal();">
+                                                    Gráficos de gastos
                                                 </button>
+
+                                                <dialog id="modalGastos_{{ $v->id_vehiculo }}" class="chart-dialog">
+                                                    <h3>📉 Gastos — {{ $v->marca }} {{ $v->modelo }}</h3>
+
+                                                    <div id="chartGastos_{{ $v->id_vehiculo }}"
+                                                        style="height: 420px; width: 100%;"></div>
+
+                                                    <div class="dialog-buttons">
+                                                        <button
+                                                            onclick="document.getElementById('modalGastos_{{ $v->id_vehiculo }}').close();"
+                                                            class="btn btn-secondary">
+                                                            Cerrar
+                                                        </button>
+                                                    </div>
+                                                </dialog>
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-sm w-100 mt-3">
@@ -524,7 +562,10 @@
                 </div>
             @endif
         </section>
-
+        {{--  --}}
+        {{--  --}}
+        {{--  --}}
+        {{--  --}}
         {{-- PANEL CALENDARIO GRANDE --}}
         <section id="panel-calendario" class="calendar-panel" style="margin-top: 24px; display:none;">
             <div class="calendar-card">
@@ -624,7 +665,6 @@
                 </div>
             </div>
         </section>
-
     </main>
 
     {{-- Datos para el calendario: mezcla de km, gastos y notas_calendario --}}
@@ -912,6 +952,69 @@
 
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            @foreach ($vehiculos as $v)
+                @php
+                    // Preparamos los datapoints EXACTAMENTE como el ejemplo
+                    $gastoPoints = [];
+                    foreach ($v->registrosGastos as $g) {
+                        $ts = $g->fecha_gasto instanceof \Carbon\Carbon ? $g->fecha_gasto->timestamp : strtotime($g->fecha_gasto);
+
+                        if ($ts) {
+                            $gastoPoints[] = [
+                                'x' => $ts * 1000, // milisegundos
+                                'y' => floatval($g->importe),
+                            ];
+                        }
+                    }
+                @endphp
+
+                    (function() {
+                        const dialog = document.getElementById("modalGastos_{{ $v->id_vehiculo }}");
+                        let chartRendered = false;
+
+                        dialog.addEventListener("toggle", function() {
+                            if (!dialog.open) return;
+                            if (chartRendered) return;
+                            chartRendered = true;
+
+                            var chart = new CanvasJS.Chart("chartGastos_{{ $v->id_vehiculo }}", {
+                                animationEnabled: true,
+                                theme: "light2",
+
+                                title: {
+                                    text: "Gastos Totales (€): {{ number_format($v->registrosGastos->sum('importe'), 2, ',', '.') }} €"
+                                },
+                                axisX: {
+                                    valueFormatString: "DD MMM"
+                                },
+
+                                axisY: {
+                                    title: "Gastos (€)",
+                                    includeZero: true,
+                                    maximum: null // deja CanvasJS decidir
+                                },
+
+                                data: [{
+                                    type: "splineArea",
+                                    color: "#6599FF",
+                                    xValueType: "dateTime",
+                                    xValueFormatString: "DD MMM",
+                                    yValueFormatString: "€#,##0.00",
+                                    dataPoints: {!! json_encode($gastoPoints, JSON_NUMERIC_CHECK) !!}
+                                }]
+                            });
+
+                            chart.render();
+                        });
+                    })();
+            @endforeach
+        });
+    </script>
+
 
     <!-- Bootstrap JS necesario para los modales -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
