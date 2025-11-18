@@ -11,6 +11,10 @@
 </head>
 
 <body>
+    @php
+        $currentYear = now()->year; // Definir el año actual
+    @endphp
+
     {{ Auth::user()->user_name }}
 
     <div class="container py-5">
@@ -51,7 +55,6 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <div class="mb-3">
                             <label for="marca" class="form-label">Marca</label>
                             <input type="text" class="form-control @error('marca') is-invalid @enderror"
@@ -112,7 +115,8 @@
                                     Gasolina</option>
                                 <option value="Diésel" {{ old('combustible') === 'Diésel' ? 'selected' : '' }}>Diésel
                                 </option>
-                                <option value="Híbrido" {{ old('combustible') === 'Híbrido' ? 'selected' : '' }}>Híbrido
+                                <option value="Híbrido" {{ old('combustible') === 'Híbrido' ? 'selected' : '' }}>
+                                    Híbrido
                                 </option>
                                 <option value="Eléctrico" {{ old('combustible') === 'Eléctrico' ? 'selected' : '' }}>
                                     Eléctrico</option>
@@ -131,7 +135,8 @@
                                 <option value="ECO" {{ old('etiqueta') === 'ECO' ? 'selected' : '' }}>ECO</option>
                                 <option value="C" {{ old('etiqueta') === 'C' ? 'selected' : '' }}>C</option>
                                 <option value="B" {{ old('etiqueta') === 'B' ? 'selected' : '' }}>B</option>
-                                <option value="No tiene" {{ old('etiqueta') === 'No tiene' ? 'selected' : '' }}>No tiene
+                                <option value="No tiene" {{ old('etiqueta') === 'No tiene' ? 'selected' : '' }}>No
+                                    tiene
                                 </option>
                             </select>
                             @error('etiqueta')
@@ -190,75 +195,12 @@
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Formateo en vivo y normalización en submit -->
-    <script>
-        (function() {
-            const fmt = new Intl.NumberFormat('de-DE'); // 1.234.567,89
-
-            function formatInt(val) {
-                const digits = (val || '').replace(/\D+/g, '');
-                if (!digits) return '';
-                return fmt.format(parseInt(digits, 10));
-            }
-
-            function formatMoney(val) {
-                val = (val || '').replace(/[^\d,]/g, '');
-                const parts = val.split(',');
-                const intDigits = (parts[0] || '').replace(/\D+/g, '');
-                let out = intDigits ? fmt.format(parseInt(intDigits, 10)) : '';
-                if (parts.length > 1) {
-                    const dec = (parts[1] || '').replace(/\D+/g, '');
-                    out += ',' + dec;
-                }
-                return out;
-            }
-
-            function withCaret(el, formatter) {
-                el.value = formatter(el.value);
-                const len = el.value.length;
-                try {
-                    el.setSelectionRange(len, len);
-                } catch (_) {}
-            }
-
-            function bindLiveFormat(selector, formatter) {
-                document.querySelectorAll(selector).forEach(el => {
-                    el.addEventListener('input', () => withCaret(el, formatter));
-                    el.addEventListener('blur', () => {
-                        el.value = formatter(el.value);
-                    });
-                });
-            }
-
-            bindLiveFormat('.js-format-int', formatInt);
-            bindLiveFormat('.js-format-money', formatMoney);
-
-            // Normalizar antes de enviar
-            const form = document.getElementById('vehiculo-form');
-            if (form) {
-                form.addEventListener('submit', () => {
-                    const currentMaxYear = new Date().getFullYear() + 1;
-
-                    form.querySelectorAll('.js-format-int').forEach(el => {
-                        const raw = (el.value || '').replace(/\./g, '');
-                        let num = raw ? parseInt(raw, 10) : '';
-                        if (el.id === 'anio' && raw) {
-                            if (num < 1886) num = 1886;
-                            if (num > currentMaxYear) num = currentMaxYear;
-                        }
-                        if (el.id === 'km' && raw && num < 0) num = 0;
-                        if (el.id === 'cv' && raw && num < 1) num = 1;
-                        el.value = raw ? String(num) : '';
-                    });
-
-                    form.querySelectorAll('.js-format-money').forEach(el => {
-                        el.value = (el.value || '').replace(/\./g, '').replace(',', '.');
-                    });
-                });
-            }
-        })();
-    </script>
+    {{-- Codigo de vehiculo --}}
+    <script src="{{ asset('./assets/js/vehiculo/vehiculo.js') }}"></script>
+    {{-- Codigo para formatear los campos de entrada --}}
+    <script src="{{ asset('./assets/js/vehiculo/matriculaFormato.js') }}"></script>
+    {{-- Codigo para calcular el año dependiendo de las matriculas --}}
+    <script src="{{ asset('./assets/js/vehiculo/matriculacion.js') }}"></script>
 </body>
 
 </html>

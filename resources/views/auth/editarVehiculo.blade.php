@@ -14,37 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/style/editarVehiculo/editarVehiculo.css') }}">
 
     {{-- Estilos mínimos para asegurar tamaño / hover correcto de los botones --}}
-    <style>
-        /* Mismo tamaño para los dos botones de acción */
-        .action-btn{
-            width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
-            padding:0;border-radius:8px;position:relative;z-index:3;
-        }
-        .action-btn .bi{font-size:1rem;line-height:1}
-
-        /* Evitar overlay blanco y mantener rojo puro en borrar */
-        .btn-outline-danger.action-btn{
-            background-color:#ff4b5c;border-color:#ff4b5c;color:#fff;
-        }
-        .btn-outline-danger.action-btn:hover,
-        .btn-outline-danger.action-btn:focus,
-        .btn-outline-danger.action-btn:active{
-            background-color:#ff4b5c !important;border-color:#ff4b5c !important;color:#fff !important;
-            box-shadow:none;
-        }
-
-        /* (Opcional) Mantener el lápiz sin cambio de fondo si lo deseas */
-        .btn-outline-primary.action-btn{
-            background:#ffffff;border:1px solid #dbeafe;color:#2563eb;
-        }
-        .btn-outline-primary.action-btn:hover{
-            background:transparent;border-color:#bfdbfe;color:#1d4ed8;
-        }
-
-        /* Asegurar que el stretched-link no tape los botones */
-        .vehiculos-editor .list-group-item{position:relative}
-        .vehiculos-editor .list-group-item .stretched-link::after{z-index:1 !important}
-    </style>
+    <script src="{{ asset('./assets/js/editarVehiculo/editarVehiculo.js') }}"></script>
 
     <div class="vehiculos-editor">
         <div class="container-fluid">
@@ -73,33 +43,34 @@
                                     <div class="d-flex align-items-center gap-1">
                                         {{-- Editar --}}
                                         <a href="{{ route('editarVehiculo.create', ['vehiculo' => $v->id_vehiculo]) }}"
-                                           class="btn btn-outline-primary btn-sm action-btn"
-                                           title="Editar" onclick="event.stopPropagation();">
+                                            class="btn btn-outline-primary btn-sm action-btn" title="Editar"
+                                            onclick="event.stopPropagation();">
                                             ✏️
                                         </a>
 
-                                        {{-- Borrar (icono Bootstrap) --}}
+                                        {{-- Borrar --}}
                                         <form method="POST" action="{{ route('vehiculos.destroy', $v->id_vehiculo) }}"
-                                              onsubmit="event.stopPropagation(); return confirm('¿Seguro que quieres eliminar este vehículo?');"
-                                              class="m-0 p-0">
+                                            onsubmit="event.stopPropagation(); return confirm('¿Seguro que quieres eliminar este vehículo?');"
+                                            class="m-0 p-0">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm action-btn" title="Eliminar">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
+                                                title="Eliminar">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
                                     </div>
 
-                                    {{-- Link estirado para abrir/editar al hacer click en la tarjeta --}}
+                                    {{-- Link estirado para abrir/editar --}}
                                     <a class="stretched-link"
-                                       href="{{ route('editarVehiculo.create', ['vehiculo' => $v->id_vehiculo]) }}"></a>
+                                        href="{{ route('editarVehiculo.create', ['vehiculo' => $v->id_vehiculo]) }}"></a>
                                 </li>
                             @endforeach
                         </ul>
                     @endif
                 </div>
 
-                {{-- FORMULARIO DERECHA: campos 9/12 + foto 3/12 --}}
+                {{-- FORMULARIO DERECHA --}}
                 <div class="col-md-9 ps-md-4">
                     @if ($vehiculoSel)
                         <h5 class="mb-3 border-bottom pb-2">
@@ -107,60 +78,62 @@
                         </h5>
 
                         <form method="POST" action="{{ route('vehiculos.update', $vehiculoSel->id_vehiculo) }}"
-                              enctype="multipart/form-data" class="w-100">
+                            enctype="multipart/form-data" class="w-100">
                             @csrf
                             @method('PUT')
 
                             <div class="row g-3">
-                                {{-- BLOQUE CAMPOS (9/12) --}}
+                                {{-- BLOQUE CAMPOS --}}
                                 <div class="col-12 col-xl-9">
                                     <div class="row g-3">
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Matrícula</label>
-                                            <input type="text" name="matricula" class="form-control"
-                                                   value="{{ old('matricula', $vehiculoSel->matricula) }}" required>
+                                            <input type="text" name="matricula" id="matricula" class="form-control"
+                                                value="{{ old('matricula', $vehiculoSel->matricula) }}" required>
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Kilómetros</label>
                                             <input type="number" name="km" class="form-control" inputmode="numeric"
-                                                   value="{{ old('km', $vehiculoSel->km) }}" min="0" step="1">
+                                                value="{{ old('km', $vehiculoSel->km) }}" min="0" step="1">
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             @php
                                                 $fechaValue = $vehiculoSel->fecha_compra
-                                                    ? \Illuminate\Support\Carbon::parse($vehiculoSel->fecha_compra)->format('Y-m-d')
+                                                    ? \Illuminate\Support\Carbon::parse(
+                                                        $vehiculoSel->fecha_compra,
+                                                    )->format('Y-m-d')
                                                     : '';
                                             @endphp
                                             <label class="form-label">Fecha de compra</label>
                                             <input type="date" name="fecha_compra" class="form-control"
-                                                   value="{{ old('fecha_compra', $fechaValue) }}">
+                                                value="{{ old('fecha_compra', $fechaValue) }}">
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Marca</label>
                                             <input type="text" name="marca" class="form-control"
-                                                   value="{{ old('marca', $vehiculoSel->marca) }}" required>
+                                                value="{{ old('marca', $vehiculoSel->marca) }}" required>
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">CV</label>
                                             <input type="number" name="cv" class="form-control"
-                                                   value="{{ old('cv', $vehiculoSel->cv) }}" min="0" step="1">
+                                                value="{{ old('cv', $vehiculoSel->cv) }}" min="0" step="1">
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Precio (€)</label>
                                             <input type="text" name="precio" class="form-control"
-                                                   value="{{ old('precio', $vehiculoSel->precio) }}"
-                                                   placeholder="Ej: 12.345,67">
+                                                value="{{ old('precio', $vehiculoSel->precio) }}"
+                                                placeholder="Ej: 12.345,67">
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Modelo</label>
                                             <input type="text" name="modelo" class="form-control"
-                                                   value="{{ old('modelo', $vehiculoSel->modelo) }}" required>
+                                                value="{{ old('modelo', $vehiculoSel->modelo) }}" required>
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
@@ -170,8 +143,7 @@
                                                 @foreach (['Gasolina', 'Diésel', 'Híbrido', 'Eléctrico'] as $tipo)
                                                     <option value="{{ $tipo }}"
                                                         {{ old('combustible', $vehiculoSel->combustible) === $tipo ? 'selected' : '' }}>
-                                                        {{ $tipo }}
-                                                    </option>
+                                                        {{ $tipo }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -179,15 +151,15 @@
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Precio 2ª mano (€)</label>
                                             <input type="text" name="precio_segunda_mano" class="form-control"
-                                                   value="{{ old('precio_segunda_mano', $vehiculoSel->precio_segunda_mano) }}"
-                                                   placeholder="Ej: 9.999,99 (opcional)">
+                                                value="{{ old('precio_segunda_mano', $vehiculoSel->precio_segunda_mano) }}"
+                                                placeholder="Ej: 9.999,99 (opcional)">
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Año</label>
                                             <input type="number" name="anio" class="form-control"
-                                                   value="{{ old('anio', $vehiculoSel->anio) }}" min="1900"
-                                                   max="{{ $currentYear }}">
+                                                value="{{ old('anio', $vehiculoSel->anio) }}" min="1900"
+                                                max="{{ $currentYear }}">
                                         </div>
 
                                         <div class="col-12 col-md-6 col-xl-4">
@@ -197,8 +169,7 @@
                                                 @foreach (['0', 'ECO', 'C', 'B', 'No tiene'] as $tag)
                                                     <option value="{{ $tag }}"
                                                         {{ old('etiqueta', $vehiculoSel->etiqueta) === $tag ? 'selected' : '' }}>
-                                                        {{ $tag }}
-                                                    </option>
+                                                        {{ $tag }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -220,11 +191,12 @@
                                         @endphp
                                         <div class="border rounded p-2 bg-light">
                                             <img src="{{ $carSrc }}" alt="Vehículo"
-                                                 style="max-width:100%;height:auto;"
-                                                 onerror="this.src='{{ asset('assets/images/default-car.png') }}'">
+                                                style="max-width:100%;height:auto;"
+                                                onerror="this.src='{{ asset('assets/images/default-car.png') }}'">
                                         </div>
                                         <div class="mt-2">
-                                            <input type="file" name="car_avatar" class="form-control" accept="image/*">
+                                            <input type="file" name="car_avatar" class="form-control"
+                                                accept="image/*">
                                         </div>
                                     </div>
                                 </div>

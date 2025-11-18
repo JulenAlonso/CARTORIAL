@@ -28,9 +28,9 @@
         </div>
 
         <div class="sidebar-menu">
-            <a href="{{ route('editarPerfil.create') }}" class="btn-sidebar">Editar Perfil</a>
+            <a href="{{ route('editarPerfil.create') }}" class="btn-sidebar">👤 Editar Perfil</a>
             <a href="{{ route('vehiculo.create') }}" class="btn-sidebar">➕ Añadir Vehículo</a>
-            <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">Editar Vehiculo</a>
+            <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">🛠️ Editar Vehiculo</a>
             <a href="{{ route('ayuda') }}" class="btn-sidebar">❓ Ayuda</a>
             <p></p>
             <a href="{{ route('perfil') }}" class="btn-sidebar-adminzone">⚙️ Admin Zone</a>

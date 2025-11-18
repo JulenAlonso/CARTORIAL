@@ -209,6 +209,63 @@
     font-size: .85rem;
 }
 
+/* Mismo tamaño para los dos botones de acción */
+.action-btn {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 8px;
+    position: relative;
+    z-index: 3;
+}
+
+.action-btn .bi {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Evitar overlay blanco y mantener rojo puro en borrar */
+.btn-outline-danger.action-btn {
+    background-color: #ff4b5c;
+    border-color: #ff4b5c;
+    color: #fff;
+}
+
+.btn-outline-danger.action-btn:hover,
+.btn-outline-danger.action-btn:focus,
+.btn-outline-danger.action-btn:active {
+    background-color: #ff4b5c !important;
+    border-color: #ff4b5c !important;
+    color: #fff !important;
+    box-shadow: none;
+}
+
+/* (Opcional) Mantener el lápiz sin cambio de fondo si lo deseas */
+.btn-outline-primary.action-btn {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    color: #2563eb;
+}
+
+.btn-outline-primary.action-btn:hover {
+    background: transparent;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+/* Asegurar que el stretched-link no tape los botones */
+.vehiculos-editor .list-group-item {
+    position: relative;
+}
+
+.vehiculos-editor .list-group-item .stretched-link::after {
+    z-index: 1 !important;
+}
+
+
 /* =====  Responsive  ===== */
 @media (max-width: 991.98px) {
     .vehiculos-editor .border-end {

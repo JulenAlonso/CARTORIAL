@@ -1,15 +1,11 @@
 /* ------------------ GENERAL ------------------ */
 html,
 body {
+    transform: scale(0.998);
+    transform-origin: top center;
+    width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #fff;
-    font-family: 'Poppins', sans-serif;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* ------------------ CONTENEDOR PRINCIPAL ------------------ */
@@ -34,6 +30,7 @@ body {
     border-radius: 18px;
     overflow: hidden;
     background-color: #fff;
+    border-bottom: 4px solid #01579B; /* Bottom border */
 }
 
 .card.rounded-3.text-black:hover {
@@ -87,7 +84,6 @@ body {
 label {
     font-weight: 600;
     font-size: 1rem;
-    /* margin-bottom: 6px; */
     color: #2f2f2f;
 }
 
@@ -96,7 +92,7 @@ label {
     border: 1px solid #ccc;
     padding: 10px 12px;
     font-size: 1rem;
-    /* margin-bottom: 12px; */
+    border-bottom: 2px solid #01579B; /* Bottom border */
 }
 
 button[type="submit"] {
@@ -107,6 +103,7 @@ button[type="submit"] {
     border: none;
     font-weight: 600;
     color: #fff;
+    border-bottom: 2px solid #01579B; /* Bottom border */
 }
 
 button[type="submit"]:hover {
@@ -146,7 +143,6 @@ button[type="submit"]:hover {
 
 /* ------------------ RESPONSIVE ------------------ */
 @media (max-width: 991.98px) {
-
     html,
     body {
         overflow: auto;

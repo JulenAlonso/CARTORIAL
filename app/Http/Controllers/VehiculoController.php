@@ -16,7 +16,7 @@ class VehiculoController extends Controller
     public function store(Request $request)
     {
         $userId = (int) Auth::id();
-        $currentYear = now()->year;
+        $currentYear = now()->year; // Definir el año actual
 
         // Normaliza dinero: "1.234,56" -> "1234.56"
         $money = function (?string $v) {
@@ -28,10 +28,20 @@ class VehiculoController extends Controller
             return is_numeric($v) ? $v : null;
         };
 
+        // Expresión regular para validar el formato de matrícula
+        $matriculaRegex = [
+            'provincial_numeric' => '/^[A-Z]{1}-\d{4}$/', // M-1234
+            'provincial_alphanumeric' => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/', // M-1234-AZ
+            'national_alphanumeric' => '/^\d{4} [A-Z]{3}$/', // 1234 XYZ
+        ];
+
         // Validación (matrícula única por usuario)
         $validated = $request->validate([
             'matricula' => [
                 'required', 'string', 'max:20',
+                'regex:' . $matriculaRegex['provincial_numeric'],  // Validar formato provincial numérico
+                'regex:' . $matriculaRegex['provincial_alphanumeric'], // Validar formato provincial alfanumérico
+                'regex:' . $matriculaRegex['national_alphanumeric'], // Validar formato alfanumérico nacional
                 Rule::unique('vehiculos', 'matricula')->where(fn ($q) => $q->where('id_usuario', $userId)),
             ],
             'marca'               => ['required', 'string', 'max:100'],
@@ -78,7 +88,8 @@ class VehiculoController extends Controller
         // ✅ Redirigir al perfil
         return redirect()
             ->route('perfil')
-            ->with('status', 'Vehículo añadido correctamente.');
+            ->with('status', 'Vehículo añadido correctamente.')
+            ->with('currentYear', $currentYear); // Pasar el año actual a la vista
     }
 
     /**
@@ -99,10 +110,22 @@ class VehiculoController extends Controller
             return is_numeric($v) ? $v : null;
         };
 
-        $currentYear = now()->year;
+        $currentYear = now()->year; // Obtener el año actual
+
+        // Expresión regular para validar el formato de matrícula
+        $matriculaRegex = [
+            'provincial_numeric' => '/^[A-Z]{1}-\d{4}$/', // M-1234
+            'provincial_alphanumeric' => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/', // M-1234-AZ
+            'national_alphanumeric' => '/^\d{4} [A-Z]{3}$/', // 1234 XYZ
+        ];
 
         $validated = $request->validate([
-            'matricula'           => ['required', 'string', 'max:20'],
+            'matricula'           => [
+                'required', 'string', 'max:20',
+                'regex:' . $matriculaRegex['provincial_numeric'],  // Validar formato provincial numérico
+                'regex:' . $matriculaRegex['provincial_alphanumeric'], // Validar formato provincial alfanumérico
+                'regex:' . $matriculaRegex['national_alphanumeric'], // Validar formato alfanumérico nacional
+            ],
             'marca'               => ['required', 'string', 'max:100'],
             'modelo'              => ['required', 'string', 'max:100'],
             'anio'                => ['nullable', 'integer', 'between:1900,' . $currentYear],
@@ -132,7 +155,8 @@ class VehiculoController extends Controller
         // ✅ Redirigir al perfil también al editar
         return redirect()
             ->route('perfil')
-            ->with('status', 'Vehículo actualizado correctamente.');
+            ->with('status', 'Vehículo actualizado correctamente.')
+            ->with('currentYear', $currentYear); // Pasar el año actual a la vista
     }
 
     /**
@@ -163,29 +187,29 @@ class VehiculoController extends Controller
 
     public function create()
     {
-        return view('auth.vehiculo');
+        $currentYear = now()->year; // Obtener el año actual
+        return view('auth.vehiculo', compact('currentYear')); // Pasar el año a la vista
     }
 
     public function destroy(Vehiculo $vehiculo)
-{
-    // Solo el dueño puede borrar
-    if ((int) $vehiculo->id_usuario !== (int) Auth::id()) {
-        abort(403);
+    {
+        // Solo el dueño puede borrar
+        if ((int) $vehiculo->id_usuario !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        // Borra la imagen si existe en storage
+        if (!empty($vehiculo->car_avatar) && Storage::disk('public')->exists($vehiculo->car_avatar)) {
+            Storage::disk('public')->delete($vehiculo->car_avatar);
+        }
+
+        // Si tienes registros relacionados (km, gastos, notas) y no tienes ON DELETE CASCADE,
+        // bórralos aquí antes del vehículo.
+
+        $vehiculo->delete();
+
+        return redirect()
+            ->route('perfil')
+            ->with('status', 'Vehículo eliminado correctamente.');
     }
-
-    // Borra la imagen si existe en storage
-    if (!empty($vehiculo->car_avatar) && Storage::disk('public')->exists($vehiculo->car_avatar)) {
-        Storage::disk('public')->delete($vehiculo->car_avatar);
-    }
-
-    // Si tienes registros relacionados (km, gastos, notas) y no tienes ON DELETE CASCADE,
-    // bórralos aquí antes del vehículo.
-
-    $vehiculo->delete();
-
-    return redirect()
-        ->route('perfil')
-        ->with('status', 'Vehículo eliminado correctamente.');
-}
-
 }
