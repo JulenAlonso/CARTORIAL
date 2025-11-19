@@ -34,7 +34,7 @@ class PerfilController extends Controller
                 'registrosKm' => fn($q) => $q->orderBy('fecha_registro', 'desc'),
                 'registrosGastos' => fn($q) => $q->orderBy('fecha_gasto', 'desc'),
             ])
-            ->orderBy('anio', 'desc')
+            ->orderBy('anio_matriculacion', 'desc')
             ->get();
 
         // 👇 aquí calculas el gasto total de CADA vehículo

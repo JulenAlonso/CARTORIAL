@@ -55,10 +55,26 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
+                        <!-- Año matriculación -->
+                        <div class="mb-3">
+                            <label for="anio_matriculacion" class="form-label">Año Matriculación</label>
+                            <input type="text" inputmode="numeric"
+                                class="form-control js-format-int @error('anio_matriculacion') is-invalid @enderror"
+                                id="anio_matriculacion" name="anio_matriculacion"
+                                value="{{ old('anio_matriculacion') }}" required>
+                            @error('anio_matriculacion')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="mb-3">
                             <label for="marca" class="form-label">Marca</label>
-                            <input type="text" class="form-control @error('marca') is-invalid @enderror"
-                                id="marca" name="marca" value="{{ old('marca') }}" required>
+                            <select class="form-select @error('marca') is-invalid @enderror" id="marca"
+                                name="marca" required>
+                                <option value="">Selecciona marca</option>
+                                <!-- Se rellena por JS -->
+                            </select>
                             @error('marca')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -66,19 +82,24 @@
 
                         <div class="mb-3">
                             <label for="modelo" class="form-label">Modelo</label>
-                            <input type="text" class="form-control @error('modelo') is-invalid @enderror"
-                                id="modelo" name="modelo" value="{{ old('modelo') }}" required>
+                            <select class="form-select @error('modelo') is-invalid @enderror" id="modelo"
+                                name="modelo" required>
+                                <option value="">Selecciona modelo</option>
+                                <!-- Se rellena por JS -->
+                            </select>
                             @error('modelo')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
+                        <!-- Año fabricación -->
                         <div class="mb-3">
-                            <label for="anio" class="form-label">Año</label>
+                            <label for="anio_fabricacion" class="form-label">Año Fabricación</label>
                             <input type="text" inputmode="numeric"
-                                class="form-control js-format-int @error('anio') is-invalid @enderror" id="anio"
-                                name="anio" value="{{ old('anio') }}" required>
-                            @error('anio')
+                                class="form-control js-format-int @error('anio_fabricacion') is-invalid @enderror"
+                                id="anio_fabricacion" name="anio_fabricacion"
+                                value="{{ old('anio_fabricacion') }}" required>
+                            @error('anio_fabricacion')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -112,14 +133,17 @@
                                 name="combustible" required>
                                 <option value="">Selecciona tipo</option>
                                 <option value="Gasolina" {{ old('combustible') === 'Gasolina' ? 'selected' : '' }}>
-                                    Gasolina</option>
-                                <option value="Diésel" {{ old('combustible') === 'Diésel' ? 'selected' : '' }}>Diésel
+                                    Gasolina
+                                </option>
+                                <option value="Diésel" {{ old('combustible') === 'Diésel' ? 'selected' : '' }}>
+                                    Diésel
                                 </option>
                                 <option value="Híbrido" {{ old('combustible') === 'Híbrido' ? 'selected' : '' }}>
                                     Híbrido
                                 </option>
                                 <option value="Eléctrico" {{ old('combustible') === 'Eléctrico' ? 'selected' : '' }}>
-                                    Eléctrico</option>
+                                    Eléctrico
+                                </option>
                             </select>
                             @error('combustible')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -135,8 +159,8 @@
                                 <option value="ECO" {{ old('etiqueta') === 'ECO' ? 'selected' : '' }}>ECO</option>
                                 <option value="C" {{ old('etiqueta') === 'C' ? 'selected' : '' }}>C</option>
                                 <option value="B" {{ old('etiqueta') === 'B' ? 'selected' : '' }}>B</option>
-                                <option value="No tiene" {{ old('etiqueta') === 'No tiene' ? 'selected' : '' }}>No
-                                    tiene
+                                <option value="No tiene" {{ old('etiqueta') === 'No tiene' ? 'selected' : '' }}>
+                                    No tiene
                                 </option>
                             </select>
                             @error('etiqueta')
@@ -195,12 +219,118 @@
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    {{-- Codigo de vehiculo --}}
-    <script src="{{ asset('./assets/js/vehiculo/vehiculo.js') }}"></script>
-    {{-- Codigo para formatear los campos de entrada --}}
-    <script src="{{ asset('./assets/js/vehiculo/matriculaFormato.js') }}"></script>
-    {{-- Codigo para calcular el año dependiendo de las matriculas --}}
-    <script src="{{ asset('./assets/js/vehiculo/matriculacion.js') }}"></script>
+    <script src="{{ asset('assets/js/vehiculo/vehiculo.js') }}"></script>
+    <script src="{{ asset('assets/js/vehiculo/matriculaFormato.js') }}"></script>
+    <script src="{{ asset('assets/js/vehiculo/matriculacion.js') }}"></script>
+
+    <script>
+        // VEHICLE_DATA se cargará desde vehiculos.json
+        let VEHICLE_DATA = {};
+
+        // Helpers para modelos y datos
+        function getModelsByBrand(brand) {
+            const brandObj = VEHICLE_DATA[brand];
+            if (!brandObj || !Array.isArray(brandObj.modelos)) return [];
+            const set = new Set();
+            brandObj.modelos.forEach(m => set.add(m.modelo));
+            return Array.from(set).sort();
+        }
+
+        function findModelInfo(brand, modelName) {
+            const brandObj = VEHICLE_DATA[brand];
+            if (!brandObj || !Array.isArray(brandObj.modelos)) return null;
+            for (const m of brandObj.modelos) {
+                if (m.modelo === modelName) {
+                    return m;
+                }
+            }
+            return null;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const marcaSelect = document.getElementById('marca');
+            const modeloSelect = document.getElementById('modelo');
+            const anioFabInput = document.getElementById('anio_fabricacion'); // <<--- cambio
+            const precioInput = document.getElementById('precio');
+
+            const oldMarca = "{{ old('marca') }}";
+            const oldModelo = "{{ old('modelo') }}";
+
+            async function loadVehicleData() {
+                try {
+                    const response = await fetch("{{ asset('assets/data/vehiculos.json') }}");
+                    VEHICLE_DATA = await response.json();
+
+                    initBrandSelect();
+                } catch (err) {
+                    console.error('Error cargando vehiculos.json', err);
+                }
+            }
+
+            function initBrandSelect() {
+                marcaSelect.innerHTML = '<option value="">Selecciona marca</option>';
+
+                const brands = Object.keys(VEHICLE_DATA).sort();
+                brands.forEach(brand => {
+                    const opt = document.createElement('option');
+                    opt.value = brand;
+                    opt.textContent = brand;
+                    if (oldMarca === brand) {
+                        opt.selected = true;
+                    }
+                    marcaSelect.appendChild(opt);
+                });
+
+                if (oldMarca) {
+                    updateModels();
+                }
+            }
+
+            function updateModels() {
+                const brand = marcaSelect.value;
+                modeloSelect.innerHTML = '<option value="">Selecciona modelo</option>';
+
+                if (!brand) return;
+
+                const models = getModelsByBrand(brand);
+                models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m;
+                    opt.textContent = m;
+                    if (oldModelo === m) {
+                        opt.selected = true;
+                    }
+                    modeloSelect.appendChild(opt);
+                });
+            }
+
+            marcaSelect.addEventListener('change', () => {
+                updateModels();
+                if (anioFabInput) anioFabInput.value = "";
+                if (precioInput) precioInput.value = "";
+            });
+
+            modeloSelect.addEventListener('change', () => {
+                const brand = marcaSelect.value;
+                const model = modeloSelect.value;
+                const info = findModelInfo(brand, model);
+                if (!info) return;
+
+                // Rellenar automáticamente Año Fabricación desde el JSON
+                if (anioFabInput && !anioFabInput.value && info.anio_fabricacion) {
+                    anioFabInput.value = info.anio_fabricacion;
+                }
+
+                // Rellenar Precio original si no hay valor aún
+                if (precioInput && !precioInput.value && info.precio_original_eur) {
+                    precioInput.value = info.precio_original_eur;
+                }
+            });
+
+            loadVehicleData();
+        });
+    </script>
+
 </body>
 
 </html>

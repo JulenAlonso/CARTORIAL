@@ -16,7 +16,7 @@ class VehiculoController extends Controller
     public function store(Request $request)
     {
         $userId = (int) Auth::id();
-        $currentYear = now()->year; // Definir el año actual
+        $currentYear = now()->year;
 
         // Normaliza dinero: "1.234,56" -> "1234.56"
         $money = function (?string $v) {
@@ -28,25 +28,29 @@ class VehiculoController extends Controller
             return is_numeric($v) ? $v : null;
         };
 
-        // Expresión regular para validar el formato de matrícula
+        // REGEX de matrícula
         $matriculaRegex = [
-            'provincial_numeric' => '/^[A-Z]{1}-\d{4}$/', // M-1234
-            'provincial_alphanumeric' => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/', // M-1234-AZ
-            'national_alphanumeric' => '/^\d{4} [A-Z]{3}$/', // 1234 XYZ
+            'provincial_numeric'       => '/^[A-Z]{1}-\d{4}$/',
+            'provincial_alphanumeric'  => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/',
+            'national_alphanumeric'    => '/^\d{4} [A-Z]{3}$/',
         ];
 
-        // Validación (matrícula única por usuario)
+        // VALIDACIONES
         $validated = $request->validate([
             'matricula' => [
                 'required', 'string', 'max:20',
-                'regex:' . $matriculaRegex['provincial_numeric'],  // Validar formato provincial numérico
-                'regex:' . $matriculaRegex['provincial_alphanumeric'], // Validar formato provincial alfanumérico
-                'regex:' . $matriculaRegex['national_alphanumeric'], // Validar formato alfanumérico nacional
+                'regex:' . $matriculaRegex['provincial_numeric'],
+                'regex:' . $matriculaRegex['provincial_alphanumeric'],
+                'regex:' . $matriculaRegex['national_alphanumeric'],
                 Rule::unique('vehiculos', 'matricula')->where(fn ($q) => $q->where('id_usuario', $userId)),
             ],
+
             'marca'               => ['required', 'string', 'max:100'],
             'modelo'              => ['required', 'string', 'max:100'],
-            'anio'                => ['nullable', 'integer', 'between:1900,' . $currentYear],
+
+            'anio_fabricacion'    => ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'anio_matriculacion'  => ['nullable', 'integer', 'between:1886,' . $currentYear],
+
             'fecha_compra'        => ['nullable', 'date'],
             'km'                  => ['nullable', 'integer', 'min:0'],
             'cv'                  => ['nullable', 'integer', 'min:0'],
@@ -57,8 +61,19 @@ class VehiculoController extends Controller
             'car_avatar'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
         ]);
 
+        // REGLA LÓGICA EXTRA — fabricación <= matriculación
+        if (
+            !empty($validated['anio_fabricacion']) &&
+            !empty($validated['anio_matriculacion']) &&
+            $validated['anio_matriculacion'] < $validated['anio_fabricacion']
+        ) {
+            return back()->withErrors([
+                'anio_matriculacion' => 'El año de matriculación no puede ser anterior al de fabricación.'
+            ])->withInput();
+        }
+
         // Normalizaciones numéricas
-        foreach (['anio', 'km', 'cv'] as $k) {
+        foreach (['anio_fabricacion', 'anio_matriculacion', 'km', 'cv'] as $k) {
             if (isset($validated[$k])) {
                 $validated[$k] = (int) preg_replace('/\D+/', '', (string) $validated[$k]);
             }
@@ -68,13 +83,12 @@ class VehiculoController extends Controller
         $validated['precio'] = $money($validated['precio'] ?? null);
         $validated['precio_segunda_mano'] = $money($validated['precio_segunda_mano'] ?? null);
 
-        // Subida de imagen (opcional)
+        // Imagen opcional
         if ($request->hasFile('car_avatar')) {
             $path = $request->file('car_avatar')->store('cars/' . $userId, 'public');
             $validated['car_avatar'] = $path;
         }
 
-        // ⚠️ Si no hay imagen, usar cadena vacía (evita error NOT NULL)
         if (!array_key_exists('car_avatar', $validated)) {
             $validated['car_avatar'] = '';
         }
@@ -82,18 +96,15 @@ class VehiculoController extends Controller
         // Asignar propietario
         $validated['id_usuario'] = $userId;
 
-        // Crear vehículo
         Vehiculo::create($validated);
 
-        // ✅ Redirigir al perfil
         return redirect()
             ->route('perfil')
-            ->with('status', 'Vehículo añadido correctamente.')
-            ->with('currentYear', $currentYear); // Pasar el año actual a la vista
+            ->with('status', 'Vehículo añadido correctamente.');
     }
 
     /**
-     * Actualizar un vehículo.
+     * Actualizar un vehículo existente.
      */
     public function update(Request $request, Vehiculo $vehiculo)
     {
@@ -110,25 +121,29 @@ class VehiculoController extends Controller
             return is_numeric($v) ? $v : null;
         };
 
-        $currentYear = now()->year; // Obtener el año actual
+        $currentYear = now()->year;
 
-        // Expresión regular para validar el formato de matrícula
+        // REGEX matriculación
         $matriculaRegex = [
-            'provincial_numeric' => '/^[A-Z]{1}-\d{4}$/', // M-1234
-            'provincial_alphanumeric' => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/', // M-1234-AZ
-            'national_alphanumeric' => '/^\d{4} [A-Z]{3}$/', // 1234 XYZ
+            'provincial_numeric'       => '/^[A-Z]{1}-\d{4}$/',
+            'provincial_alphanumeric'  => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/',
+            'national_alphanumeric'    => '/^\d{4} [A-Z]{3}$/',
         ];
 
         $validated = $request->validate([
-            'matricula'           => [
+            'matricula' => [
                 'required', 'string', 'max:20',
-                'regex:' . $matriculaRegex['provincial_numeric'],  // Validar formato provincial numérico
-                'regex:' . $matriculaRegex['provincial_alphanumeric'], // Validar formato provincial alfanumérico
-                'regex:' . $matriculaRegex['national_alphanumeric'], // Validar formato alfanumérico nacional
+                'regex:' . $matriculaRegex['provincial_numeric'],
+                'regex:' . $matriculaRegex['provincial_alphanumeric'],
+                'regex:' . $matriculaRegex['national_alphanumeric'],
             ],
+
             'marca'               => ['required', 'string', 'max:100'],
             'modelo'              => ['required', 'string', 'max:100'],
-            'anio'                => ['nullable', 'integer', 'between:1900,' . $currentYear],
+
+            'anio_fabricacion'    => ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'anio_matriculacion'  => ['nullable', 'integer', 'between:1886,' . $currentYear],
+
             'fecha_compra'        => ['nullable', 'date'],
             'km'                  => ['nullable', 'integer', 'min:0'],
             'cv'                  => ['nullable', 'integer', 'min:0'],
@@ -139,9 +154,29 @@ class VehiculoController extends Controller
             'car_avatar'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
         ]);
 
+        // Regla lógica fabricación <= matriculación
+        if (
+            !empty($validated['anio_fabricacion']) &&
+            !empty($validated['anio_matriculacion']) &&
+            $validated['anio_matriculacion'] < $validated['anio_fabricacion']
+        ) {
+            return back()->withErrors([
+                'anio_matriculacion' => 'El año de matriculación no puede ser anterior al de fabricación.'
+            ])->withInput();
+        }
+
+        // Normalizar enteros
+        foreach (['anio_fabricacion', 'anio_matriculacion', 'km', 'cv'] as $k) {
+            if (isset($validated[$k])) {
+                $validated[$k] = (int) preg_replace('/\D+/', '', (string) $validated[$k]);
+            }
+        }
+
+        // Normalizar precios
         $validated['precio'] = $money($validated['precio'] ?? null);
         $validated['precio_segunda_mano'] = $money($validated['precio_segunda_mano'] ?? null);
 
+        // Imagen
         if ($request->hasFile('car_avatar')) {
             if ($vehiculo->car_avatar && Storage::disk('public')->exists($vehiculo->car_avatar)) {
                 Storage::disk('public')->delete($vehiculo->car_avatar);
@@ -152,27 +187,23 @@ class VehiculoController extends Controller
 
         $vehiculo->update($validated);
 
-        // ✅ Redirigir al perfil también al editar
         return redirect()
             ->route('perfil')
-            ->with('status', 'Vehículo actualizado correctamente.')
-            ->with('currentYear', $currentYear); // Pasar el año actual a la vista
+            ->with('status', 'Vehículo actualizado correctamente.');
     }
 
-    /**
-     * Mostrar lista de vehículos para editar (no se usa para redirección).
-     */
     public function selectToEdit()
     {
         $user = auth()->user();
 
         $vehiculos = $user->vehiculos()
             ->select(
-                'id_vehiculo','marca','modelo','matricula','anio','km','cv',
-                'combustible','etiqueta','precio','precio_segunda_mano',
-                'fecha_compra','car_avatar'
+                'id_vehiculo','marca','modelo','matricula',
+                'anio_fabricacion','anio_matriculacion',
+                'km','cv','combustible','etiqueta',
+                'precio','precio_segunda_mano','fecha_compra','car_avatar'
             )
-            ->orderBy('anio', 'desc')
+            ->orderBy('anio_matriculacion', 'desc')
             ->get();
 
         $vehiculoSel = null;
@@ -182,29 +213,24 @@ class VehiculoController extends Controller
                 ->first();
         }
 
-        return view('auth.editarVehiculo', compact('vehiculos', 'vehiculoSel'));
+        return view('auth.editarVehiculo', compact('vehiculos','vehiculoSel'));
     }
 
     public function create()
     {
-        $currentYear = now()->year; // Obtener el año actual
-        return view('auth.vehiculo', compact('currentYear')); // Pasar el año a la vista
+        $currentYear = now()->year;
+        return view('auth.vehiculo', compact('currentYear'));
     }
 
     public function destroy(Vehiculo $vehiculo)
     {
-        // Solo el dueño puede borrar
         if ((int) $vehiculo->id_usuario !== (int) Auth::id()) {
             abort(403);
         }
 
-        // Borra la imagen si existe en storage
         if (!empty($vehiculo->car_avatar) && Storage::disk('public')->exists($vehiculo->car_avatar)) {
             Storage::disk('public')->delete($vehiculo->car_avatar);
         }
-
-        // Si tienes registros relacionados (km, gastos, notas) y no tienes ON DELETE CASCADE,
-        // bórralos aquí antes del vehículo.
 
         $vehiculo->delete();
 

@@ -29,30 +29,44 @@ const matriculasPorAno = {
 };
 
 // Función para obtener el año basado en la matrícula
-function obtenerAnoDeMatricula(matricula) {
-    // Extraemos las primeras tres letras alfabéticas de la matrícula
-    const letras = matricula.replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase(); // Filtramos solo letras y tomamos las primeras tres
+function obtenerAnioDeMatricula(matricula) {
+    // Extraemos las letras de la matrícula (ej: "1234FSW" -> "FSW")
+    const letras = matricula.replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase();
 
     // Verificar en qué rango cae la matrícula
-    for (let ano in matriculasPorAno) {
-        const rango = matriculasPorAno[ano];
-        if (letras >= rango.start && letras <= rango.end) {
-            return ano;
+    for (let anio in matriculasPorAno) {
+        const rango = matriculasPorAno[anio];
+
+        // Ignoramos el año 2000 si el inicio es "--"
+        if (rango.start === '--') {
+            if (letras <= rango.end && letras !== '') {
+                return anio;
+            }
+        } else {
+            if (letras >= rango.start && letras <= rango.end) {
+                return anio;
+            }
         }
     }
 
     return ""; // Si no se encuentra un año válido
 }
 
-// Agregar evento de entrada en el campo de matrícula
-document.getElementById('matricula').addEventListener('input', function () {
-    const matricula = this.value; // Obtener el valor de la matrícula
-    const añoMatriculacion = obtenerAnoDeMatricula(matricula); // Obtener el año correspondiente
+document.addEventListener('DOMContentLoaded', function () {
+    const inputMatricula = document.getElementById('matricula');
+    const inputAnioMatriculacion = document.getElementById('anio_matriculacion');
 
-    // Solo actualizar el campo si se encontró un año
-    if (añoMatriculacion) {
-        document.getElementById('anio').value = añoMatriculacion; // Actualizar el campo "Año"
-    } else {
-        document.getElementById('anio').value = ''; // Si no es válida, dejar el campo vacío
-    }
+    if (!inputMatricula || !inputAnioMatriculacion) return;
+
+    // Agregar evento de entrada en el campo de matrícula
+    inputMatricula.addEventListener('input', function () {
+        const matricula = this.value;
+        const anioMatriculacion = obtenerAnioDeMatricula(matricula);
+
+        if (anioMatriculacion) {
+            inputAnioMatriculacion.value = anioMatriculacion;
+        } else {
+            inputAnioMatriculacion.value = '';
+        }
+    });
 });

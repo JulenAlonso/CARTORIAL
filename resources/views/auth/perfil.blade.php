@@ -70,7 +70,7 @@
                             <div class="vehiculo-mini">
                                 <div>
                                     <strong>{{ $v->marca }} {{ $v->modelo }}</strong>
-                                    ({{ $v->anio }})
+                                    ({{ $v->anio_matriculacion }})
                                     <br>
                                     <span style="font-size:0.9rem;color:#666;">Matrícula: {{ $v->matricula }}</span>
                                     <p>
@@ -258,7 +258,7 @@
 
                             <div class="vehiculo-body">
                                 <h3 class="vehiculo-titulo">
-                                    {{ $v->marca }} {{ $v->modelo }} <span>({{ $v->anio }})</span>
+                                    {{ $v->marca }} {{ $v->modelo }} <span>({{ $v->anio_matriculacion }})</span>
                                 </h3>
 
                                 {{-- 🟩 VISTA COMPLETA → para tarjeta "Vehículos" --}}
