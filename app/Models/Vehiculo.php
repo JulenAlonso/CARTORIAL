@@ -23,21 +23,21 @@ class Vehiculo extends Model
 
     // Campos que se pueden asignar masivamente
     protected $fillable = [
-        'id_usuario',
+        'matricula',
         'marca',
         'modelo',
-        'anio',
-        'matricula',
+        'anio_fabricacion',
+        'anio_matriculacion',
+        'fecha_compra',
         'km',
         'cv',
         'combustible',
         'etiqueta',
         'precio',
         'precio_segunda_mano',
-        'fecha_compra',
-        'car_avatar'
+        'car_avatar',
+        'id_usuario',
     ];
-
     /**
      * 🔹 Relación: un vehículo pertenece a un usuario.
      */

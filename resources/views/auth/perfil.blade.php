@@ -33,7 +33,11 @@
             <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">🛠️ Editar Vehiculo</a>
             <a href="{{ route('ayuda') }}" class="btn-sidebar">❓ Ayuda</a>
             <p></p>
-            <a href="{{ route('perfil') }}" class="btn-sidebar-adminzone">⚙️ Admin Zone</a>
+            @if (auth()->user()?->admin == 1)
+                <a href="{{ route('admin.dashboard') }}" class="btn-sidebar-adminzone">
+                    ⚙️ Admin Zone
+                </a>
+            @endif
         </div>
 
         <form method="POST" action="{{ route('logout') }}">
@@ -258,7 +262,8 @@
 
                             <div class="vehiculo-body">
                                 <h3 class="vehiculo-titulo">
-                                    {{ $v->marca }} {{ $v->modelo }} <span>({{ $v->anio_matriculacion }})</span>
+                                    {{ $v->marca }} {{ $v->modelo }}
+                                    <span>({{ $v->anio_matriculacion }})</span>
                                 </h3>
 
                                 {{-- 🟩 VISTA COMPLETA → para tarjeta "Vehículos" --}}
@@ -1010,17 +1015,44 @@
 
             @foreach ($vehiculos as $v)
                 @php
-                    // Preparamos los datapoints EXACTAMENTE como el ejemplo
-                    $gastoPoints = [];
-                    foreach ($v->registrosGastos as $g) {
-                        $ts = $g->fecha_gasto instanceof \Carbon\Carbon ? $g->fecha_gasto->timestamp : strtotime($g->fecha_gasto);
+                    // ============================
+                    // 1) AGRUPAR POR FECHA + TIPO
+                    // ============================
+                    // Estructura: [ tipo => [ fechaKey => [label, y] ] ]
+                    $seriesMap = [];
 
-                        if ($ts) {
-                            $gastoPoints[] = [
-                                'x' => $ts * 1000, // milisegundos
-                                'y' => floatval($g->importe),
+                    foreach ($v->registrosGastos as $g) {
+                        // --- Fecha normalizada ---
+                        if ($g->fecha_gasto instanceof \Carbon\Carbon) {
+                            $fechaKey = $g->fecha_gasto->format('Y-m-d');
+                            $labelFecha = $g->fecha_gasto->format('d/m/Y');
+                        } else {
+                            $fecha = \Carbon\Carbon::parse($g->fecha_gasto);
+                            $fechaKey = $fecha->format('Y-m-d');
+                            $labelFecha = $fecha->format('d/m/Y');
+                        }
+
+                        // --- Tipo de gasto (ajusta el nombre del campo si es distinto) ---
+                        $tipo = $g->tipo ?? 'Otros'; // <-- cambia 'tipo' por el campo real (ej: categoria)
+
+                        if (!isset($seriesMap[$tipo])) {
+                            $seriesMap[$tipo] = [];
+                        }
+
+                        if (!isset($seriesMap[$tipo][$fechaKey])) {
+                            $seriesMap[$tipo][$fechaKey] = [
+                                'label' => $labelFecha,
+                                'y' => 0,
                             ];
                         }
+
+                        $seriesMap[$tipo][$fechaKey]['y'] += (float) $g->importe;
+                    }
+
+                    // Ordenar las fechas dentro de cada serie
+                    foreach ($seriesMap as $tipo => $pointsByDate) {
+                        ksort($pointsByDate); // orden cronológico
+                        $seriesMap[$tipo] = array_values($pointsByDate); // reset índices para CanvasJS
                     }
                 @endphp
 
@@ -1034,30 +1066,47 @@
                             chartRendered = true;
 
                             var chart = new CanvasJS.Chart("chartGastos_{{ $v->id_vehiculo }}", {
-                                animationEnabled: true,
-                                theme: "light2",
-
                                 title: {
                                     text: "Gastos Totales (€): {{ number_format($v->registrosGastos->sum('importe'), 2, ',', '.') }} €"
                                 },
-                                axisX: {
-                                    valueFormatString: "DD MMM"
+                                theme: "light2",
+                                animationEnabled: true,
+                                toolTip: {
+                                    shared: true,
+                                    reversed: true
                                 },
-
                                 axisY: {
-                                    title: "Gastos (€)",
-                                    includeZero: true,
-                                    maximum: null // deja CanvasJS decidir
+                                    title: "Gastos acumulados",
+                                    suffix: " €",
+                                    includeZero: true
                                 },
-
-                                data: [{
-                                    type: "splineArea",
-                                    color: "#6599FF",
-                                    xValueType: "dateTime",
-                                    xValueFormatString: "DD MMM",
-                                    yValueFormatString: "€#,##0.00",
-                                    dataPoints: {!! json_encode($gastoPoints, JSON_NUMERIC_CHECK) !!}
-                                }]
+                                legend: {
+                                    cursor: "pointer",
+                                    itemclick: function(e) {
+                                        if (typeof(e.dataSeries.visible) === "undefined" ||
+                                            e.dataSeries.visible) {
+                                            e.dataSeries.visible = false;
+                                        } else {
+                                            e.dataSeries.visible = true;
+                                        }
+                                        e.chart.render();
+                                    }
+                                },
+                                data: [
+                                    @php $firstTipo = true; @endphp
+                                    @foreach ($seriesMap as $tipo => $points)
+                                        {
+                                            type: "stackedColumn",
+                                            name: "{{ $tipo }}",
+                                            showInLegend: true,
+                                            yValueFormatString: "€#,##0.00",
+                                            dataPoints: {!! json_encode($points, JSON_NUMERIC_CHECK) !!}
+                                        }
+                                        @if (!$loop->last)
+                                            ,
+                                        @endif
+                                    @endforeach
+                                ]
                             });
 
                             chart.render();

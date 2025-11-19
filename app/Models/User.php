@@ -21,6 +21,7 @@ class User extends Authenticatable
         'apellidos',
         'user_avatar',
         'telefono',
+        'admin'
     ];
 
     // 🔹 Relación con vehículos
@@ -28,4 +29,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Vehiculo::class, 'id_usuario', 'id_usuario');
     }
+
+    
 }

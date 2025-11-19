@@ -5453,7 +5453,7 @@
             },
             {
                 "modelo": "Corsa F",
-                "anio_fabricacion": "2019-Actualidad",
+                "anio_fabricacion": "2019",
                 "precio_original_eur": 15000
             },
             {
@@ -5498,12 +5498,12 @@
             },
             {
                 "modelo": "Astra L",
-                "anio_fabricacion": "2022-Actualidad",
+                "anio_fabricacion": "2022",
                 "precio_original_eur": 23000
             },
             {
                 "modelo": "Astra Sports Tourer",
-                "anio_fabricacion": "1998-Actualidad",
+                "anio_fabricacion": "1998",
                 "precio_original_eur": 20000
             },
             {
@@ -5583,7 +5583,7 @@
             },
             {
                 "modelo": "Mokka (2ª Gen)",
-                "anio_fabricacion": "2020-Actualidad",
+                "anio_fabricacion": "2020",
                 "precio_original_eur": 23000
             },
             {
@@ -5593,7 +5593,7 @@
             },
             {
                 "modelo": "Mokka Electric",
-                "anio_fabricacion": "2021-Actualidad",
+                "anio_fabricacion": "2021",
                 "precio_original_eur": 35000
             },
             {
@@ -5628,42 +5628,42 @@
             },
             {
                 "modelo": "Vivaro C",
-                "anio_fabricacion": "2019-Actualidad",
+                "anio_fabricacion": "2019",
                 "precio_original_eur": 28000
             },
             {
                 "modelo": "Vivaro Furgón",
-                "anio_fabricacion": "2001-Actualidad",
+                "anio_fabricacion": "2001",
                 "precio_original_eur": 22000
             },
             {
                 "modelo": "Vivaro Combi",
-                "anio_fabricacion": "2001-Actualidad",
+                "anio_fabricacion": "2001",
                 "precio_original_eur": 23000
             },
             {
                 "modelo": "Vivaro Doble Cabina",
-                "anio_fabricacion": "2001-Actualidad",
+                "anio_fabricacion": "2001",
                 "precio_original_eur": 24000
             },
             {
                 "modelo": "Vivaro Plataforma Cabina",
-                "anio_fabricacion": "2001-Actualidad",
+                "anio_fabricacion": "2001",
                 "precio_original_eur": 24000
             },
             {
                 "modelo": "Vivaro Electric (Furgón)",
-                "anio_fabricacion": "2020-Actualidad",
+                "anio_fabricacion": "2020",
                 "precio_original_eur": 40000
             },
             {
                 "modelo": "Vivaro Electric Combi",
-                "anio_fabricacion": "2020-Actualidad",
+                "anio_fabricacion": "2020",
                 "precio_original_eur": 42000
             },
             {
                 "modelo": "Vivaro 4x4",
-                "anio_fabricacion": "2005-Actualidad",
+                "anio_fabricacion": "2005",
                 "precio_original_eur": 26000
             }
         ]
@@ -6972,9 +6972,19 @@
     "Toyota": {
         "modelos": [
             {
+                "modelo": "Corolla (E80)",
+                "anio_fabricacion": 1983,
+                "precio_original_eur": 8000
+            },
+            {
                 "modelo": "Corolla (E90)",
                 "anio_fabricacion": 1987,
                 "precio_original_eur": 9000
+            },
+            {
+                "modelo": "Corolla (E100)",
+                "anio_fabricacion": 1991,
+                "precio_original_eur": 11000
             },
             {
                 "modelo": "Corolla (E110)",
@@ -6982,13 +6992,43 @@
                 "precio_original_eur": 12000
             },
             {
+                "modelo": "Corolla (E120)",
+                "anio_fabricacion": 2000,
+                "precio_original_eur": 13500
+            },
+            {
                 "modelo": "Corolla (E150)",
                 "anio_fabricacion": 2006,
                 "precio_original_eur": 15000
             },
             {
+                "modelo": "Corolla (E180)",
+                "anio_fabricacion": 2013,
+                "precio_original_eur": 19000
+            },
+            {
                 "modelo": "Corolla (E210)",
                 "anio_fabricacion": 2018,
+                "precio_original_eur": 22000
+            },
+            {
+                "modelo": "Corolla Touring Sports",
+                "anio_fabricacion": 2018,
+                "precio_original_eur": 23000
+            },
+            {
+                "modelo": "Corolla GR",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 38000
+            },
+            {
+                "modelo": "Supra Mk1",
+                "anio_fabricacion": 1978,
+                "precio_original_eur": 18000
+            },
+            {
+                "modelo": "Supra Mk2",
+                "anio_fabricacion": 1981,
                 "precio_original_eur": 22000
             },
             {
@@ -7032,9 +7072,29 @@
                 "precio_original_eur": 32000
             },
             {
+                "modelo": "Yaris Cross",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 21000
+            },
+            {
                 "modelo": "RAV4 Mk1",
                 "anio_fabricacion": 1994,
                 "precio_original_eur": 21000
+            },
+            {
+                "modelo": "RAV4 Mk2",
+                "anio_fabricacion": 2000,
+                "precio_original_eur": 23000
+            },
+            {
+                "modelo": "RAV4 Mk3",
+                "anio_fabricacion": 2005,
+                "precio_original_eur": 25000
+            },
+            {
+                "modelo": "RAV4 Mk4",
+                "anio_fabricacion": 2012,
+                "precio_original_eur": 28000
             },
             {
                 "modelo": "RAV4 Mk5",
@@ -7042,9 +7102,34 @@
                 "precio_original_eur": 32000
             },
             {
+                "modelo": "RAV4 Hybrid",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 34000
+            },
+            {
+                "modelo": "RAV4 Plug-in Hybrid",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 42000
+            },
+            {
                 "modelo": "Prius Mk1",
                 "anio_fabricacion": 1997,
                 "precio_original_eur": 19000
+            },
+            {
+                "modelo": "Prius Mk2",
+                "anio_fabricacion": 2003,
+                "precio_original_eur": 22000
+            },
+            {
+                "modelo": "Prius Mk3",
+                "anio_fabricacion": 2009,
+                "precio_original_eur": 24000
+            },
+            {
+                "modelo": "Prius Mk4",
+                "anio_fabricacion": 2015,
+                "precio_original_eur": 26000
             },
             {
                 "modelo": "Prius Mk5",
@@ -7060,6 +7145,66 @@
                 "modelo": "GR86",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 34000
+            },
+            {
+                "modelo": "Land Cruiser 70",
+                "anio_fabricacion": 1984,
+                "precio_original_eur": 30000
+            },
+            {
+                "modelo": "Land Cruiser 90",
+                "anio_fabricacion": 1996,
+                "precio_original_eur": 35000
+            },
+            {
+                "modelo": "Land Cruiser 120",
+                "anio_fabricacion": 2002,
+                "precio_original_eur": 40000
+            },
+            {
+                "modelo": "Land Cruiser 150",
+                "anio_fabricacion": 2009,
+                "precio_original_eur": 45000
+            },
+            {
+                "modelo": "Land Cruiser 300",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 70000
+            },
+            {
+                "modelo": "Hilux (5ª gen)",
+                "anio_fabricacion": 1983,
+                "precio_original_eur": 16000
+            },
+            {
+                "modelo": "Hilux (7ª gen)",
+                "anio_fabricacion": 2004,
+                "precio_original_eur": 22000
+            },
+            {
+                "modelo": "Hilux (8ª gen)",
+                "anio_fabricacion": 2015,
+                "precio_original_eur": 26000
+            },
+            {
+                "modelo": "Avensis",
+                "anio_fabricacion": 1997,
+                "precio_original_eur": 20000
+            },
+            {
+                "modelo": "Auris",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 18000
+            },
+            {
+                "modelo": "C-HR",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 23000
+            },
+            {
+                "modelo": "bZ4X (EV)",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 42000
             }
         ]
     },
@@ -7115,6 +7260,16 @@
     "Volkswagen": {
         "modelos": [
             {
+                "modelo": "Golf Mk1",
+                "anio_fabricacion": 1974,
+                "precio_original_eur": 6000
+            },
+            {
+                "modelo": "Golf Mk2",
+                "anio_fabricacion": 1983,
+                "precio_original_eur": 8000
+            },
+            {
                 "modelo": "Golf Mk3",
                 "anio_fabricacion": 1991,
                 "precio_original_eur": 12000
@@ -7145,6 +7300,16 @@
                 "precio_original_eur": 23000
             },
             {
+                "modelo": "Polo Mk1",
+                "anio_fabricacion": 1975,
+                "precio_original_eur": 5000
+            },
+            {
+                "modelo": "Polo Mk2",
+                "anio_fabricacion": 1981,
+                "precio_original_eur": 6000
+            },
+            {
                 "modelo": "Polo Mk3",
                 "anio_fabricacion": 1994,
                 "precio_original_eur": 9000
@@ -7173,6 +7338,31 @@
                 "modelo": "Up!",
                 "anio_fabricacion": 2011,
                 "precio_original_eur": 9500
+            },
+            {
+                "modelo": "Fox",
+                "anio_fabricacion": 2003,
+                "precio_original_eur": 8000
+            },
+            {
+                "modelo": "Passat B1",
+                "anio_fabricacion": 1973,
+                "precio_original_eur": 5000
+            },
+            {
+                "modelo": "Passat B2",
+                "anio_fabricacion": 1981,
+                "precio_original_eur": 7000
+            },
+            {
+                "modelo": "Passat B3",
+                "anio_fabricacion": 1988,
+                "precio_original_eur": 11000
+            },
+            {
+                "modelo": "Passat B4",
+                "anio_fabricacion": 1993,
+                "precio_original_eur": 13000
             },
             {
                 "modelo": "Passat B5",
@@ -7225,9 +7415,34 @@
                 "precio_original_eur": 16000
             },
             {
+                "modelo": "Phaeton",
+                "anio_fabricacion": 2002,
+                "precio_original_eur": 80000
+            },
+            {
+                "modelo": "Scirocco Mk1",
+                "anio_fabricacion": 1974,
+                "precio_original_eur": 7000
+            },
+            {
+                "modelo": "Scirocco Mk2",
+                "anio_fabricacion": 1981,
+                "precio_original_eur": 9000
+            },
+            {
                 "modelo": "Scirocco Mk3",
                 "anio_fabricacion": 2008,
                 "precio_original_eur": 25000
+            },
+            {
+                "modelo": "Corrado",
+                "anio_fabricacion": 1988,
+                "precio_original_eur": 18000
+            },
+            {
+                "modelo": "Beetle",
+                "anio_fabricacion": 1997,
+                "precio_original_eur": 15000
             },
             {
                 "modelo": "Tiguan",
@@ -7280,14 +7495,39 @@
                 "precio_original_eur": 21000
             },
             {
-                "modelo": "Multivan T5",
+                "modelo": "Transporter T1",
+                "anio_fabricacion": 1950,
+                "precio_original_eur": 2000
+            },
+            {
+                "modelo": "Transporter T2",
+                "anio_fabricacion": 1967,
+                "precio_original_eur": 3000
+            },
+            {
+                "modelo": "Transporter T3",
+                "anio_fabricacion": 1979,
+                "precio_original_eur": 6000
+            },
+            {
+                "modelo": "Transporter T4",
+                "anio_fabricacion": 1990,
+                "precio_original_eur": 15000
+            },
+            {
+                "modelo": "Transporter T5 / Multivan T5",
                 "anio_fabricacion": 2003,
                 "precio_original_eur": 38000
             },
             {
-                "modelo": "Multivan T6",
+                "modelo": "Transporter T6 / Multivan T6",
                 "anio_fabricacion": 2015,
                 "precio_original_eur": 42000
+            },
+            {
+                "modelo": "Transporter T7",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 45000
             },
             {
                 "modelo": "California",

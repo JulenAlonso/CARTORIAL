@@ -13,6 +13,8 @@ use App\Http\Controllers\RegistroKmController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\NotaCalendarioController;
 use App\Http\Controllers\AyudaController;
+use App\Http\Controllers\AdminController;
+
 
 
 Route::get('/', function () {
@@ -108,5 +110,27 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('auth');
 
     Route::get('/ayuda', [AyudaController::class, 'index'])->name('ayuda');
+    // ===== ADMIN ZONE =====
+    Route::middleware(['auth', 'admin'])
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
 
+            Route::get('/dashboard', [AdminController::class, 'dashboard'])
+                ->name('dashboard');
+
+            // Usuarios
+            Route::put('/usuarios/{id}', [AdminController::class, 'updateUser'])
+                ->name('users.update');
+
+            Route::delete('/usuarios/{id}', [AdminController::class, 'deleteUser'])
+                ->name('users.delete');
+
+            // Vehículos
+            Route::put('/vehiculos/{id}', [AdminController::class, 'updateVehiculo'])
+                ->name('vehiculos.update');
+
+            Route::delete('/vehiculos/{id}', [AdminController::class, 'deleteVehiculo'])
+                ->name('vehiculos.delete');
+        });
 });

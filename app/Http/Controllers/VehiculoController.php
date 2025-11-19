@@ -28,21 +28,19 @@ class VehiculoController extends Controller
             return is_numeric($v) ? $v : null;
         };
 
-        // REGEX de matrícula
-        $matriculaRegex = [
-            'provincial_numeric'       => '/^[A-Z]{1}-\d{4}$/',
-            'provincial_alphanumeric'  => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/',
-            'national_alphanumeric'    => '/^\d{4} [A-Z]{3}$/',
-        ];
-
         // VALIDACIONES
         $validated = $request->validate([
             'matricula' => [
-                'required', 'string', 'max:20',
-                'regex:' . $matriculaRegex['provincial_numeric'],
-                'regex:' . $matriculaRegex['provincial_alphanumeric'],
-                'regex:' . $matriculaRegex['national_alphanumeric'],
-                Rule::unique('vehiculos', 'matricula')->where(fn ($q) => $q->where('id_usuario', $userId)),
+                'required',
+                'string',
+                'max:20',
+                // Acepta:
+                // - 1234FSW o 1234 FSW (formato moderno)
+                // - M-1234          (provincial numérico)
+                // - M-1234-AB       (provincial alfanumérico)
+                'regex:/^(\d{4}\s?[BCDFGHJKLMNPRSTVWXYZ]{3}|[A-Z]{1,2}-\d{4}-[A-Z]{2}|[A-Z]{1,2}-\d{4})$/i',
+                Rule::unique('vehiculos', 'matricula')
+                    ->where(fn ($q) => $q->where('id_usuario', $userId)),
             ],
 
             'marca'               => ['required', 'string', 'max:100'],
@@ -59,6 +57,8 @@ class VehiculoController extends Controller
             'precio'              => ['nullable', 'string', 'max:30'],
             'precio_segunda_mano' => ['nullable', 'string', 'max:30'],
             'car_avatar'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
+        ], [
+            'matricula.regex' => 'El formato de la matrícula no es válido.',
         ]);
 
         // REGLA LÓGICA EXTRA — fabricación <= matriculación
@@ -123,19 +123,13 @@ class VehiculoController extends Controller
 
         $currentYear = now()->year;
 
-        // REGEX matriculación
-        $matriculaRegex = [
-            'provincial_numeric'       => '/^[A-Z]{1}-\d{4}$/',
-            'provincial_alphanumeric'  => '/^[A-Z]{1}-\d{4}-[A-Z]{2}$/',
-            'national_alphanumeric'    => '/^\d{4} [A-Z]{3}$/',
-        ];
-
         $validated = $request->validate([
             'matricula' => [
-                'required', 'string', 'max:20',
-                'regex:' . $matriculaRegex['provincial_numeric'],
-                'regex:' . $matriculaRegex['provincial_alphanumeric'],
-                'regex:' . $matriculaRegex['national_alphanumeric'],
+                'required',
+                'string',
+                'max:20',
+                // Misma lógica que en store, pero sin unique
+                'regex:/^(\d{4}\s?[BCDFGHJKLMNPRSTVWXYZ]{3}|[A-Z]{1,2}-\d{4}-[A-Z]{2}|[A-Z]{1,2}-\d{4})$/i',
             ],
 
             'marca'               => ['required', 'string', 'max:100'],
@@ -152,6 +146,8 @@ class VehiculoController extends Controller
             'precio'              => ['nullable', 'string', 'max:30'],
             'precio_segunda_mano' => ['nullable', 'string', 'max:30'],
             'car_avatar'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
+        ], [
+            'matricula.regex' => 'El formato de la matrícula no es válido.',
         ]);
 
         // Regla lógica fabricación <= matriculación
@@ -198,10 +194,10 @@ class VehiculoController extends Controller
 
         $vehiculos = $user->vehiculos()
             ->select(
-                'id_vehiculo','marca','modelo','matricula',
-                'anio_fabricacion','anio_matriculacion',
-                'km','cv','combustible','etiqueta',
-                'precio','precio_segunda_mano','fecha_compra','car_avatar'
+                'id_vehiculo', 'marca', 'modelo', 'matricula',
+                'anio_fabricacion', 'anio_matriculacion',
+                'km', 'cv', 'combustible', 'etiqueta',
+                'precio', 'precio_segunda_mano', 'fecha_compra', 'car_avatar'
             )
             ->orderBy('anio_matriculacion', 'desc')
             ->get();
@@ -213,7 +209,7 @@ class VehiculoController extends Controller
                 ->first();
         }
 
-        return view('auth.editarVehiculo', compact('vehiculos','vehiculoSel'));
+        return view('auth.editarVehiculo', compact('vehiculos', 'vehiculoSel'));
     }
 
     public function create()

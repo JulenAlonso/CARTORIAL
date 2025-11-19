@@ -36,7 +36,7 @@
                                     <div class="me-2" style="min-width:0;">
                                         <div class="fw-semibold text-truncate">{{ $v->marca }} {{ $v->modelo }}</div>
                                         <small class="texto-secundario">
-                                            {{ $v->anio }} — {{ $v->matricula }}
+                                            {{ $v->anio_matriculacion }} — {{ $v->matricula }}
                                         </small>
                                     </div>
 
@@ -74,7 +74,7 @@
                 <div class="col-md-9 ps-md-4">
                     @if ($vehiculoSel)
                         <h5 class="mb-3 border-bottom pb-2">
-                            ✏️ Editar: {{ $vehiculoSel->marca }} {{ $vehiculoSel->modelo }} ({{ $vehiculoSel->anio }})
+                            ✏️ Editar: {{ $vehiculoSel->marca }} {{ $vehiculoSel->modelo }} ({{ $vehiculoSel->anio_matriculacion }})
                         </h5>
 
                         <form method="POST" action="{{ route('vehiculos.update', $vehiculoSel->id_vehiculo) }}"
@@ -157,8 +157,8 @@
 
                                         <div class="col-12 col-md-6 col-xl-4">
                                             <label class="form-label">Año</label>
-                                            <input type="number" name="anio" class="form-control"
-                                                value="{{ old('anio', $vehiculoSel->anio) }}" min="1900"
+                                            <input type="number" name="anio_matriculacion" class="form-control"
+                                                value="{{ old('anio_matriculacion', $vehiculoSel->anio_matriculacion) }}" min="1900"
                                                 max="{{ $currentYear }}">
                                         </div>
 

@@ -272,11 +272,9 @@
                         <div class="map-wrapper">
                             <!-- GOOGLE MAPS EMBED -->
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d193812.9805710052!2d-3.7853302095096764!3d40.62265186891201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1staller%20mec%C3%A1nico%2C%20toda%20Espa%C3%B1a!5e0!3m2!1ses!2ses!4v1763328370668!5m2!1ses!2ses"
-                                allowfullscreen
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
+                                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d6053.17593290997!2d-3.768706204995342!3d40.66101221856797!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1staller%2C%20taller%20mecanico%2C%20auto%2C%20motor!5e0!3m2!1ses!2ses!4v1763579826062!5m2!1ses!2ses"
+                                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
 
                     </div>
