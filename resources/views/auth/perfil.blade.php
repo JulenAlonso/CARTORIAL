@@ -947,65 +947,57 @@
             @foreach ($vehiculos as $v)
                 @php
                     $kmPoints = [];
+
                     foreach ($v->registrosKm as $rk) {
+                        // Convertir fecha a timestamp en milisegundos
                         $ts = $rk->fecha_registro instanceof \Carbon\Carbon ? $rk->fecha_registro->timestamp : strtotime($rk->fecha_registro);
+
                         if ($ts) {
                             $kmPoints[] = [
-                                'x' => $ts * 1000,
+                                'x' => $ts * 1000, // CanvasJS usa ms
                                 'y' => (int) $rk->km_actual,
                             ];
                         }
                     }
+
+                    // 🔥 Ordenar ASC por fecha: primera fecha → hoy
+                    usort($kmPoints, fn($a, $b) => $a['x'] <=> $b['x']);
                 @endphp
 
                     (function() {
                         const dialog = document.getElementById("modalKm_{{ $v->id_vehiculo }}");
                         let chartRendered = false;
 
-                        dialog.addEventListener("show", function() {
-                            // por compatibilidad (algunos navegadores disparan 'show', otros 'showmodal')
-                        });
-
-                        dialog.addEventListener("shown", function() {
-                            // (Chrome lo dispara automáticamente)
-                        });
-
-                        dialog.addEventListener("close", function() {
-                            // Nada adicional
-                        });
-
-                        dialog.addEventListener("close", function() {});
-
-                        // Evento correcto que se dispara al abrir el dialog:
                         dialog.addEventListener("toggle", function() {
-                            if (!dialog.open) return;
+                            if (!dialog.open || chartRendered) return;
 
-                            if (!chartRendered) {
-                                chartRendered = true;
+                            chartRendered = true;
 
-                                let chart = new CanvasJS.Chart("chartKm_{{ $v->id_vehiculo }}", {
-                                    animationEnabled: true,
-                                    theme: "light2",
-                                    title: {
-                                        text: "Evolución de kilómetros"
-                                    },
-                                    axisX: {
-                                        valueFormatString: "DD/MM/YYYY"
-                                    },
-                                    axisY: {
-                                        title: "Kilómetros",
-                                        includeZero: false
-                                    },
-                                    data: [{
-                                        type: "line",
-                                        xValueType: "dateTime",
-                                        markerSize: 5,
-                                        dataPoints: {!! json_encode($kmPoints, JSON_NUMERIC_CHECK) !!}
-                                    }]
-                                });
+                            const chart = new CanvasJS.Chart("chartKm_{{ $v->id_vehiculo }}", {
+                                animationEnabled: true,
+                                theme: "light2",
+                                title: {
+                                    text: "Evolución de kilómetros"
+                                },
+                                axisX: {
+                                    valueFormatString: "DD MMM"
+                                },
+                                axisY: {
+                                    title: "Kilómetros",
+                                    includeZero: true,
+                                    maximum: null // si quieres un límite, pon un número
+                                },
+                                data: [{
+                                    type: "splineArea",
+                                    color: "#6599FF",
+                                    xValueType: "dateTime",
+                                    xValueFormatString: "DD MMM",
+                                    yValueFormatString: "#,##0 km",
+                                    dataPoints: {!! json_encode($kmPoints, JSON_NUMERIC_CHECK) !!}
+                                }]
+                            });
 
-                                chart.render();
-                            }
+                            chart.render();
                         });
                     })();
             @endforeach
