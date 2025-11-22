@@ -8,23 +8,24 @@
         $currentYear = now()->year;
     @endphp
 
-    {{-- Bootstrap Icons (si ya lo tienes en el layout, puedes quitar esta línea) --}}
+    {{-- Bootstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="{{ asset('assets/style/editarVehiculo/editarVehiculo.css') }}">
 
-    {{-- Estilos mínimos para asegurar tamaño / hover correcto de los botones --}}
+    {{-- JS propio de edición (si tienes lógica específica) --}}
     <script src="{{ asset('./assets/js/editarVehiculo/editarVehiculo.js') }}"></script>
 
     <div class="vehiculos-editor">
         <div class="container-fluid">
-            <h3 class="mb-4 text-center fw-bold">Editar mis vehículos</h3>
+            <h3 class="mb-4 text-center fw-bold">Mis Vehiculos</h3>
 
             <div class="row">
                 {{-- LISTA IZQUIERDA --}}
                 <div class="col-md-3 border-end pe-4 vehiculos-list">
                     @if ($vehiculos->isEmpty())
-                        <div class="alert alert-info">No tienes vehículos registrados.
+                        <div class="alert alert-info">
+                            No tienes vehículos registrados.
                             <a href="{{ route('vehiculo.create') }}">Añadir vehículo</a>.
                         </div>
                     @else
@@ -71,13 +72,33 @@
                 </div>
 
                 {{-- FORMULARIO DERECHA --}}
-                <div class="col-md-9 ps-md-4">
+                <div class="col-md-9 ps-md-4" style="background-color: white; padding: 30px; border-radius: 8px;">
                     @if ($vehiculoSel)
                         <h5 class="mb-3 border-bottom pb-2">
-                            ✏️ Editar: {{ $vehiculoSel->marca }} {{ $vehiculoSel->modelo }} ({{ $vehiculoSel->anio_matriculacion }})
+                            ✏️ Editar: {{ $vehiculoSel->marca }} {{ $vehiculoSel->modelo }}
+                            ({{ $vehiculoSel->anio_matriculacion }})
                         </h5>
 
-                        <form method="POST" action="{{ route('vehiculos.update', $vehiculoSel->id_vehiculo) }}"
+                        {{-- BLOQUE DE ERRORES (opcional, igual que en alta) --}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <strong>Hay errores en el formulario:</strong>
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                    @error('db')
+                                        <li>{{ $message }}</li>
+                                    @enderror
+                                    @error('app')
+                                        <li>{{ $message }}</li>
+                                    @enderror
+                                </ul>
+                            </div>
+                        @endif
+
+                        <form id="vehiculo-edit-form" method="POST"
+                            action="{{ route('vehiculos.update', $vehiculoSel->id_vehiculo) }}"
                             enctype="multipart/form-data" class="w-100">
                             @csrf
                             @method('PUT')
@@ -86,97 +107,177 @@
                                 {{-- BLOQUE CAMPOS --}}
                                 <div class="col-12 col-xl-9">
                                     <div class="row g-3">
+                                        {{-- Matrícula --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Matrícula</label>
-                                            <input type="text" name="matricula" id="matricula" class="form-control"
+                                            <label class="form-label" for="matricula">Matrícula</label>
+                                            <input type="text" name="matricula" id="matricula"
+                                                class="form-control @error('matricula') is-invalid @enderror"
                                                 value="{{ old('matricula', $vehiculoSel->matricula) }}" required>
+                                            @error('matricula')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
+                                        {{-- Año matriculación --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Kilómetros</label>
-                                            <input type="number" name="km" class="form-control" inputmode="numeric"
-                                                value="{{ old('km', $vehiculoSel->km) }}" min="0" step="1">
+                                            <label class="form-label" for="anio_matriculacion">Año Matriculación</label>
+                                            <input type="text" inputmode="numeric" name="anio_matriculacion"
+                                                id="anio_matriculacion"
+                                                class="form-control js-format-int @error('anio_matriculacion') is-invalid @enderror"
+                                                value="{{ old('anio_matriculacion', $vehiculoSel->anio_matriculacion) }}"
+                                                required>
+                                            @error('anio_matriculacion')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
+                                        {{-- Kilometraje --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            @php
-                                                $fechaValue = $vehiculoSel->fecha_compra
-                                                    ? \Illuminate\Support\Carbon::parse(
-                                                        $vehiculoSel->fecha_compra,
-                                                    )->format('Y-m-d')
-                                                    : '';
-                                            @endphp
-                                            <label class="form-label">Fecha de compra</label>
-                                            <input type="date" name="fecha_compra" class="form-control"
-                                                value="{{ old('fecha_compra', $fechaValue) }}">
+                                            <label class="form-label" for="km">Kilometraje</label>
+                                            <input type="text" inputmode="numeric" name="km" id="km"
+                                                class="form-control js-format-int @error('km') is-invalid @enderror"
+                                                value="{{ old('km', $vehiculoSel->km) }}" required>
+                                            @error('km')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
+                                        {{-- Marca (select dinámico) --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Marca</label>
-                                            <input type="text" name="marca" class="form-control"
-                                                value="{{ old('marca', $vehiculoSel->marca) }}" required>
-                                        </div>
-
-                                        <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">CV</label>
-                                            <input type="number" name="cv" class="form-control"
-                                                value="{{ old('cv', $vehiculoSel->cv) }}" min="0" step="1">
-                                        </div>
-
-                                        <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Precio (€)</label>
-                                            <input type="text" name="precio" class="form-control"
-                                                value="{{ old('precio', $vehiculoSel->precio) }}"
-                                                placeholder="Ej: 12.345,67">
-                                        </div>
-
-                                        <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Modelo</label>
-                                            <input type="text" name="modelo" class="form-control"
-                                                value="{{ old('modelo', $vehiculoSel->modelo) }}" required>
-                                        </div>
-
-                                        <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Combustible</label>
-                                            <select class="form-select" name="combustible" required>
-                                                <option value="">Selecciona tipo</option>
-                                                @foreach (['Gasolina', 'Diésel', 'Híbrido', 'Eléctrico'] as $tipo)
-                                                    <option value="{{ $tipo }}"
-                                                        {{ old('combustible', $vehiculoSel->combustible) === $tipo ? 'selected' : '' }}>
-                                                        {{ $tipo }}</option>
-                                                @endforeach
+                                            <label class="form-label" for="marca">Marca</label>
+                                            <select class="form-select @error('marca') is-invalid @enderror" id="marca"
+                                                name="marca" required>
+                                                <option value="">Selecciona marca</option>
+                                                {{-- Se rellena por JS usando vehiculos.json --}}
                                             </select>
+                                            @error('marca')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
+                                        {{-- Modelo (select dinámico) --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Precio 2ª mano (€)</label>
-                                            <input type="text" name="precio_segunda_mano" class="form-control"
-                                                value="{{ old('precio_segunda_mano', $vehiculoSel->precio_segunda_mano) }}"
-                                                placeholder="Ej: 9.999,99 (opcional)">
+                                            <label class="form-label" for="modelo">Modelo</label>
+                                            <select class="form-select @error('modelo') is-invalid @enderror" id="modelo"
+                                                name="modelo" required>
+                                                <option value="">Selecciona modelo</option>
+                                                {{-- Se rellena por JS --}}
+                                            </select>
+                                            @error('modelo')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
+                                        {{-- Año fabricación --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Año</label>
-                                            <input type="number" name="anio_matriculacion" class="form-control"
-                                                value="{{ old('anio_matriculacion', $vehiculoSel->anio_matriculacion) }}" min="1900"
-                                                max="{{ $currentYear }}">
+                                            <label class="form-label" for="anio_fabricacion">Año Fabricación</label>
+                                            <input type="text" inputmode="numeric" name="anio_fabricacion"
+                                                id="anio_fabricacion"
+                                                class="form-control js-format-int @error('anio_fabricacion') is-invalid @enderror"
+                                                value="{{ old('anio_fabricacion', $vehiculoSel->anio_fabricacion ?? '') }}"
+                                                required>
+                                            @error('anio_fabricacion')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
+
+                                        {{-- CV --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label">Etiqueta Ambiental</label>
-                                            <select class="form-select" name="etiqueta" required>
+                                            <label class="form-label" for="cv">CV</label>
+                                            <input type="text" inputmode="numeric" name="cv" id="cv"
+                                                class="form-control js-format-int @error('cv') is-invalid @enderror"
+                                                value="{{ old('cv', $vehiculoSel->cv) }}" required>
+                                            @error('cv')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        {{-- Combustible --}}
+                                        <div class="col-12 col-md-6 col-xl-4">
+                                            <label class="form-label" for="combustible">Combustible</label>
+                                            <select class="form-select @error('combustible') is-invalid @enderror"
+                                                id="combustible" name="combustible" required>
+                                                <option value="">Selecciona tipo</option>
+                                                <option value="Gasolina"
+                                                    {{ old('combustible', $vehiculoSel->combustible) === 'Gasolina' ? 'selected' : '' }}>
+                                                    Gasolina</option>
+                                                <option value="Diésel"
+                                                    {{ old('combustible', $vehiculoSel->combustible) === 'Diésel' ? 'selected' : '' }}>
+                                                    Diésel</option>
+                                                <option value="Híbrido"
+                                                    {{ old('combustible', $vehiculoSel->combustible) === 'Híbrido' ? 'selected' : '' }}>
+                                                    Híbrido</option>
+                                                <option
+                                                    value="Eléctrico"{{ old('combustible', $vehiculoSel->combustible) === 'Eléctrico' ? 'selected' : '' }}>
+                                                    Eléctrico</option>
+                                            </select>
+                                            @error('combustible')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        {{-- Etiqueta Ambiental --}}
+                                        <div class="col-12 col-md-6 col-xl-4">
+                                            <label class="form-label" for="etiqueta">Etiqueta Ambiental</label>
+                                            <select class="form-select @error('etiqueta') is-invalid @enderror"
+                                                id="etiqueta" name="etiqueta" required>
                                                 <option value="">Selecciona etiqueta</option>
                                                 @foreach (['0', 'ECO', 'C', 'B', 'No tiene'] as $tag)
                                                     <option value="{{ $tag }}"
                                                         {{ old('etiqueta', $vehiculoSel->etiqueta) === $tag ? 'selected' : '' }}>
-                                                        {{ $tag }}</option>
+                                                        {{ $tag }}
+                                                    </option>
                                                 @endforeach
                                             </select>
+                                            @error('etiqueta')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        {{-- Fecha de compra --}}
+                                        <div class="col-12 col-md-6 col-xl-4">
+                                            @php
+                                                $fechaValue = $vehiculoSel->fecha_compra
+                                                    ? Carbon::parse($vehiculoSel->fecha_compra)->format('Y-m-d')
+                                                    : '';
+                                            @endphp
+                                            <label class="form-label" for="fecha_compra">Fecha de compra</label>
+                                            <input type="date" name="fecha_compra" id="fecha_compra"
+                                                class="form-control @error('fecha_compra') is-invalid @enderror"
+                                                value="{{ old('fecha_compra', $fechaValue) }}">
+                                            @error('fecha_compra')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        {{-- Precio --}}
+                                        <div class="col-12 col-md-6 col-xl-4">
+                                            <label class="form-label" for="precio">Precio (€)</label>
+                                            <input type="text" inputmode="decimal" name="precio" id="precio"
+                                                class="form-control js-format-money @error('precio') is-invalid @enderror"
+                                                value="{{ old('precio', $vehiculoSel->precio) }}">
+                                            @error('precio')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        {{-- Precio 2ª mano --}}
+                                        <div class="col-12 col-md-6 col-xl-4">
+                                            <label class="form-label" for="precio_segunda_mano">Precio de Segunda Mano
+                                                (€)</label>
+                                            <input type="text" inputmode="decimal" name="precio_segunda_mano"
+                                                id="precio_segunda_mano"
+                                                class="form-control js-format-money @error('precio_segunda_mano') is-invalid @enderror"
+                                                value="{{ old('precio_segunda_mano', $vehiculoSel->precio_segunda_mano) }}">
+                                            @error('precio_segunda_mano')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
 
-                                {{-- BLOQUE FOTO (3/12) --}}
+                                {{-- BLOQUE FOTO --}}
                                 <div class="col-12 col-xl-3">
                                     <div class="text-center vehiculo-foto">
                                         <label class="form-label">Foto del vehículo</label>
@@ -189,14 +290,17 @@
                                                 $carSrc = asset('storage/' . ltrim($vehiculoSel->car_avatar, '/'));
                                             }
                                         @endphp
-                                        <div class="border rounded p-2 bg-light">
+                                        <div class="border rounded p-2 bg-light mb-2">
                                             <img src="{{ $carSrc }}" alt="Vehículo"
                                                 style="max-width:100%;height:auto;"
                                                 onerror="this.src='{{ asset('assets/images/default-car.png') }}'">
                                         </div>
-                                        <div class="mt-2">
-                                            <input type="file" name="car_avatar" class="form-control"
-                                                accept="image/*">
+                                        <div class="file-upload-wrapper">
+                                            <input type="file" name="car_avatar" id="car_avatar" accept="image/*"
+                                                class="@error('car_avatar') is-invalid @enderror">
+                                            @error('car_avatar')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -214,9 +318,126 @@
                     @endif
                 </div>
             </div>
+
             <div class="text-end mt-4">
-                <a href="{{ route('perfil') }}" class="btn btn-secondary">Volver</a>
+                <a href="{{ route('perfil') }}" class="btn btn-gold">Volver</a>
             </div>
         </div>
     </div>
+
+    {{-- JS compartido con el alta: lógica marca/modelo/anio_fabricacion/precio --}}
+    <script>
+        // VEHICLE_DATA se cargará desde vehiculos.json
+        let VEHICLE_DATA = {};
+
+        function getModelsByBrand(brand) {
+            const brandObj = VEHICLE_DATA[brand];
+            if (!brandObj || !Array.isArray(brandObj.modelos)) return [];
+            const set = new Set();
+            brandObj.modelos.forEach(m => set.add(m.modelo));
+            return Array.from(set).sort();
+        }
+
+        function findModelInfo(brand, modelName) {
+            const brandObj = VEHICLE_DATA[brand];
+            if (!brandObj || !Array.isArray(brandObj.modelos)) return null;
+            for (const m of brandObj.modelos) {
+                if (m.modelo === modelName) {
+                    return m;
+                }
+            }
+            return null;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const marcaSelect = document.getElementById('marca');
+            const modeloSelect = document.getElementById('modelo');
+            const anioFabInput = document.getElementById('anio_fabricacion');
+            const precioInput = document.getElementById('precio');
+
+            const oldMarca = "{{ old('marca', $vehiculoSel->marca) }}";
+            const oldModelo = "{{ old('modelo', $vehiculoSel->modelo) }}";
+
+            async function loadVehicleData() {
+                try {
+                    const response = await fetch("{{ asset('assets/data/vehiculos.json') }}");
+                    VEHICLE_DATA = await response.json();
+                    initBrandSelect();
+                } catch (err) {
+                    console.error('Error cargando vehiculos.json', err);
+                }
+            }
+
+            function initBrandSelect() {
+                if (!marcaSelect) return;
+
+                marcaSelect.innerHTML = '<option value="">Selecciona marca</option>';
+
+                const brands = Object.keys(VEHICLE_DATA).sort();
+                brands.forEach(brand => {
+                    const opt = document.createElement('option');
+                    opt.value = brand;
+                    opt.textContent = brand;
+                    if (oldMarca === brand) {
+                        opt.selected = true;
+                    }
+                    marcaSelect.appendChild(opt);
+                });
+
+                if (oldMarca) {
+                    updateModels();
+                }
+            }
+
+            function updateModels() {
+                if (!marcaSelect || !modeloSelect) return;
+
+                const brand = marcaSelect.value;
+                modeloSelect.innerHTML = '<option value="">Selecciona modelo</option>';
+
+                if (!brand) return;
+
+                const models = getModelsByBrand(brand);
+                models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m;
+                    opt.textContent = m;
+                    if (oldModelo === m) {
+                        opt.selected = true;
+                    }
+                    modeloSelect.appendChild(opt);
+                });
+            }
+
+            marcaSelect?.addEventListener('change', () => {
+                updateModels();
+                if (anioFabInput) anioFabInput.value = "";
+                if (precioInput) precioInput.value = "";
+            });
+
+            modeloSelect?.addEventListener('change', () => {
+                const brand = marcaSelect.value;
+                const model = modeloSelect.value;
+                const info = findModelInfo(brand, model);
+                if (!info) return;
+
+                // Rellenar automáticamente Año Fabricación desde el JSON
+                if (anioFabInput && !anioFabInput.value && info.anio_fabricacion) {
+                    anioFabInput.value = info.anio_fabricacion;
+                }
+
+                // Rellenar Precio original si no hay valor aún
+                if (precioInput && !precioInput.value && info.precio_original_eur) {
+                    precioInput.value = info.precio_original_eur;
+                }
+            });
+
+            loadVehicleData();
+        });
+    </script>
+
+    {{-- Si quieres reutilizar también la lógica de matrícula/año, puedes incluir:
+    <script src="{{ asset('assets/js/vehiculo/matriculaFormato.js') }}"></script>
+    <script src="{{ asset('assets/js/vehiculo/matriculacion.js') }}"></script>
+    --}}
 @endsection

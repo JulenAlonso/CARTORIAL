@@ -2,761 +2,456 @@
     "Abarth": {
         "modelos": [
             {
-                "modelo": "500",
+                "modelo": "500 - 1.4L Turbo Gasolina (T-Jet)",
                 "anio_fabricacion": 2008,
-                "precio_original_eur": 15500
+                "precio_original_eur": 18500
             },
             {
-                "modelo": "500 EsseEsse",
+                "modelo": "500C - 1.4L Turbo Gasolina (T-Jet)",
+                "anio_fabricacion": 2009,
+                "precio_original_eur": 21000
+            },
+            {
+                "modelo": "500 EsseEsse - 1.4L Turbo Gasolina (160 CV)",
                 "anio_fabricacion": 2010,
-                "precio_original_eur": 20500
-            },
-            {
-                "modelo": "595",
-                "anio_fabricacion": 2012,
-                "precio_original_eur": 19000
-            },
-            {
-                "modelo": "595 Competizione",
-                "anio_fabricacion": 2012,
-                "precio_original_eur": 24000
-            },
-            {
-                "modelo": "595 Turismo",
-                "anio_fabricacion": 2012,
                 "precio_original_eur": 22500
             },
             {
-                "modelo": "595 EsseEsse",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 26500
+                "modelo": "595 - 1.4L Turbo Gasolina (140-165 CV)",
+                "anio_fabricacion": 2012,
+                "precio_original_eur": 21500
             },
             {
-                "modelo": "695 Biposto",
+                "modelo": "695 Biposto - 1.4L Turbo Gasolina (190 CV)",
                 "anio_fabricacion": 2014,
-                "precio_original_eur": 39000
+                "precio_original_eur": 40000
             },
             {
-                "modelo": "695 Rivale",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 33000
+                "modelo": "500e - Eléctrico (155 CV)",
+                "anio_fabricacion": 2023,
+                "precio_original_eur": 33082
             },
             {
-                "modelo": "695 70° Anniversario",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 34000
+                "modelo": "500Ce - Eléctrico (155 CV)",
+                "anio_fabricacion": 2023,
+                "precio_original_eur": 35752
+            },
+            {
+                "modelo": "600e - Eléctrico",
+                "anio_fabricacion": 2024,
+                "precio_original_eur": 39928
             }
         ]
     },
     "Acura": {
         "modelos": [
             {
-                "modelo": "Integra",
+                "modelo": "Integra - 4 Cilindros Gasolina",
                 "anio_fabricacion": 1986,
                 "precio_original_eur": 13000
             },
             {
-                "modelo": "Integra Type R",
-                "anio_fabricacion": 1995,
-                "precio_original_eur": 22000
-            },
-            {
-                "modelo": "RSX",
-                "anio_fabricacion": 2002,
-                "precio_original_eur": 19000
-            },
-            {
-                "modelo": "TSX",
-                "anio_fabricacion": 2004,
-                "precio_original_eur": 21000
-            },
-            {
-                "modelo": "TLX",
-                "anio_fabricacion": 2015,
-                "precio_original_eur": 35000
-            },
-            {
-                "modelo": "RDX",
-                "anio_fabricacion": 2007,
-                "precio_original_eur": 33000
-            },
-            {
-                "modelo": "MDX",
-                "anio_fabricacion": 2001,
-                "precio_original_eur": 40000
-            },
-            {
-                "modelo": "ZDX",
-                "anio_fabricacion": 2010,
-                "precio_original_eur": 49000
-            },
-            {
-                "modelo": "NSX",
+                "modelo": "NSX - V6 Gasolina",
                 "anio_fabricacion": 1990,
                 "precio_original_eur": 65000
             },
             {
-                "modelo": "NSX (2ª gen)",
+                "modelo": "Integra Type R - 4 Cilindros Gasolina VTEC",
+                "anio_fabricacion": 1995,
+                "precio_original_eur": 28000
+            },
+            {
+                "modelo": "RSX - 2.0L 4 Cilindros Gasolina (K20)",
+                "anio_fabricacion": 2002,
+                "precio_original_eur": 24000
+            },
+            {
+                "modelo": "TLX - 2.4L 4 Cilindros Gasolina",
+                "anio_fabricacion": 2015,
+                "precio_original_eur": 38000
+            },
+            {
+                "modelo": "TLX - 3.5L V6 Gasolina",
+                "anio_fabricacion": 2015,
+                "precio_original_eur": 38000
+            },
+            {
+                "modelo": "NSX (2ª gen) - V6 Biturbo Híbrido",
                 "anio_fabricacion": 2016,
-                "precio_original_eur": 150000
+                "precio_original_eur": 160000
+            },
+            {
+                "modelo": "Integra (2023) - 1.5L Turbo Gasolina",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 33000
             }
         ]
     },
     "Alfa Romeo": {
         "modelos": [
             {
-                "modelo": "33",
+                "modelo": "33 - Motor Boxer Gasolina",
                 "anio_fabricacion": 1983,
                 "precio_original_eur": 9500
             },
             {
-                "modelo": "75",
-                "anio_fabricacion": 1985,
-                "precio_original_eur": 13000
-            },
-            {
-                "modelo": "145",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 12000
-            },
-            {
-                "modelo": "146",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 12500
-            },
-            {
-                "modelo": "147",
-                "anio_fabricacion": 2000,
-                "precio_original_eur": 16500
-            },
-            {
-                "modelo": "155",
+                "modelo": "155 - Twin Spark Gasolina",
                 "anio_fabricacion": 1992,
-                "precio_original_eur": 17000
+                "precio_original_eur": 17500
             },
             {
-                "modelo": "156",
+                "modelo": "155 - V6 Gasolina",
+                "anio_fabricacion": 1992,
+                "precio_original_eur": 17500
+            },
+            {
+                "modelo": "156 - Twin Spark Gasolina",
                 "anio_fabricacion": 1997,
-                "precio_original_eur": 18000
+                "precio_original_eur": 19000
             },
             {
-                "modelo": "159",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 24000
+                "modelo": "156 - JTD Diésel",
+                "anio_fabricacion": 1997,
+                "precio_original_eur": 19000
             },
             {
-                "modelo": "164",
-                "anio_fabricacion": 1987,
-                "precio_original_eur": 21000
+                "modelo": "156 - Busso V6",
+                "anio_fabricacion": 1997,
+                "precio_original_eur": 19000
             },
             {
-                "modelo": "166",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 26000
+                "modelo": "147 - Twin Spark Gasolina",
+                "anio_fabricacion": 2000,
+                "precio_original_eur": 17500
             },
             {
-                "modelo": "Brera",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 32000
+                "modelo": "147 - JTD Diésel",
+                "anio_fabricacion": 2000,
+                "precio_original_eur": 17500
             },
             {
-                "modelo": "GT",
+                "modelo": "GT - Twin Spark Gasolina",
                 "anio_fabricacion": 2003,
-                "precio_original_eur": 26000
-            },
-            {
-                "modelo": "GTV",
-                "anio_fabricacion": 1995,
-                "precio_original_eur": 30000
-            },
-            {
-                "modelo": "Spider",
-                "anio_fabricacion": 1995,
                 "precio_original_eur": 27000
             },
             {
-                "modelo": "MiTo",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 14000
+                "modelo": "GT - JTD Diésel",
+                "anio_fabricacion": 2003,
+                "precio_original_eur": 27000
             },
             {
-                "modelo": "Giulietta",
-                "anio_fabricacion": 2010,
-                "precio_original_eur": 21000
+                "modelo": "GT - Busso V6",
+                "anio_fabricacion": 2003,
+                "precio_original_eur": 27000
             },
             {
-                "modelo": "Giulia",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 36000
-            },
-            {
-                "modelo": "Giulia Quadrifoglio",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 79000
-            },
-            {
-                "modelo": "Giulia GTA",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 175000
-            },
-            {
-                "modelo": "Giulia GTAm",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 190000
-            },
-            {
-                "modelo": "Stelvio",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 42000
-            },
-            {
-                "modelo": "Stelvio Quadrifoglio",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 92000
-            },
-            {
-                "modelo": "Tonale",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 36000
-            },
-            {
-                "modelo": "8C Competizione",
+                "modelo": "8C Competizione - 4.7L V8 Gasolina (Ferrari/Maserati)",
                 "anio_fabricacion": 2007,
-                "precio_original_eur": 160000
+                "precio_original_eur": 165000
             },
             {
-                "modelo": "8C Spider",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 180000
+                "modelo": "Giulietta - MultiAir Gasolina",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 22000
             },
             {
-                "modelo": "4C",
+                "modelo": "Giulietta - JTDm Diésel",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 22000
+            },
+            {
+                "modelo": "4C - 1.75L Turbo Gasolina",
                 "anio_fabricacion": 2013,
-                "precio_original_eur": 62000
+                "precio_original_eur": 65000
             },
             {
-                "modelo": "4C Spider",
-                "anio_fabricacion": 2015,
-                "precio_original_eur": 70000
+                "modelo": "Giulia - 2.0L Turbo Gasolina",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 38000
+            },
+            {
+                "modelo": "Giulia - 2.2L Diésel",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 38000
+            },
+            {
+                "modelo": "Giulia Quadrifoglio - 2.9L V6 Biturbo Gasolina (Ferrari)",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 80000
+            },
+            {
+                "modelo": "Tonale - Híbrido Ligero (MHEV)",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 39546
+            },
+            {
+                "modelo": "Tonale - Híbrido Enchufable (PHEV)",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 39546
             }
         ]
     },
     "Alpina": {
         "modelos": [
             {
-                "modelo": "B3",
-                "anio_fabricacion": 1987,
-                "precio_original_eur": 60000
+                "modelo": "B6 2.8 - 6 Cilindros Gasolina",
+                "anio_fabricacion": 1978,
+                "precio_original_eur": 35000
             },
             {
-                "modelo": "B3 BiTurbo",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 70000
+                "modelo": "B7 Turbo (E24) - 6 Cilindros Turbo Gasolina",
+                "anio_fabricacion": 1984,
+                "precio_original_eur": 85000
             },
             {
-                "modelo": "B4",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 75000
-            },
-            {
-                "modelo": "B4 Gran Coupé",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 90000
-            },
-            {
-                "modelo": "B5",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 90000
-            },
-            {
-                "modelo": "B5 Touring",
-                "anio_fabricacion": 2011,
-                "precio_original_eur": 105000
-            },
-            {
-                "modelo": "B7",
-                "anio_fabricacion": 2006,
-                "precio_original_eur": 130000
-            },
-            {
-                "modelo": "B7 (G12)",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 160000
-            },
-            {
-                "modelo": "XD3",
-                "anio_fabricacion": 2013,
+                "modelo": "B10 V8 - V8 Gasolina",
+                "anio_fabricacion": 1997,
                 "precio_original_eur": 80000
             },
             {
-                "modelo": "XD4",
-                "anio_fabricacion": 2018,
+                "modelo": "B5 (E60) - V8 Sobrealimentado Gasolina",
+                "anio_fabricacion": 2005,
+                "precio_original_eur": 95000
+            },
+            {
+                "modelo": "B3 Bi-Turbo (F30) - 6 Cilindros Biturbo Gasolina",
+                "anio_fabricacion": 2013,
+                "precio_original_eur": 75000
+            },
+            {
+                "modelo": "B7 (G12) - V8 Biturbo Gasolina",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 170000
+            },
+            {
+                "modelo": "D5 S - 6 Cilindros Trubo Diésel",
+                "anio_fabricacion": 2017,
                 "precio_original_eur": 85000
+            },
+            {
+                "modelo": "B8 Gran Coupé - V8 Biturbo Gasolina (Basado en BMW N63/S63)",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 165000
             }
         ]
     },
     "Alpine": {
         "modelos": [
             {
-                "modelo": "A110",
+                "modelo": "A110 (clásico) - 4 Cilindros Gasolina (Motor Renault Cléon)",
+                "anio_fabricacion": 1961,
+                "precio_original_eur": 3000
+            },
+            {
+                "modelo": "A310 - 4 Cilindros Gasolina",
+                "anio_fabricacion": 1971,
+                "precio_original_eur": 12000
+            },
+            {
+                "modelo": "A310 - V6 PRV Gasolina",
+                "anio_fabricacion": 1971,
+                "precio_original_eur": 12000
+            },
+            {
+                "modelo": "A110 (moderno) - 1.8L Turbo Gasolina (Renault)",
                 "anio_fabricacion": 2017,
                 "precio_original_eur": 60000
             },
             {
-                "modelo": "A110S",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 72000
-            },
-            {
-                "modelo": "A110 GT",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 70000
-            },
-            {
-                "modelo": "A110 R",
+                "modelo": "A110 R - 1.8L Turbo Gasolina de alto rendimiento",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 105000
+            },
+            {
+                "modelo": "A290 - Eléctrico (Hatchback)",
+                "anio_fabricacion": 2024,
+                "precio_original_eur": 38576
             }
         ]
     },
     "Aston Martin": {
         "modelos": [
             {
-                "modelo": "DB5",
+                "modelo": "DB5 - 4.0L 6 Cilindros Gasolina",
                 "anio_fabricacion": 1963,
-                "precio_original_eur": 5200
+                "precio_original_eur": 5500
             },
             {
-                "modelo": "DB6",
-                "anio_fabricacion": 1965,
-                "precio_original_eur": 6500
-            },
-            {
-                "modelo": "V8 Vantage (classic)",
+                "modelo": "V8 Vantage (clásico) - 5.3L V8 Gasolina",
                 "anio_fabricacion": 1977,
-                "precio_original_eur": 32000
+                "precio_original_eur": 35000
             },
             {
-                "modelo": "Lagonda",
-                "anio_fabricacion": 1976,
-                "precio_original_eur": 45000
-            },
-            {
-                "modelo": "Virage",
-                "anio_fabricacion": 1989,
-                "precio_original_eur": 95000
-            },
-            {
-                "modelo": "Vantage (90s)",
-                "anio_fabricacion": 1993,
-                "precio_original_eur": 125000
-            },
-            {
-                "modelo": "DB7",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 120000
-            },
-            {
-                "modelo": "DB7 Vantage",
-                "anio_fabricacion": 1999,
-                "precio_original_eur": 140000
-            },
-            {
-                "modelo": "Vanquish",
-                "anio_fabricacion": 2001,
-                "precio_original_eur": 220000
-            },
-            {
-                "modelo": "DB9",
+                "modelo": "DB9 - 5.9L V12 Gasolina",
                 "anio_fabricacion": 2004,
-                "precio_original_eur": 150000
+                "precio_original_eur": 160000
             },
             {
-                "modelo": "DB9 Volante",
+                "modelo": "V8 Vantage (moderno) - 4.3L V8 Gasolina",
                 "anio_fabricacion": 2005,
-                "precio_original_eur": 170000
+                "precio_original_eur": 115000
             },
             {
-                "modelo": "Vantage",
+                "modelo": "V8 Vantage (moderno) - 4.7L V8 Gasolina",
                 "anio_fabricacion": 2005,
-                "precio_original_eur": 110000
+                "precio_original_eur": 115000
             },
             {
-                "modelo": "V8 Vantage Roadster",
-                "anio_fabricacion": 2007,
-                "precio_original_eur": 120000
-            },
-            {
-                "modelo": "V12 Vantage",
-                "anio_fabricacion": 2009,
-                "precio_original_eur": 180000
-            },
-            {
-                "modelo": "DBS",
-                "anio_fabricacion": 2007,
-                "precio_original_eur": 200000
-            },
-            {
-                "modelo": "DBS Volante",
-                "anio_fabricacion": 2009,
-                "precio_original_eur": 230000
-            },
-            {
-                "modelo": "Rapide",
-                "anio_fabricacion": 2010,
-                "precio_original_eur": 190000
-            },
-            {
-                "modelo": "Rapide S",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 210000
-            },
-            {
-                "modelo": "Vanquish (2012)",
+                "modelo": "Vanquish (2ª gen) - 5.9L V12 Gasolina",
                 "anio_fabricacion": 2012,
-                "precio_original_eur": 250000
+                "precio_original_eur": 260000
             },
             {
-                "modelo": "Vanquish S",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 290000
-            },
-            {
-                "modelo": "DB11",
+                "modelo": "DB11 - 5.2L V12 Biturbo",
                 "anio_fabricacion": 2016,
                 "precio_original_eur": 205000
             },
             {
-                "modelo": "DB11 V8",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 185000
-            },
-            {
-                "modelo": "DB11 AMR",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 230000
-            },
-            {
-                "modelo": "Vantage (2018)",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 155000
-            },
-            {
-                "modelo": "DBS Superleggera",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 275000
-            },
-            {
-                "modelo": "DBS 770 Ultimate",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 350000
-            },
-            {
-                "modelo": "DBX",
-                "anio_fabricacion": 2020,
+                "modelo": "DB11 - 4.0L V8 Biturbo (AMG)",
+                "anio_fabricacion": 2016,
                 "precio_original_eur": 205000
             },
             {
-                "modelo": "DBX707",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 260000
+                "modelo": "DBX - 4.0L V8 Biturbo Gasolina (AMG)",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 186584
             },
             {
-                "modelo": "Valkyrie",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 3000000
-            },
-            {
-                "modelo": "Valkyrie AMR Pro",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 3500000
-            },
-            {
-                "modelo": "Valhalla",
+                "modelo": "DB12 - 4.0L V8 Biturbo Gasolina (AMG)",
                 "anio_fabricacion": 2023,
-                "precio_original_eur": 800000
+                "precio_original_eur": 230000
             },
             {
-                "modelo": "Vanquish Vision Concept",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 320000
+                "modelo": "Valkyrie - 6.5L V12 Híbrido Cosworth",
+                "anio_fabricacion": 2024,
+                "precio_original_eur": 3000000
             }
         ]
     },
     "Audi": {
         "modelos": [
             {
-                "modelo": "A1",
-                "anio_fabricacion": 2010,
-                "precio_original_eur": 16000
+                "modelo": "80 (B1) - 4 Cilindros Gasolina",
+                "anio_fabricacion": 1972,
+                "precio_original_eur": 3500
             },
             {
-                "modelo": "A1 Sportback",
-                "anio_fabricacion": 2012,
-                "precio_original_eur": 17500
+                "modelo": "Quattro - 2.1L 5 Cilindros Turbo Gasolina",
+                "anio_fabricacion": 1980,
+                "precio_original_eur": 35000
             },
             {
-                "modelo": "A1 Citycarver",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 21000
+                "modelo": "A4 (B5) - 4 Cilindros Gasolina",
+                "anio_fabricacion": 1994,
+                "precio_original_eur": 23000
             },
             {
-                "modelo": "A2",
-                "anio_fabricacion": 1999,
-                "precio_original_eur": 17500
+                "modelo": "A4 (B5) - TDI Diésel",
+                "anio_fabricacion": 1994,
+                "precio_original_eur": 23000
             },
             {
-                "modelo": "A3",
+                "modelo": "A8 (D2) - V6 Gasolina",
+                "anio_fabricacion": 1994,
+                "precio_original_eur": 62000
+            },
+            {
+                "modelo": "A8 (D2) - V8 Gasolina",
+                "anio_fabricacion": 1994,
+                "precio_original_eur": 62000
+            },
+            {
+                "modelo": "A3 (8L) - 4 Cilindros Gasolina",
                 "anio_fabricacion": 1996,
                 "precio_original_eur": 18500
             },
             {
-                "modelo": "A3 Sportback",
-                "anio_fabricacion": 2004,
-                "precio_original_eur": 21000
-            },
-            {
-                "modelo": "A3 Sedan",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 23000
-            },
-            {
-                "modelo": "S3",
-                "anio_fabricacion": 1999,
-                "precio_original_eur": 30000
-            },
-            {
-                "modelo": "RS3",
-                "anio_fabricacion": 2011,
-                "precio_original_eur": 55000
-            },
-            {
-                "modelo": "RS3 (2021)",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 61000
-            },
-            {
-                "modelo": "A4",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 23000
-            },
-            {
-                "modelo": "A4 Avant",
+                "modelo": "A3 (8L) - TDI Diésel",
                 "anio_fabricacion": 1996,
-                "precio_original_eur": 25000
+                "precio_original_eur": 18500
             },
             {
-                "modelo": "S4",
-                "anio_fabricacion": 1997,
-                "precio_original_eur": 42000
-            },
-            {
-                "modelo": "RS4",
-                "anio_fabricacion": 2000,
-                "precio_original_eur": 62000
-            },
-            {
-                "modelo": "RS4 Avant (2020)",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 93000
-            },
-            {
-                "modelo": "A5",
-                "anio_fabricacion": 2007,
-                "precio_original_eur": 40000
-            },
-            {
-                "modelo": "A5 Sportback",
-                "anio_fabricacion": 2009,
-                "precio_original_eur": 42000
-            },
-            {
-                "modelo": "S5",
-                "anio_fabricacion": 2007,
-                "precio_original_eur": 55000
-            },
-            {
-                "modelo": "RS5",
-                "anio_fabricacion": 2010,
-                "precio_original_eur": 78000
-            },
-            {
-                "modelo": "A6",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 30000
-            },
-            {
-                "modelo": "A6 Avant",
+                "modelo": "TT Coupé (8N) - 1.8L Turbo 4 Cilindros Gasolina",
                 "anio_fabricacion": 1998,
+                "precio_original_eur": 34000
+            },
+            {
+                "modelo": "A2 (8Z) - Gasolina",
+                "anio_fabricacion": 1999,
+                "precio_original_eur": 18500
+            },
+            {
+                "modelo": "A2 (8Z) - 1.4L TDI Diésel",
+                "anio_fabricacion": 1999,
+                "precio_original_eur": 18500
+            },
+            {
+                "modelo": "RS4 Avant (B5) - 2.7L V6 Biturbo Gasolina",
+                "anio_fabricacion": 2000,
+                "precio_original_eur": 65000
+            },
+            {
+                "modelo": "R8 Coupé (1ª gen) - 4.2L V8 Gasolina",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 145000
+            },
+            {
+                "modelo": "R8 Coupé (1ª gen) - 5.2L V10 Gasolina",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 145000
+            },
+            {
+                "modelo": "A1 (8X) - TFSI Gasolina",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 16500
+            },
+            {
+                "modelo": "A1 (8X) - TDI Diésel",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 16500
+            },
+            {
+                "modelo": "RS3 Sportback (8P) - 2.5L 5 Cilindros Turbo Gasolina",
+                "anio_fabricacion": 2011,
+                "precio_original_eur": 56000
+            },
+            {
+                "modelo": "Q3 (8U) - TFSI Gasolina",
+                "anio_fabricacion": 2011,
                 "precio_original_eur": 32000
             },
             {
-                "modelo": "S6",
-                "anio_fabricacion": 1995,
-                "precio_original_eur": 55000
-            },
-            {
-                "modelo": "RS6 Avant",
-                "anio_fabricacion": 2002,
-                "precio_original_eur": 95000
-            },
-            {
-                "modelo": "RS6 Avant (2020)",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 135000
-            },
-            {
-                "modelo": "A6 e-tron",
-                "anio_fabricacion": 2024,
-                "precio_original_eur": 65000
-            },
-            {
-                "modelo": "A7",
-                "anio_fabricacion": 2010,
-                "precio_original_eur": 58000
-            },
-            {
-                "modelo": "S7",
-                "anio_fabricacion": 2012,
-                "precio_original_eur": 90000
-            },
-            {
-                "modelo": "RS7",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 120000
-            },
-            {
-                "modelo": "RS7 Sportback (2020)",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 135000
-            },
-            {
-                "modelo": "A8",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 60000
-            },
-            {
-                "modelo": "A8L",
-                "anio_fabricacion": 2001,
-                "precio_original_eur": 75000
-            },
-            {
-                "modelo": "S8",
-                "anio_fabricacion": 1996,
-                "precio_original_eur": 90000
-            },
-            {
-                "modelo": "Q2",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 23000
-            },
-            {
-                "modelo": "SQ2",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 42000
-            },
-            {
-                "modelo": "Q3",
+                "modelo": "Q3 (8U) - TDI Diésel",
                 "anio_fabricacion": 2011,
-                "precio_original_eur": 31000
+                "precio_original_eur": 32000
             },
             {
-                "modelo": "RS Q3",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 62000
-            },
-            {
-                "modelo": "Q5",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 45000
-            },
-            {
-                "modelo": "SQ5",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 65000
-            },
-            {
-                "modelo": "Q6 e-tron",
-                "anio_fabricacion": 2024,
-                "precio_original_eur": 70000
-            },
-            {
-                "modelo": "Q7",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 65000
-            },
-            {
-                "modelo": "SQ7",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 90000
-            },
-            {
-                "modelo": "Q8",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 82000
-            },
-            {
-                "modelo": "RS Q8",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 140000
-            },
-            {
-                "modelo": "TT",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 33000
-            },
-            {
-                "modelo": "TTS",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 48000
-            },
-            {
-                "modelo": "TT RS",
-                "anio_fabricacion": 2009,
-                "precio_original_eur": 72000
-            },
-            {
-                "modelo": "R8",
-                "anio_fabricacion": 2006,
-                "precio_original_eur": 140000
-            },
-            {
-                "modelo": "R8 V10",
-                "anio_fabricacion": 2009,
-                "precio_original_eur": 165000
-            },
-            {
-                "modelo": "R8 GT",
+                "modelo": "A7 Sportback (C7) - V6 Gasolina",
                 "anio_fabricacion": 2010,
-                "precio_original_eur": 190000
+                "precio_original_eur": 59000
             },
             {
-                "modelo": "R8 Final Edition",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 210000
+                "modelo": "A7 Sportback (C7) - V8 Gasolina",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 59000
             },
             {
-                "modelo": "e-tron",
+                "modelo": "A7 Sportback (C7) - Diésel",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 59000
+            },
+            {
+                "modelo": "RS7 Sportback (C7) - 4.0L V8 Biturbo Gasolina",
+                "anio_fabricacion": 2013,
+                "precio_original_eur": 125000
+            },
+            {
+                "modelo": "e-tron (SUV) - Eléctrico",
                 "anio_fabricacion": 2019,
                 "precio_original_eur": 82000
             },
             {
-                "modelo": "e-tron Sportback",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 85000
-            },
-            {
-                "modelo": "Q4 e-tron",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 45000
-            },
-            {
-                "modelo": "Q8 e-tron",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 95000
-            },
-            {
-                "modelo": "RS e-tron GT",
+                "modelo": "RS e-tron GT - Eléctrico (Alto Rendimiento)",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 140000
             }
@@ -944,29 +639,14 @@
     "BMW": {
         "modelos": [
             {
-                "modelo": "116i",
-                "anio_fabricacion": 2004,
-                "precio_original_eur": 20000
-            },
-            {
-                "modelo": "118i",
-                "anio_fabricacion": 2004,
-                "precio_original_eur": 22500
-            },
-            {
-                "modelo": "120i",
-                "anio_fabricacion": 2004,
-                "precio_original_eur": 24500
-            },
-            {
-                "modelo": "130i",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 33000
-            },
-            {
                 "modelo": "116d",
                 "anio_fabricacion": 2004,
                 "precio_original_eur": 20500
+            },
+            {
+                "modelo": "116i",
+                "anio_fabricacion": 2004,
+                "precio_original_eur": 20000
             },
             {
                 "modelo": "118d",
@@ -974,9 +654,19 @@
                 "precio_original_eur": 23000
             },
             {
+                "modelo": "118i",
+                "anio_fabricacion": 2004,
+                "precio_original_eur": 22500
+            },
+            {
                 "modelo": "120d",
                 "anio_fabricacion": 2004,
                 "precio_original_eur": 26000
+            },
+            {
+                "modelo": "120i",
+                "anio_fabricacion": 2004,
+                "precio_original_eur": 24500
             },
             {
                 "modelo": "123d",
@@ -994,29 +684,9 @@
                 "precio_original_eur": 42000
             },
             {
-                "modelo": "M135i xDrive",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 51000
-            },
-            {
-                "modelo": "218i",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 27000
-            },
-            {
-                "modelo": "220i",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 29500
-            },
-            {
-                "modelo": "228i",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 36000
-            },
-            {
-                "modelo": "M235i",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 49000
+                "modelo": "130i",
+                "anio_fabricacion": 2005,
+                "precio_original_eur": 33000
             },
             {
                 "modelo": "218d",
@@ -1024,9 +694,19 @@
                 "precio_original_eur": 29000
             },
             {
+                "modelo": "218i",
+                "anio_fabricacion": 2014,
+                "precio_original_eur": 27000
+            },
+            {
                 "modelo": "220d",
                 "anio_fabricacion": 2014,
                 "precio_original_eur": 32000
+            },
+            {
+                "modelo": "220i",
+                "anio_fabricacion": 2014,
+                "precio_original_eur": 29500
             },
             {
                 "modelo": "225xe (híbrido)",
@@ -1034,9 +714,14 @@
                 "precio_original_eur": 42000
             },
             {
-                "modelo": "M240i",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 52000
+                "modelo": "228i Gran Coupé",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 38000
+            },
+            {
+                "modelo": "228i",
+                "anio_fabricacion": 2014,
+                "precio_original_eur": 36000
             },
             {
                 "modelo": "230i",
@@ -1044,19 +729,9 @@
                 "precio_original_eur": 45500
             },
             {
-                "modelo": "M240i xDrive",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 62000
-            },
-            {
-                "modelo": "228i Gran Coupé",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 38000
-            },
-            {
-                "modelo": "M235i Gran Coupé",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 52000
+                "modelo": "316d",
+                "anio_fabricacion": 2008,
+                "precio_original_eur": 28000
             },
             {
                 "modelo": "316i",
@@ -1064,39 +739,14 @@
                 "precio_original_eur": 9000
             },
             {
-                "modelo": "318i",
-                "anio_fabricacion": 1980,
-                "precio_original_eur": 11000
-            },
-            {
-                "modelo": "320i",
-                "anio_fabricacion": 1980,
-                "precio_original_eur": 13500
-            },
-            {
-                "modelo": "325i",
-                "anio_fabricacion": 1985,
-                "precio_original_eur": 18000
-            },
-            {
-                "modelo": "330i",
-                "anio_fabricacion": 1999,
-                "precio_original_eur": 35000
-            },
-            {
-                "modelo": "M3",
-                "anio_fabricacion": 1986,
-                "precio_original_eur": 31000
-            },
-            {
-                "modelo": "316d",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 28000
-            },
-            {
                 "modelo": "318d",
                 "anio_fabricacion": 1998,
                 "precio_original_eur": 23000
+            },
+            {
+                "modelo": "318i",
+                "anio_fabricacion": 1980,
+                "precio_original_eur": 11000
             },
             {
                 "modelo": "320d",
@@ -1104,9 +754,24 @@
                 "precio_original_eur": 26000
             },
             {
+                "modelo": "320e",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 47000
+            },
+            {
+                "modelo": "320i",
+                "anio_fabricacion": 1980,
+                "precio_original_eur": 13500
+            },
+            {
                 "modelo": "323i",
                 "anio_fabricacion": 1995,
                 "precio_original_eur": 25000
+            },
+            {
+                "modelo": "325i",
+                "anio_fabricacion": 1985,
+                "precio_original_eur": 18000
             },
             {
                 "modelo": "328i",
@@ -1114,19 +779,9 @@
                 "precio_original_eur": 28000
             },
             {
-                "modelo": "335i",
-                "anio_fabricacion": 2006,
-                "precio_original_eur": 45000
-            },
-            {
                 "modelo": "330d",
                 "anio_fabricacion": 1999,
                 "precio_original_eur": 42000
-            },
-            {
-                "modelo": "335d",
-                "anio_fabricacion": 2006,
-                "precio_original_eur": 48000
             },
             {
                 "modelo": "330e (híbrido)",
@@ -1139,24 +794,24 @@
                 "precio_original_eur": 52000
             },
             {
-                "modelo": "320e",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 47000
+                "modelo": "330i",
+                "anio_fabricacion": 1999,
+                "precio_original_eur": 35000
             },
             {
-                "modelo": "M3 Competition",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 90000
+                "modelo": "335d",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 48000
             },
             {
-                "modelo": "M3 xDrive",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 95000
+                "modelo": "335i",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 45000
             },
             {
-                "modelo": "M3 CS",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 150000
+                "modelo": "420d",
+                "anio_fabricacion": 2013,
+                "precio_original_eur": 43000
             },
             {
                 "modelo": "420i",
@@ -1169,24 +824,14 @@
                 "precio_original_eur": 48000
             },
             {
-                "modelo": "430i",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 51000
-            },
-            {
-                "modelo": "M4",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 72000
-            },
-            {
-                "modelo": "420d",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 43000
-            },
-            {
                 "modelo": "430d",
                 "anio_fabricacion": 2016,
                 "precio_original_eur": 55000
+            },
+            {
+                "modelo": "430i",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 51000
             },
             {
                 "modelo": "440i",
@@ -1194,24 +839,14 @@
                 "precio_original_eur": 60000
             },
             {
-                "modelo": "M440i xDrive",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 72000
-            },
-            {
-                "modelo": "M4 Competition",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 95000
-            },
-            {
-                "modelo": "M4 CSL",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 180000
-            },
-            {
                 "modelo": "518i",
                 "anio_fabricacion": 1981,
                 "precio_original_eur": 16000
+            },
+            {
+                "modelo": "520d",
+                "anio_fabricacion": 1998,
+                "precio_original_eur": 32000
             },
             {
                 "modelo": "520i",
@@ -1219,9 +854,24 @@
                 "precio_original_eur": 18500
             },
             {
+                "modelo": "525d",
+                "anio_fabricacion": 1998,
+                "precio_original_eur": 35000
+            },
+            {
                 "modelo": "525i",
                 "anio_fabricacion": 1988,
                 "precio_original_eur": 21000
+            },
+            {
+                "modelo": "530d",
+                "anio_fabricacion": 1998,
+                "precio_original_eur": 45000
+            },
+            {
+                "modelo": "530e",
+                "anio_fabricacion": 2017,
+                "precio_original_eur": 57000
             },
             {
                 "modelo": "530i",
@@ -1234,24 +884,9 @@
                 "precio_original_eur": 52000
             },
             {
-                "modelo": "M5",
-                "anio_fabricacion": 1985,
-                "precio_original_eur": 36000
-            },
-            {
-                "modelo": "520d",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 32000
-            },
-            {
-                "modelo": "525d",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 35000
-            },
-            {
-                "modelo": "530d",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 45000
+                "modelo": "545e xDrive",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 75000
             },
             {
                 "modelo": "545i",
@@ -1259,39 +894,14 @@
                 "precio_original_eur": 62000
             },
             {
-                "modelo": "550i",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 70000
-            },
-            {
-                "modelo": "530e",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 57000
-            },
-            {
-                "modelo": "545e xDrive",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 75000
-            },
-            {
                 "modelo": "550d xDrive",
                 "anio_fabricacion": 2017,
                 "precio_original_eur": 85000
             },
             {
-                "modelo": "M550i xDrive",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 90000
-            },
-            {
-                "modelo": "M5 Competition",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 130000
-            },
-            {
-                "modelo": "M5 CS",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 180000
+                "modelo": "550i",
+                "anio_fabricacion": 2005,
+                "precio_original_eur": 70000
             },
             {
                 "modelo": "630i",
@@ -1299,24 +909,9 @@
                 "precio_original_eur": 67000
             },
             {
-                "modelo": "645Ci",
-                "anio_fabricacion": 2004,
-                "precio_original_eur": 83000
-            },
-            {
-                "modelo": "650i",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 87000
-            },
-            {
-                "modelo": "M6",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 110000
-            },
-            {
-                "modelo": "640i",
-                "anio_fabricacion": 2011,
-                "precio_original_eur": 78000
+                "modelo": "640d Gran Turismo",
+                "anio_fabricacion": 2017,
+                "precio_original_eur": 80000
             },
             {
                 "modelo": "640d",
@@ -1329,9 +924,19 @@
                 "precio_original_eur": 78000
             },
             {
-                "modelo": "640d Gran Turismo",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 80000
+                "modelo": "640i",
+                "anio_fabricacion": 2011,
+                "precio_original_eur": 78000
+            },
+            {
+                "modelo": "645Ci",
+                "anio_fabricacion": 2004,
+                "precio_original_eur": 83000
+            },
+            {
+                "modelo": "650i",
+                "anio_fabricacion": 2005,
+                "precio_original_eur": 87000
             },
             {
                 "modelo": "728i",
@@ -1344,9 +949,24 @@
                 "precio_original_eur": 70000
             },
             {
+                "modelo": "740d xDrive",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 99000
+            },
+            {
                 "modelo": "740i",
                 "anio_fabricacion": 1995,
                 "precio_original_eur": 80000
+            },
+            {
+                "modelo": "745e",
+                "anio_fabricacion": 2019,
+                "precio_original_eur": 115000
+            },
+            {
+                "modelo": "750d xDrive",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 125000
             },
             {
                 "modelo": "750i",
@@ -1359,44 +979,14 @@
                 "precio_original_eur": 135000
             },
             {
-                "modelo": "745e",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 115000
-            },
-            {
-                "modelo": "740d xDrive",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 99000
-            },
-            {
-                "modelo": "750d xDrive",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 125000
-            },
-            {
                 "modelo": "760Li V12",
                 "anio_fabricacion": 2017,
                 "precio_original_eur": 180000
             },
             {
-                "modelo": "i7 M70 xDrive",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 185000
-            },
-            {
                 "modelo": "840Ci",
                 "anio_fabricacion": 1993,
                 "precio_original_eur": 85000
-            },
-            {
-                "modelo": "850i",
-                "anio_fabricacion": 1990,
-                "precio_original_eur": 110000
-            },
-            {
-                "modelo": "M850i",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 120000
             },
             {
                 "modelo": "840d",
@@ -1409,194 +999,24 @@
                 "precio_original_eur": 120000
             },
             {
-                "modelo": "M8",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 170000
-            },
-            {
-                "modelo": "M8 Competition",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 195000
-            },
-            {
-                "modelo": "X1",
-                "anio_fabricacion": 2009,
-                "precio_original_eur": 32000
-            },
-            {
-                "modelo": "X3",
-                "anio_fabricacion": 2003,
-                "precio_original_eur": 42000
-            },
-            {
-                "modelo": "X5",
-                "anio_fabricacion": 1999,
-                "precio_original_eur": 60000
-            },
-            {
-                "modelo": "X6",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 72000
-            },
-            {
-                "modelo": "X2",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 38000
-            },
-            {
-                "modelo": "X4",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 55000
-            },
-            {
-                "modelo": "X7",
-                "anio_fabricacion": 2018,
-                "precio_original_eur": 90000
-            },
-            {
-                "modelo": "XM",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 180000
-            },
-            {
-                "modelo": "X1 (2023)",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 41000
-            },
-            {
-                "modelo": "X2 (2024)",
-                "anio_fabricacion": 2024,
-                "precio_original_eur": 46000
-            },
-            {
-                "modelo": "X5 M Competition",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 145000
-            },
-            {
-                "modelo": "X6 M Competition",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 150000
-            },
-            {
-                "modelo": "X7 M60i",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 130000
-            },
-            {
-                "modelo": "Z1",
-                "anio_fabricacion": 1989,
-                "precio_original_eur": 38000
-            },
-            {
-                "modelo": "Z3",
-                "anio_fabricacion": 1995,
-                "precio_original_eur": 32000
-            },
-            {
-                "modelo": "Z4",
-                "anio_fabricacion": 2002,
-                "precio_original_eur": 42000
-            },
-            {
-                "modelo": "Z8",
-                "anio_fabricacion": 2000,
-                "precio_original_eur": 128000
-            },
-            {
-                "modelo": "Z4 M40i",
-                "anio_fabricacion": 2019,
-                "precio_original_eur": 69000
-            },
-            {
-                "modelo": "i3",
-                "anio_fabricacion": 2013,
-                "precio_original_eur": 36000
-            },
-            {
-                "modelo": "i4",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 57000
-            },
-            {
-                "modelo": "i8",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 125000
-            },
-            {
-                "modelo": "i5",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 72000
-            },
-            {
-                "modelo": "i7",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 135000
-            },
-            {
-                "modelo": "iX1",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 48000
-            },
-            {
-                "modelo": "iX3",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 65000
-            },
-            {
-                "modelo": "iX",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 95000
-            },
-            {
-                "modelo": "iX M60",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 135000
-            },
-            {
-                "modelo": "iX2",
-                "anio_fabricacion": 2024,
-                "precio_original_eur": 54000
-            },
-            {
-                "modelo": "i4 M50",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 69000
-            },
-            {
-                "modelo": "M2",
-                "anio_fabricacion": 2016,
-                "precio_original_eur": 61000
-            },
-            {
-                "modelo": "M3",
-                "anio_fabricacion": 1986,
-                "precio_original_eur": 31000
-            },
-            {
-                "modelo": "M4",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 72000
-            },
-            {
-                "modelo": "M5",
-                "anio_fabricacion": 1985,
-                "precio_original_eur": 36000
-            },
-            {
-                "modelo": "M6",
-                "anio_fabricacion": 2005,
+                "modelo": "850i",
+                "anio_fabricacion": 1990,
                 "precio_original_eur": 110000
             },
             {
-                "modelo": "M1",
+                "modelo": "M1 (E26)",
                 "anio_fabricacion": 1978,
                 "precio_original_eur": 80000
             },
             {
-                "modelo": "M8",
+                "modelo": "M135i xDrive",
                 "anio_fabricacion": 2019,
-                "precio_original_eur": 170000
+                "precio_original_eur": 51000
+            },
+            {
+                "modelo": "M2 (F87)",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 61000
             },
             {
                 "modelo": "M2 G87",
@@ -1604,103 +1024,158 @@
                 "precio_original_eur": 72000
             },
             {
+                "modelo": "M235i Gran Coupé",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 52000
+            },
+            {
+                "modelo": "M235i",
+                "anio_fabricacion": 2014,
+                "precio_original_eur": 49000
+            },
+            {
+                "modelo": "M240i xDrive",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 62000
+            },
+            {
+                "modelo": "M240i",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 52000
+            },
+            {
+                "modelo": "M3 (E30)",
+                "anio_fabricacion": 1986,
+                "precio_original_eur": 31000
+            },
+            {
+                "modelo": "M3 CS",
+                "anio_fabricacion": 2023,
+                "precio_original_eur": 150000
+            },
+            {
+                "modelo": "M3 Competition",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 90000
+            },
+            {
+                "modelo": "M3 xDrive",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 95000
+            },
+            {
+                "modelo": "M4 (F82)",
+                "anio_fabricacion": 2014,
+                "precio_original_eur": 72000
+            },
+            {
+                "modelo": "M4 CSL",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 180000
+            },
+            {
                 "modelo": "M4 Competition xDrive",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 98000
             },
             {
-                "modelo": "M4 GT4",
+                "modelo": "M4 Competition",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 95000
+            },
+            {
+                "modelo": "M4 GT4 (Carreras)",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 195000
             },
             {
-                "modelo": "M8 Gran Coupé Competition",
+                "modelo": "M440i xDrive",
                 "anio_fabricacion": 2020,
-                "precio_original_eur": 200000
-            },
-            {
-                "modelo": "XM",
-                "anio_fabricacion": 2023,
-                "precio_original_eur": 180000
-            },
-            {
-                "modelo": "XM Label Red",
-                "anio_fabricacion": 2024,
-                "precio_original_eur": 205000
+                "precio_original_eur": 72000
             }
         ]
     },
     "Brabus": {
         "modelos": [
             {
-                "modelo": "Brabus E V12",
+                "modelo": "Brabus E V12 (W210)",
                 "anio_fabricacion": 1996,
                 "precio_original_eur": 250000
             },
             {
-                "modelo": "Brabus ML 55 K8",
+                "modelo": "Brabus ML 55 K8 (W163)",
                 "anio_fabricacion": 2000,
                 "precio_original_eur": 160000
             },
             {
-                "modelo": "Brabus S V12 Biturbo",
+                "modelo": "Brabus S V12 Biturbo (W220)",
                 "anio_fabricacion": 2003,
                 "precio_original_eur": 350000
             },
             {
-                "modelo": "Brabus Rocket (CLS V12)",
+                "modelo": "Brabus Rocket (CLS V12) (C219)",
                 "anio_fabricacion": 2006,
                 "precio_original_eur": 430000
             },
             {
-                "modelo": "Brabus GLK V12",
+                "modelo": "Brabus GLK V12 (X204)",
                 "anio_fabricacion": 2009,
                 "precio_original_eur": 380000
             },
             {
-                "modelo": "Brabus 700 Widestar (G63)",
+                "modelo": "Brabus 700 Widestar (G63) (W463)",
                 "anio_fabricacion": 2013,
                 "precio_original_eur": 250000
             },
             {
-                "modelo": "Brabus 850 6.0 Biturbo",
+                "modelo": "Brabus 850 6.0 Biturbo (CLS/E/S)",
                 "anio_fabricacion": 2015,
                 "precio_original_eur": 300000
             },
             {
-                "modelo": "Brabus Rocket 900 (S-Class)",
+                "modelo": "Brabus Rocket 900 (S-Class) (W222)",
                 "anio_fabricacion": 2015,
                 "precio_original_eur": 450000
             },
             {
-                "modelo": "Brabus 800 GLE Coupé",
+                "modelo": "Brabus 900 Maybach (S600)",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 800000
+            },
+            {
+                "modelo": "Brabus 800 GLE Coupé (C292)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 320000
             },
             {
-                "modelo": "Brabus XLP Adventure (G63 pickup)",
+                "modelo": "Brabus XLP Adventure (G63 pickup) (W463A)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 550000
             },
             {
-                "modelo": "Brabus G900 Rocket Edition",
+                "modelo": "Brabus G900 Rocket Edition (W463A)",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 480000
             },
             {
-                "modelo": "Brabus 900 Maybach",
+                "modelo": "Brabus 900 Superblack (G63) (W463A)",
                 "anio_fabricacion": 2022,
-                "precio_original_eur": 600000
+                "precio_original_eur": 440000
             },
             {
-                "modelo": "Brabus 930 GLE",
+                "modelo": "Brabus 930 (S-Class) (W223)",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 480000
             },
             {
-                "modelo": "Brabus 800 4x4²",
+                "modelo": "Brabus 800 4x4² (G63) (W463A)",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 500000
+            },
+            {
+                "modelo": "Brabus Rocket 1000 (AMG GT 63 S E)",
+                "anio_fabricacion": 2024,
+                "precio_original_eur": 530000
             }
         ]
     },
@@ -1722,14 +1197,14 @@
                 "precio_original_eur": 1200000
             },
             {
-                "modelo": "Veyron Super Sport",
-                "anio_fabricacion": 2010,
-                "precio_original_eur": 1500000
-            },
-            {
                 "modelo": "Veyron Grand Sport",
                 "anio_fabricacion": 2009,
                 "precio_original_eur": 1400000
+            },
+            {
+                "modelo": "Veyron Super Sport",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 1500000
             },
             {
                 "modelo": "Chiron",
@@ -1740,16 +1215,6 @@
                 "modelo": "Chiron Sport",
                 "anio_fabricacion": 2018,
                 "precio_original_eur": 2800000
-            },
-            {
-                "modelo": "Chiron Pur Sport",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 3000000
-            },
-            {
-                "modelo": "Chiron Super Sport 300+",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 3500000
             },
             {
                 "modelo": "Divo",
@@ -1767,9 +1232,19 @@
                 "precio_original_eur": 11000000
             },
             {
-                "modelo": "Bolide",
+                "modelo": "Chiron Pur Sport",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 3000000
+            },
+            {
+                "modelo": "Bolide (Sólo para pista)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 4000000
+            },
+            {
+                "modelo": "Chiron Super Sport 300+",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 3500000
             },
             {
                 "modelo": "Mistral (W16 Roadster)",
@@ -1777,7 +1252,7 @@
                 "precio_original_eur": 5000000
             },
             {
-                "modelo": "Tourbillon (nuevo modelo reemplazo del Chiron)",
+                "modelo": "Tourbillon (Híbrido)",
                 "anio_fabricacion": 2024,
                 "precio_original_eur": 3800000
             }
@@ -1796,7 +1271,7 @@
                 "precio_original_eur": 18000
             },
             {
-                "modelo": "BYD Tang",
+                "modelo": "BYD Tang (SUV EV/PHEV)",
                 "anio_fabricacion": 2015,
                 "precio_original_eur": 32000
             },
@@ -1806,54 +1281,54 @@
                 "precio_original_eur": 22000
             },
             {
-                "modelo": "BYD Han",
+                "modelo": "BYD Han (Sedán EV)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 45000
             },
             {
-                "modelo": "BYD Dolphin",
+                "modelo": "BYD Dolphin (Hatchback EV)",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 21000
             },
             {
-                "modelo": "BYD Yuan Plus",
+                "modelo": "BYD Yuan Plus (Atto 3) (SUV EV)",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 26000
             },
             {
-                "modelo": "BYD Atto 3",
-                "anio_fabricacion": 2022,
-                "precio_original_eur": 30000
-            },
-            {
-                "modelo": "BYD Seal",
+                "modelo": "BYD Seal (Sedán EV)",
                 "anio_fabricacion": 2022,
                 "precio_original_eur": 39000
             },
             {
-                "modelo": "BYD Destroyer 05",
+                "modelo": "BYD Destroyer 05 (PHEV)",
                 "anio_fabricacion": 2022,
                 "precio_original_eur": 23000
             },
             {
-                "modelo": "BYD Frigate 07",
+                "modelo": "BYD Frigate 07 (SUV PHEV)",
                 "anio_fabricacion": 2022,
                 "precio_original_eur": 35000
             },
             {
-                "modelo": "BYD Seagull",
+                "modelo": "BYD Seagull (Mini EV)",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 12000
             },
             {
-                "modelo": "BYD Song L",
+                "modelo": "BYD Song L (SUV Coupé EV)",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 28000
             },
             {
-                "modelo": "BYD Sea Lion 07",
+                "modelo": "BYD Seal U (SUV EV)",
+                "anio_fabricacion": 2023,
+                "precio_original_eur": 43000
+            },
+            {
+                "modelo": "BYD Sealion 7 (SUV EV)",
                 "anio_fabricacion": 2024,
-                "precio_original_eur": 35000
+                "precio_original_eur": 39000
             }
         ]
     },
@@ -1865,17 +1340,17 @@
                 "precio_original_eur": 26000
             },
             {
-                "modelo": "DeVille",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 30000
-            },
-            {
                 "modelo": "Eldorado",
                 "anio_fabricacion": 1992,
                 "precio_original_eur": 32000
             },
             {
-                "modelo": "Escalade",
+                "modelo": "DeVille",
+                "anio_fabricacion": 1994,
+                "precio_original_eur": 30000
+            },
+            {
+                "modelo": "Escalade (Primera Gen)",
                 "anio_fabricacion": 1999,
                 "precio_original_eur": 55000
             },
@@ -1885,17 +1360,22 @@
                 "precio_original_eur": 60000
             },
             {
+                "modelo": "CTS (Primera Gen)",
+                "anio_fabricacion": 2003,
+                "precio_original_eur": 32000
+            },
+            {
+                "modelo": "XLR",
+                "anio_fabricacion": 2003,
+                "precio_original_eur": 70000
+            },
+            {
                 "modelo": "Escalade ESV",
                 "anio_fabricacion": 2003,
                 "precio_original_eur": 70000
             },
             {
-                "modelo": "CTS",
-                "anio_fabricacion": 2003,
-                "precio_original_eur": 32000
-            },
-            {
-                "modelo": "CTS-V",
+                "modelo": "CTS-V (Primera Gen)",
                 "anio_fabricacion": 2004,
                 "precio_original_eur": 55000
             },
@@ -1903,11 +1383,6 @@
                 "modelo": "STS",
                 "anio_fabricacion": 2004,
                 "precio_original_eur": 40000
-            },
-            {
-                "modelo": "XLR",
-                "anio_fabricacion": 2003,
-                "precio_original_eur": 70000
             },
             {
                 "modelo": "XLR-V",
@@ -1930,14 +1405,14 @@
                 "precio_original_eur": 60000
             },
             {
+                "modelo": "XT5 (SUV)",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 45000
+            },
+            {
                 "modelo": "CT4",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 35000
-            },
-            {
-                "modelo": "CT4-V Blackwing",
-                "anio_fabricacion": 2021,
-                "precio_original_eur": 65000
             },
             {
                 "modelo": "CT5",
@@ -1945,48 +1420,83 @@
                 "precio_original_eur": 42000
             },
             {
+                "modelo": "CT4-V Blackwing",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 65000
+            },
+            {
                 "modelo": "CT5-V Blackwing",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 85000
             },
             {
-                "modelo": "Lyriq (EV)",
+                "modelo": "Lyriq (EV SUV)",
                 "anio_fabricacion": 2022,
                 "precio_original_eur": 60000
             },
             {
-                "modelo": "Celestiq (EV)",
+                "modelo": "Celestiq (EV Ultra-Lujo)",
                 "anio_fabricacion": 2024,
                 "precio_original_eur": 300000
+            },
+            {
+                "modelo": "Escalade-V (SUV)",
+                "anio_fabricacion": 2025,
+                "precio_original_eur": 216000
+            },
+            {
+                "modelo": "Optiq (EV SUV)",
+                "anio_fabricacion": 2026,
+                "precio_original_eur": 65000
             }
         ]
     },
     "Chevrolet": {
         "modelos": [
             {
-                "modelo": "Spark",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 9000
+                "modelo": "Corvette C5",
+                "anio_fabricacion": 1997,
+                "precio_original_eur": 50000
             },
             {
-                "modelo": "Matiz",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 8000
+                "modelo": "Tahoe (Segunda Gen)",
+                "anio_fabricacion": 1999,
+                "precio_original_eur": 35000
             },
             {
-                "modelo": "Aveo",
+                "modelo": "Silverado (Primera Gen)",
+                "anio_fabricacion": 1999,
+                "precio_original_eur": 30000
+            },
+            {
+                "modelo": "Impala (Octava Gen)",
+                "anio_fabricacion": 2000,
+                "precio_original_eur": 22000
+            },
+            {
+                "modelo": "TrailBlazer (Primera Gen)",
+                "anio_fabricacion": 2002,
+                "precio_original_eur": 28000
+            },
+            {
+                "modelo": "Aveo (T200)",
                 "anio_fabricacion": 2002,
                 "precio_original_eur": 11000
             },
             {
-                "modelo": "Cruze",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 15000
-            },
-            {
-                "modelo": "Lacetti",
+                "modelo": "Lacetti (Daewoo Lacetti)",
                 "anio_fabricacion": 2002,
                 "precio_original_eur": 13000
+            },
+            {
+                "modelo": "Corvette C6",
+                "anio_fabricacion": 2005,
+                "precio_original_eur": 65000
+            },
+            {
+                "modelo": "Captiva (SUV)",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 23000
             },
             {
                 "modelo": "Epica",
@@ -1994,44 +1504,29 @@
                 "precio_original_eur": 21000
             },
             {
-                "modelo": "Malibu",
-                "anio_fabricacion": 1997,
-                "precio_original_eur": 20000
+                "modelo": "Cruze (Primera Gen)",
+                "anio_fabricacion": 2008,
+                "precio_original_eur": 15000
             },
             {
-                "modelo": "Camaro",
+                "modelo": "Camaro (Quinta Gen)",
                 "anio_fabricacion": 2010,
                 "precio_original_eur": 37000
             },
             {
-                "modelo": "Camaro ZL1",
+                "modelo": "Volt (Híbrido)",
+                "anio_fabricacion": 2011,
+                "precio_original_eur": 41000
+            },
+            {
+                "modelo": "Camaro ZL1 (Quinta Gen)",
                 "anio_fabricacion": 2012,
                 "precio_original_eur": 60000
             },
             {
-                "modelo": "Impala",
-                "anio_fabricacion": 2000,
-                "precio_original_eur": 22000
-            },
-            {
-                "modelo": "TrailBlazer",
-                "anio_fabricacion": 2002,
-                "precio_original_eur": 28000
-            },
-            {
-                "modelo": "Tahoe",
-                "anio_fabricacion": 1995,
-                "precio_original_eur": 35000
-            },
-            {
-                "modelo": "Suburban",
-                "anio_fabricacion": 1992,
-                "precio_original_eur": 40000
-            },
-            {
-                "modelo": "Silverado",
-                "anio_fabricacion": 1999,
-                "precio_original_eur": 30000
+                "modelo": "Corvette C7 Stingray",
+                "anio_fabricacion": 2014,
+                "precio_original_eur": 75000
             },
             {
                 "modelo": "Bolt EV",
@@ -2039,28 +1534,58 @@
                 "precio_original_eur": 30000
             },
             {
+                "modelo": "Corvette C8 Stingray (Motor Central)",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 85000
+            },
+            {
+                "modelo": "Corvette Z06 (C8)",
+                "anio_fabricacion": 2023,
+                "precio_original_eur": 150000
+            },
+            {
                 "modelo": "Blazer EV",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 55000
             },
             {
+                "modelo": "Silverado EV",
+                "anio_fabricacion": 2023,
+                "precio_original_eur": 70000
+            },
+            {
                 "modelo": "Equinox EV",
                 "anio_fabricacion": 2024,
                 "precio_original_eur": 42000
+            },
+            {
+                "modelo": "Corvette E-Ray (Híbrido)",
+                "anio_fabricacion": 2024,
+                "precio_original_eur": 110000
             }
         ]
     },
     "Chrysler": {
         "modelos": [
             {
+                "modelo": "Neon",
+                "anio_fabricacion": 1994,
+                "precio_original_eur": 15000
+            },
+            {
+                "modelo": "Sebring (Segunda Gen)",
+                "anio_fabricacion": 1995,
+                "precio_original_eur": 22000
+            },
+            {
+                "modelo": "Voyager (Tercera Gen)",
+                "anio_fabricacion": 1996,
+                "precio_original_eur": 23000
+            },
+            {
                 "modelo": "300M",
                 "anio_fabricacion": 1998,
                 "precio_original_eur": 25000
-            },
-            {
-                "modelo": "Sebring",
-                "anio_fabricacion": 1995,
-                "precio_original_eur": 22000
             },
             {
                 "modelo": "PT Cruiser",
@@ -2073,43 +1598,48 @@
                 "precio_original_eur": 32000
             },
             {
-                "modelo": "300C",
+                "modelo": "300C (Primera Gen)",
                 "anio_fabricacion": 2004,
                 "precio_original_eur": 38000
             },
             {
-                "modelo": "Voyager",
-                "anio_fabricacion": 1996,
-                "precio_original_eur": 23000
+                "modelo": "Pacifica (SUV/Crossover original)",
+                "anio_fabricacion": 2004,
+                "precio_original_eur": 30000
             },
             {
-                "modelo": "Grand Voyager",
-                "anio_fabricacion": 2000,
-                "precio_original_eur": 28000
-            },
-            {
-                "modelo": "Pacifica",
+                "modelo": "Pacifica (Minivan/Híbrida)",
                 "anio_fabricacion": 2017,
                 "precio_original_eur": 35000
             },
             {
-                "modelo": "Pacifica Hybrid",
+                "modelo": "Pacifica Hybrid (PHEV)",
                 "anio_fabricacion": 2017,
                 "precio_original_eur": 42000
+            },
+            {
+                "modelo": "Voyager (Post-2017)",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 28000
             }
         ]
     },
     "Citroën": {
         "modelos": [
             {
+                "modelo": "Xantia (Segunda Gen)",
+                "anio_fabricacion": 1993,
+                "precio_original_eur": 16000
+            },
+            {
+                "modelo": "Berlingo (Primera Gen)",
+                "anio_fabricacion": 1996,
+                "precio_original_eur": 14000
+            },
+            {
                 "modelo": "Saxo",
                 "anio_fabricacion": 1996,
                 "precio_original_eur": 9000
-            },
-            {
-                "modelo": "Xantia",
-                "anio_fabricacion": 1993,
-                "precio_original_eur": 16000
             },
             {
                 "modelo": "Xsara",
@@ -2117,49 +1647,19 @@
                 "precio_original_eur": 13000
             },
             {
-                "modelo": "C1",
-                "anio_fabricacion": 2005,
-                "precio_original_eur": 9500
-            },
-            {
-                "modelo": "C2",
-                "anio_fabricacion": 2003,
-                "precio_original_eur": 11000
-            },
-            {
-                "modelo": "C3",
-                "anio_fabricacion": 2002,
-                "precio_original_eur": 13000
-            },
-            {
-                "modelo": "C3 Aircross",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 17000
-            },
-            {
-                "modelo": "C4",
-                "anio_fabricacion": 2004,
-                "precio_original_eur": 16000
-            },
-            {
-                "modelo": "C4 Cactus",
-                "anio_fabricacion": 2014,
-                "precio_original_eur": 15000
-            },
-            {
-                "modelo": "C4 Picasso",
-                "anio_fabricacion": 2006,
-                "precio_original_eur": 21000
-            },
-            {
-                "modelo": "C5",
+                "modelo": "C5 (Primera Gen)",
                 "anio_fabricacion": 2001,
                 "precio_original_eur": 22000
             },
             {
-                "modelo": "C5 Aircross",
-                "anio_fabricacion": 2017,
-                "precio_original_eur": 25000
+                "modelo": "C3 (Primera Gen)",
+                "anio_fabricacion": 2002,
+                "precio_original_eur": 13000
+            },
+            {
+                "modelo": "C4 (Primera Gen)",
+                "anio_fabricacion": 2004,
+                "precio_original_eur": 16000
             },
             {
                 "modelo": "C6",
@@ -2167,9 +1667,9 @@
                 "precio_original_eur": 45000
             },
             {
-                "modelo": "Berlingo",
-                "anio_fabricacion": 1996,
-                "precio_original_eur": 14000
+                "modelo": "C4 Picasso / Grand C4 Picasso (Monovolumen)",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 21000
             },
             {
                 "modelo": "Nemo",
@@ -2177,14 +1677,49 @@
                 "precio_original_eur": 11000
             },
             {
-                "modelo": "E-Méhari",
+                "modelo": "DS3 (Se separó en 2016 como DS)",
+                "anio_fabricacion": 2010,
+                "precio_original_eur": 18000
+            },
+            {
+                "modelo": "C4 Cactus",
+                "anio_fabricacion": 2014,
+                "precio_original_eur": 15000
+            },
+            {
+                "modelo": "E-Méhari (EV)",
                 "anio_fabricacion": 2016,
                 "precio_original_eur": 25000
             },
             {
-                "modelo": "C4 X",
+                "modelo": "C3 Aircross",
+                "anio_fabricacion": 2017,
+                "precio_original_eur": 17000
+            },
+            {
+                "modelo": "C5 Aircross",
+                "anio_fabricacion": 2017,
+                "precio_original_eur": 25000
+            },
+            {
+                "modelo": "Ë-C4 / C4 (Tercera Gen)",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 20000
+            },
+            {
+                "modelo": "C4 X / Ë-C4 X (Fastback)",
                 "anio_fabricacion": 2022,
                 "precio_original_eur": 27000
+            },
+            {
+                "modelo": "C5 X (Berlina/Familiar)",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 35000
+            },
+            {
+                "modelo": "Ë-C3 (EV)",
+                "anio_fabricacion": 2024,
+                "precio_original_eur": 22000
             }
         ]
     },
@@ -2196,19 +1731,19 @@
                 "precio_original_eur": 45000
             },
             {
-                "modelo": "Leon",
+                "modelo": "Formentor",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 43000
+            },
+            {
+                "modelo": "Leon (Hatchback)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 36000
             },
             {
-                "modelo": "Leon Sportstourer",
+                "modelo": "Leon Sportstourer (Familiar)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 38000
-            },
-            {
-                "modelo": "Formentor",
-                "anio_fabricacion": 2020,
-                "precio_original_eur": 43000
             },
             {
                 "modelo": "Born (EV)",
@@ -2216,12 +1751,17 @@
                 "precio_original_eur": 38000
             },
             {
-                "modelo": "Tavascan (EV)",
+                "modelo": "UrbanRebel (Concepto de EV Pequeño)",
+                "anio_fabricacion": 2022,
+                "precio_original_eur": 25000
+            },
+            {
+                "modelo": "Tavascan (EV SUV Coupé)",
                 "anio_fabricacion": 2024,
                 "precio_original_eur": 55000
             },
             {
-                "modelo": "Terramar",
+                "modelo": "Terramar (SUV Híbrido/ICE)",
                 "anio_fabricacion": 2025,
                 "precio_original_eur": 45000
             }
@@ -2265,7 +1805,7 @@
                 "precio_original_eur": 100000
             },
             {
-                "modelo": "Corvette C7",
+                "modelo": "Corvette C7 Stingray",
                 "anio_fabricacion": 2014,
                 "precio_original_eur": 55000
             },
@@ -2280,7 +1820,7 @@
                 "precio_original_eur": 130000
             },
             {
-                "modelo": "Corvette C8 Stingray",
+                "modelo": "Corvette C8 Stingray (Motor Central)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 65000
             },
@@ -2295,61 +1835,61 @@
                 "precio_original_eur": 110000
             },
             {
-                "modelo": "Corvette C8 ZR1",
-                "anio_fabricacion": 2025,
-                "precio_original_eur": 160000
-            },
-            {
-                "modelo": "Corvette E-Ray (híbrido)",
+                "modelo": "Corvette E-Ray (Híbrido)",
                 "anio_fabricacion": 2023,
                 "precio_original_eur": 120000
+            },
+            {
+                "modelo": "Corvette C8 ZR1 (Est. Lanzamiento)",
+                "anio_fabricacion": 2025,
+                "precio_original_eur": 160000
             }
         ]
     },
     "Dacia": {
         "modelos": [
             {
-                "modelo": "Logan",
+                "modelo": "Logan (Primera Gen)",
                 "anio_fabricacion": 2004,
                 "precio_original_eur": 8500
             },
             {
-                "modelo": "Logan MCV",
+                "modelo": "Logan MCV (Familiar/Primera Gen)",
                 "anio_fabricacion": 2006,
                 "precio_original_eur": 9500
             },
             {
-                "modelo": "Sandero",
+                "modelo": "Sandero (Primera Gen)",
                 "anio_fabricacion": 2008,
                 "precio_original_eur": 9000
             },
             {
-                "modelo": "Sandero Stepway",
-                "anio_fabricacion": 2010,
+                "modelo": "Sandero Stepway (Primera Gen)",
+                "anio_fabricacion": 2009,
                 "precio_original_eur": 11000
             },
             {
-                "modelo": "Duster",
+                "modelo": "Duster (Primera Gen)",
                 "anio_fabricacion": 2010,
                 "precio_original_eur": 12000
             },
             {
-                "modelo": "Lodgy",
+                "modelo": "Lodgy (Monovolumen)",
                 "anio_fabricacion": 2012,
                 "precio_original_eur": 14000
             },
             {
-                "modelo": "Dokker",
+                "modelo": "Dokker (Furgoneta/Combi)",
                 "anio_fabricacion": 2012,
                 "precio_original_eur": 12000
             },
             {
-                "modelo": "Dokker Van",
+                "modelo": "Dokker Van (Comercial)",
                 "anio_fabricacion": 2012,
                 "precio_original_eur": 11000
             },
             {
-                "modelo": "Jogger",
+                "modelo": "Jogger (Crossover 7 plazas)",
                 "anio_fabricacion": 2021,
                 "precio_original_eur": 16000
             },
@@ -2359,12 +1899,12 @@
                 "precio_original_eur": 17000
             },
             {
-                "modelo": "Duster (3ª generación)",
+                "modelo": "Duster (Tercera Gen)",
                 "anio_fabricacion": 2024,
                 "precio_original_eur": 19000
             },
             {
-                "modelo": "Bigster",
+                "modelo": "Bigster (SUV Grande)",
                 "anio_fabricacion": 2025,
                 "precio_original_eur": 23000
             }
@@ -2373,9 +1913,14 @@
     "Daewoo": {
         "modelos": [
             {
-                "modelo": "Matiz",
-                "anio_fabricacion": 1998,
-                "precio_original_eur": 9000
+                "modelo": "Tico",
+                "anio_fabricacion": 1991,
+                "precio_original_eur": 6000
+            },
+            {
+                "modelo": "Nexia",
+                "anio_fabricacion": 1995,
+                "precio_original_eur": 10000
             },
             {
                 "modelo": "Lanos",
@@ -2393,7 +1938,12 @@
                 "precio_original_eur": 16000
             },
             {
-                "modelo": "Tacuma",
+                "modelo": "Matiz (Primera Gen)",
+                "anio_fabricacion": 1998,
+                "precio_original_eur": 9000
+            },
+            {
+                "modelo": "Tacuma / Rezzo (Monovolumen)",
                 "anio_fabricacion": 2000,
                 "precio_original_eur": 15000
             }
@@ -2407,14 +1957,24 @@
                 "precio_original_eur": 18000
             },
             {
+                "modelo": "Deauville (Berlina)",
+                "anio_fabricacion": 1971,
+                "precio_original_eur": 20000
+            },
+            {
+                "modelo": "Longchamp",
+                "anio_fabricacion": 1972,
+                "precio_original_eur": 25000
+            },
+            {
                 "modelo": "Guarà",
                 "anio_fabricacion": 1993,
                 "precio_original_eur": 120000
             },
             {
-                "modelo": "Deauville",
-                "anio_fabricacion": 1971,
-                "precio_original_eur": 20000
+                "modelo": "P72 (Moderno)",
+                "anio_fabricacion": 2020,
+                "precio_original_eur": 750000
             }
         ]
     },
@@ -2424,64 +1984,99 @@
                 "modelo": "DMC-12",
                 "anio_fabricacion": 1981,
                 "precio_original_eur": 25000
+            },
+            {
+                "modelo": "Alpha5 (EV Concepto)",
+                "anio_fabricacion": 2024,
+                "precio_original_eur": 100000
             }
         ]
     },
     "Dodge": {
         "modelos": [
             {
-                "modelo": "Viper",
+                "modelo": "Viper (Primera Gen)",
                 "anio_fabricacion": 1992,
                 "precio_original_eur": 50000
             },
             {
-                "modelo": "Charger",
-                "anio_fabricacion": 2006,
-                "precio_original_eur": 25000
+                "modelo": "Ram 1500 (Segunda Gen, pre-separación de Ram)",
+                "anio_fabricacion": 1994,
+                "precio_original_eur": 28000
             },
             {
-                "modelo": "Challenger",
-                "anio_fabricacion": 2008,
-                "precio_original_eur": 27000
-            },
-            {
-                "modelo": "Durango",
+                "modelo": "Durango (Primera Gen SUV)",
                 "anio_fabricacion": 1997,
                 "precio_original_eur": 30000
             },
             {
-                "modelo": "Ram 1500",
-                "anio_fabricacion": 1994,
-                "precio_original_eur": 28000
+                "modelo": "Charger (Sexta Gen, Vuelve como Sedán)",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 25000
+            },
+            {
+                "modelo": "Nitro (SUV)",
+                "anio_fabricacion": 2006,
+                "precio_original_eur": 23000
+            },
+            {
+                "modelo": "Challenger (Tercera Gen)",
+                "anio_fabricacion": 2008,
+                "precio_original_eur": 27000
+            },
+            {
+                "modelo": "Journey / Fiat Freemont",
+                "anio_fabricacion": 2009,
+                "precio_original_eur": 21000
+            },
+            {
+                "modelo": "Challenger SRT Demon",
+                "anio_fabricacion": 2018,
+                "precio_original_eur": 95000
             }
         ]
     },
     "DS Automobiles": {
         "modelos": [
             {
-                "modelo": "DS3",
+                "modelo": "DS3 (Lanzado bajo Citroën, listado aquí para contexto)",
                 "anio_fabricacion": 2010,
                 "precio_original_eur": 17000
             },
             {
-                "modelo": "DS4",
+                "modelo": "DS4 (Lanzado bajo Citroën, listado aquí para contexto)",
                 "anio_fabricacion": 2011,
                 "precio_original_eur": 21000
             },
             {
-                "modelo": "DS5",
+                "modelo": "DS5 (Lanzado bajo Citroën, listado aquí para contexto)",
                 "anio_fabricacion": 2011,
                 "precio_original_eur": 28000
             },
             {
-                "modelo": "DS7 Crossback",
+                "modelo": "DS 3 Crossback / DS 3",
+                "anio_fabricacion": 2018,
+                "precio_original_eur": 25000
+            },
+            {
+                "modelo": "DS 7 Crossback / DS 7",
                 "anio_fabricacion": 2017,
                 "precio_original_eur": 32000
             },
             {
-                "modelo": "DS9",
+                "modelo": "DS 4 (Segunda Gen)",
+                "anio_fabricacion": 2021,
+                "precio_original_eur": 29000
+            },
+            {
+                "modelo": "DS 9 (Berlina)",
                 "anio_fabricacion": 2020,
                 "precio_original_eur": 51000
+            },
+            {
+                "modelo": "DS E-Tense (Concepto/EV)",
+                "anio_fabricacion": 2016,
+                "precio_original_eur": 100000
             }
         ]
     },

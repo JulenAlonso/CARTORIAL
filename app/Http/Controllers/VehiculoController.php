@@ -20,9 +20,11 @@ class VehiculoController extends Controller
 
         // Normaliza dinero: "1.234,56" -> "1234.56"
         $money = function (?string $v) {
-            if ($v === null) return null;
+            if ($v === null)
+                return null;
             $v = trim($v);
-            if ($v === '') return null;
+            if ($v === '')
+                return null;
             $v = str_replace('.', '', $v);
             $v = str_replace(',', '.', $v);
             return is_numeric($v) ? $v : null;
@@ -40,23 +42,23 @@ class VehiculoController extends Controller
                 // - M-1234-AB       (provincial alfanumérico)
                 'regex:/^(\d{4}\s?[BCDFGHJKLMNPRSTVWXYZ]{3}|[A-Z]{1,2}-\d{4}-[A-Z]{2}|[A-Z]{1,2}-\d{4})$/i',
                 Rule::unique('vehiculos', 'matricula')
-                    ->where(fn ($q) => $q->where('id_usuario', $userId)),
+                    ->where(fn($q) => $q->where('id_usuario', $userId)),
             ],
 
-            'marca'               => ['required', 'string', 'max:100'],
-            'modelo'              => ['required', 'string', 'max:100'],
+            'marca' => ['required', 'string', 'max:100'],
+            'modelo' => ['required', 'string', 'max:100'],
 
-            'anio_fabricacion'    => ['nullable', 'integer', 'between:1886,' . $currentYear],
-            'anio_matriculacion'  => ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'anio_fabricacion' => ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'anio_matriculacion' => ['nullable', 'integer', 'between:1886,' . $currentYear],
 
-            'fecha_compra'        => ['nullable', 'date'],
-            'km'                  => ['nullable', 'integer', 'min:0'],
-            'cv'                  => ['nullable', 'integer', 'min:0'],
-            'combustible'         => ['nullable', 'string', 'max:50'],
-            'etiqueta'            => ['nullable', 'string', 'max:20'],
-            'precio'              => ['nullable', 'string', 'max:30'],
+            'fecha_compra' => ['nullable', 'date'],
+            'km' => ['nullable', 'integer', 'min:0'],
+            'cv' => ['nullable', 'integer', 'min:0'],
+            'combustible' => ['nullable', 'string', 'max:50'],
+            'etiqueta' => ['nullable', 'string', 'max:20'],
+            'precio' => ['nullable', 'string', 'max:30'],
             'precio_segunda_mano' => ['nullable', 'string', 'max:30'],
-            'car_avatar'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
+            'car_avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
         ], [
             'matricula.regex' => 'El formato de la matrícula no es válido.',
         ]);
@@ -113,9 +115,11 @@ class VehiculoController extends Controller
         }
 
         $money = function (?string $v) {
-            if ($v === null) return null;
+            if ($v === null)
+                return null;
             $v = trim($v);
-            if ($v === '') return null;
+            if ($v === '')
+                return null;
             $v = str_replace('.', '', $v);
             $v = str_replace(',', '.', $v);
             return is_numeric($v) ? $v : null;
@@ -132,20 +136,20 @@ class VehiculoController extends Controller
                 'regex:/^(\d{4}\s?[BCDFGHJKLMNPRSTVWXYZ]{3}|[A-Z]{1,2}-\d{4}-[A-Z]{2}|[A-Z]{1,2}-\d{4})$/i',
             ],
 
-            'marca'               => ['required', 'string', 'max:100'],
-            'modelo'              => ['required', 'string', 'max:100'],
+            'marca' => ['required', 'string', 'max:100'],
+            'modelo' => ['required', 'string', 'max:100'],
 
-            'anio_fabricacion'    => ['nullable', 'integer', 'between:1886,' . $currentYear],
-            'anio_matriculacion'  => ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'anio_fabricacion' => ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'anio_matriculacion' => ['nullable', 'integer', 'between:1886,' . $currentYear],
 
-            'fecha_compra'        => ['nullable', 'date'],
-            'km'                  => ['nullable', 'integer', 'min:0'],
-            'cv'                  => ['nullable', 'integer', 'min:0'],
-            'combustible'         => ['nullable', 'string', 'max:50'],
-            'etiqueta'            => ['nullable', 'string', 'max:20'],
-            'precio'              => ['nullable', 'string', 'max:30'],
+            'fecha_compra' => ['nullable', 'date'],
+            'km' => ['nullable', 'integer', 'min:0'],
+            'cv' => ['nullable', 'integer', 'min:0'],
+            'combustible' => ['nullable', 'string', 'max:50'],
+            'etiqueta' => ['nullable', 'string', 'max:20'],
+            'precio' => ['nullable', 'string', 'max:30'],
             'precio_segunda_mano' => ['nullable', 'string', 'max:30'],
-            'car_avatar'          => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
+            'car_avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
         ], [
             'matricula.regex' => 'El formato de la matrícula no es válido.',
         ]);
@@ -194,10 +198,20 @@ class VehiculoController extends Controller
 
         $vehiculos = $user->vehiculos()
             ->select(
-                'id_vehiculo', 'marca', 'modelo', 'matricula',
-                'anio_fabricacion', 'anio_matriculacion',
-                'km', 'cv', 'combustible', 'etiqueta',
-                'precio', 'precio_segunda_mano', 'fecha_compra', 'car_avatar'
+                'id_vehiculo',
+                'marca',
+                'modelo',
+                'matricula',
+                'anio_fabricacion',
+                'anio_matriculacion',
+                'km',
+                'cv',
+                'combustible',
+                'etiqueta',
+                'precio',
+                'precio_segunda_mano',
+                'fecha_compra',
+                'car_avatar'
             )
             ->orderBy('anio_matriculacion', 'desc')
             ->get();

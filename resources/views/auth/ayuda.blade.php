@@ -4,43 +4,100 @@
 @section('fullwidth', true)
 
 @section('content')
+    {{-- Bootstrap Icons para los iconos de RRSS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <style>
+        :root {
+            --gold: #facc15;
+            /* amarillo dorado */
+            --gold-2: #f97316;
+            /* naranja dorado */
+        }
+
+        /* Ocultar navbar del layout */
+        nav {
+            display: none !important;
+        }
+
+        /* ============================= */
+        /*         BASE / SCROLL         */
+        /* ============================= */
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f3f4f6;
+
+            /* Sobrescribe el layout en grid del perfil */
+            display: block !important;
+            grid-template-columns: none !important;
+        }
+
+        main {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: none !important;
+        }
+
+        .py-4 {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
         /* ============================= */
         /*      FULL PAGE + MODERN UI    */
         /* ============================= */
+
         .ayuda-wrapper {
-            width: 100vw;
-            height: calc(100vh - 70px);
-            background: #f3f4f6;
-            padding: 24px 40px;
+            min-height: 100vh;
+            /* ocupa como mínimo toda la altura */
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            /* para poder “pegar” el footer abajo */
+            box-sizing: border-box;
+            width: 100%;
         }
 
         .ayuda-container {
             width: 100%;
-            margin: 0 auto;
-            flex: 1;
+            /* 🔹 ocupa todo el ancho */
+            max-width: 100%;
+            /* 🔹 sin límite centrado */
+            margin: 0 0 24px 0;
+            /* sólo separación inferior con el footer */
+            flex: 1 0 auto;
+            /* ocupa el espacio disponible encima del footer */
+            padding: 24px 40px 0;
+
         }
 
-        /* BOTÓN VOLVER */
-        .btn-volver {
-            background: #e5edff;
-            color: #1d4ed8;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 14px;
+        /* ===== Botón volver ===== */
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+            color: #1f2937;
+            border: none;
+            box-shadow: 0 8px 18px rgba(234, 179, 8, 0.2);
+            padding: 10px 18px;
+            border-radius: 999px;
             font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             text-decoration: none;
-            border: 1px solid #c7d2fe;
-            transition: 0.2s ease-in-out;
-            display: inline-block;
         }
 
-        .btn-volver:hover {
-            background: #dbe4ff;
-            border-color: #a5b4fc;
+        .btn-gold:hover {
+            filter: brightness(1.05);
+            color: #111827;
         }
 
         /* HEADER */
@@ -57,19 +114,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .ayuda-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #0d6efd, #38bdf8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 22px;
-            box-shadow: 0 6px 18px rgba(37, 99, 235, .35);
         }
 
         .ayuda-title {
@@ -187,6 +231,119 @@
             height: 100%;
             border: 0;
         }
+
+        /* ======================= */
+        /*         FOOTER          */
+        /* ======================= */
+
+        .ayuda-footer {
+            width: 100%;
+            /* 🔹 ocupa todo el ancho de la pantalla */
+            background: #111827;
+            color: #e5e7eb;
+            padding: 16px 40px 10px;
+            border-radius: 0;
+            box-sizing: border-box;
+            margin-top: auto;
+            /* se queda pegado abajo si hay poca altura */
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #facc15;
+        }
+
+        .footer-subtitle {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #f3f4f6;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 3px;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            text-decoration: none;
+            color: #e5e7eb;
+            transition: color .2s;
+        }
+
+        .footer-links a:hover {
+            color: #facc15;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 6px;
+        }
+
+        .social-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e5e7eb;
+            font-size: 14px;
+            transition: all .2s ease;
+        }
+
+        .social-icon:hover {
+            background: #facc15;
+            color: #111827;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
     </style>
 
     <div class="ayuda-wrapper">
@@ -196,25 +353,23 @@
             <div class="ayuda-header">
 
                 <!-- BOTÓN VOLVER -->
-                <a href="{{ url()->previous() }}" class="btn-volver">← Volver</a>
+                <a href="{{ route('perfil') }}" class="btn btn-gold">← Volver</a>
 
                 <div class="ayuda-title-block">
-                    <div class="ayuda-icon">?</div>
                     <div>
-                        <h1 class="ayuda-title">Centro de Ayuda</h1>
+                        <h1 class="ayuda-title"> ❓Centro de Ayuda</h1>
                         <p class="ayuda-subtitle">Soluciona dudas, contacta soporte y consulta talleres cercanos.</p>
                     </div>
                 </div>
 
                 <div class="ayuda-header-right">
                     <span>🔐 Soporte exclusivo para usuarios</span><br>
-                    <small>Si necesitas ayuda, escribe a <strong>soporte@autocontrol.com</strong></small>
+                    <small>Si necesitas ayuda, escribe a <strong>soporte@cartorial.com</strong></small>
                 </div>
             </div>
 
             <!-- GRID -->
             <div class="ayuda-grid">
-
                 <!-- IZQUIERDA -->
                 <div>
                     <!-- CONTACTO -->
@@ -224,7 +379,7 @@
                             <span class="ayuda-badge">Soporte</span>
                         </div>
 
-                        <p><strong>Email soporte:</strong> soporte@autocontrol.com</p>
+                        <p><strong>Email soporte:</strong> soporte@cartorial.com</p>
                         <p><strong>Teléfono:</strong> 600 123 456</p>
                         <p><strong>Horario:</strong> L–V 09:00–19:00</p>
                     </div>
@@ -270,7 +425,6 @@
                         </div>
 
                         <div class="map-wrapper">
-                            <!-- GOOGLE MAPS EMBED -->
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d6053.17593290997!2d-3.768706204995342!3d40.66101221856797!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1staller%2C%20taller%20mecanico%2C%20auto%2C%20motor!5e0!3m2!1ses!2ses!4v1763579826062!5m2!1ses!2ses"
                                 width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
@@ -279,8 +433,64 @@
 
                     </div>
                 </div>
-
             </div>
         </div>
+
+        <!-- FOOTER -->
+        <footer class="ayuda-footer">
+            <div class="footer-content">
+
+                <!-- Columna 1 - Marca -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Cartorial</h3>
+                    <p class="footer-text">
+                        Tu asistente personal para gestionar vehículos, gastos, mantenimientos y mucho más.
+                    </p>
+
+                    <div class="footer-socials">
+                        <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Columna 2 - Enlaces -->
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Navegación</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ route('perfil') }}">Mi Perfil</a></li>
+                        <li><a href="{{ route('vehiculo.create') }}">Añadir Vehículo</a></li>
+                        <li><a href="{{ route('notas.index') }}">Notas y Mantenimientos</a></li>
+                        <li><a href="#">Gastos</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3 - Soporte -->
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Soporte</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ route('ayuda') }}">Centro de Ayuda</a></li>
+                        <li><a href="mailto:soporte@cartorial.com">Correo soporte</a></li>
+                        <li><a href="#">Estado del servicio</a></li>
+                        <li><a href="#">Preguntas frecuentes</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 4 - Legal -->
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacidad</a></li>
+                        <li><a href="#">Términos de uso</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                © {{ date('Y') }} Cartorial — Todos los derechos reservados.
+            </div>
+        </footer>
     </div>
 @endsection

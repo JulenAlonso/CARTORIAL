@@ -1,57 +1,54 @@
 /* =========
-   Variables
+   Variables (solo colores modernos)
    ========= */
 :root {
-    --brand: #dbeafe;
-    /* azul pastel muy claro */
-    --brand-2: #bfdbfe;
-    /* azul pastel */
-    --bg-soft: #fafcff;
-    /* fondo casi blanco */
-    --text: #475569;
-    /* gris azulado tenue */
-    --muted: #94a3b8;
-    /* gris medio suave */
-    --muted-2: #cbd5e1;
-    /* gris clarito */
-    --ring: rgba(191, 219, 254, 0.40);
+    --brand: #e0f2fe;
+    --brand-2: #bae6fd;
+    --bg-soft: #f8fafc;
+    --text: #000000;
+    --muted: #000000;
+    --muted-2: #000000;
+    --ring: rgba(147, 197, 253, 0.45);
     --card-radius: 16px;
     --field-radius: 12px;
-    --shadow-sm: 0 4px 10px rgba(17, 24, 39, 0.04);
-    --shadow-md: 0 6px 18px rgba(17, 24, 39, 0.05);
+    --shadow-sm: 0 4px 10px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.06);
+    --gold: #eab308;
+--gold-2: #facc15;
+}
+
+/* Ocultar navbar */
+nav {
+    display: none !important;
 }
 
 /* ============  Página general  ============ */
 .vehiculos-editor {
-    background: linear-gradient(135deg, #e8f0ff, #ffffff);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     min-height: 100vh;
     padding: 40px 4vw;
-    color: var(--text);
+    color: #000000;
 }
 
 /* =======  Títulos  ======= */
-.vehiculos-editor h3,
-.vehiculos-editor h5 {
+.vehiculos-editor h3 {
     font-weight: 600;
-    color: #334155;
+    color: #2563eb;
     letter-spacing: .2px;
-    border: none;
 }
 
-/* ============  Lista lateral (tarjetas iguales para todos)  ============ */
+/* ============  Lista lateral  ============ */
 .vehiculos-editor .border-end {
-    border-color: #f1f5f9 !important;
-}
-
-.vehiculos-editor .list-group {
-    background: transparent;
-    border: 0;
+    border-color: #e2e8f0 !important;
 }
 
 .vehiculos-editor .list-group-item {
-    border: 1px solid #edf2f7;
+    border: 1px solid #dbeafe;
     border-radius: var(--card-radius) !important;
-    background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
     box-shadow: var(--shadow-sm);
     margin-bottom: 14px;
     min-height: 95px;
@@ -59,93 +56,74 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition: all .25s ease;
 }
 
 .vehiculos-editor .list-group-item:hover {
-    filter: brightness(1.02);
-    transform: translateY(-1px);
+    filter: brightness(1.04);
     box-shadow: var(--shadow-md);
 }
 
 .vehiculos-editor .list-group-item.active {
-    /* mismo look, con un pelín más de énfasis */
-    border: 1px solid #dbeafe;
-    box-shadow: 0 6px 14px rgba(191, 219, 254, .30);
+    border: 1px solid #93c5fd;
+    background: linear-gradient(135deg, #bae6fd, #93c5fd);
 }
 
 .vehiculos-editor .list-group-item strong {
-    font-size: 1.05rem;
-    color: #1e293b;
+    color: #000;
 }
 
 .vehiculos-editor .list-group-item small {
-    display: block;
-    font-size: .85rem;
-    color: #64748b;
-    margin-top: 2px;
+    color: #000;
 }
 
-/* Texto secundario consistente (evita variaciones de Bootstrap) */
 .vehiculos-editor .texto-secundario {
-    color: #64748b !important;
+    color: #000 !important;
 }
 
-/* Botón ✏️ acorde al tema claro */
+/* Botón ✏️ lista */
 .vehiculos-editor .btn-outline-primary {
     background: #ffffff;
-    border: 1px solid #dbeafe;
-    color: #2563eb;
+    border: 1px solid #cbd5e1;
+    color: #000;
 }
 
 .vehiculos-editor .btn-outline-primary:hover {
     background: #eff6ff;
-    border-color: #bfdbfe;
-    color: #1d4ed8;
+    border-color: #93c5fd;
 }
 
-/* ==========  Formulario (debe ocupar todo el ancho útil)  ========== */
-/* Contenedor de campos ocupa 9/12 y foto 3/12 en XL (se define en el Blade con col-classes).
-   Aquí aseguramos que los controles se expanden al 100% del espacio del grid. */
-.vehiculos-editor .col-xl-9>.row.g-3>[class*="col-"] .form-control,
-.vehiculos-editor .col-xl-9>.row.g-3>[class*="col-"] .form-select {
-    width: 100%;
-}
-
+/* ==========  Formularios  ========== */
 .vehiculos-editor label.form-label {
     font-size: .85rem;
     font-weight: 600;
-    color: #475569;
-    margin-bottom: .35rem;
+    color: #000;
 }
 
 .vehiculos-editor .form-control,
 .vehiculos-editor .form-select {
     background-color: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #dbeafe;
     border-radius: var(--field-radius);
     padding: 10px 12px;
-    color: #475569;
+    color: #000;
     transition: all .2s ease;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .02);
+}
+
+.vehiculos-editor .form-control::placeholder {
+    color: #000;
 }
 
 .vehiculos-editor .form-control:focus,
 .vehiculos-editor .form-select:focus {
-    border-color: #bfdbfe;
+    border-color: #93c5fd;
     box-shadow: 0 0 0 4px var(--ring);
-    outline: 0;
 }
 
-.vehiculos-editor .form-control::placeholder {
-    color: var(--muted-2);
-}
-
-/* Select con flecha */
+/* Flecha select */
 .vehiculos-editor .form-select {
     background-image:
-        linear-gradient(45deg, transparent 50%, #94a3b8 50%),
-        linear-gradient(135deg, #94a3b8 50%, transparent 50%),
+        linear-gradient(45deg, transparent 50%, #000 50%),
+        linear-gradient(135deg, #000 50%, transparent 50%),
         linear-gradient(to right, transparent, transparent);
     background-position:
         calc(100% - 18px) 1.1em,
@@ -157,128 +135,106 @@
 
 /* ==========  Botones  ========== */
 .vehiculos-editor .btn-primary {
-    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-    border: 0;
-    color: #1e293b;
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
     border-radius: 12px;
     padding: 10px 16px;
+    color: #fff !important;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(191, 219, 254, .40);
-    transition: all .2s ease;
+    border: none;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
 }
 
 .vehiculos-editor .btn-primary:hover {
-    background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
-    box-shadow: 0 6px 18px rgba(191, 219, 254, .45);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
 }
 
 .vehiculos-editor .btn-secondary {
-    background: linear-gradient(135deg, #e8f0ff, #ffffff);
+    background: #f8fafc;
     border: 1px solid #e2e8f0;
-    color: #475569;
+    color: #000;
     border-radius: 12px;
     padding: 10px 16px;
 }
 
 .vehiculos-editor .btn-secondary:hover {
-    background: #f8fafc;
+    background: #f1f5f9;
 }
 
 /* =====  Foto vehículo  ===== */
-.vehiculos-editor .vehiculo-foto .border {
-    border: 1px dashed #dbeafe !important;
-    background: #f9fbff;
-}
-
 .vehiculos-editor .vehiculo-foto img {
     border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .04);
+    background-color: transparent;
 }
 
-/* =====  Sección título  ===== */
-.vehiculos-editor .section-title {
-    display: inline-flex;
-    align-items: center;
-    gap: .6rem;
-    padding: .35rem .75rem;
-    border-radius: 999px;
-    background: #eff6ff;
-    color: #2563eb;
-    font-weight: 600;
-    font-size: .85rem;
-}
+/* ============================================
+   INPUT FILE — versión DEFINITIVA (AL REVÉS)
+   ============================================ */
 
-/* Mismo tamaño para los dos botones de acción */
-.action-btn {
-    width: 34px;
-    height: 34px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+/* Contenedor completo */
+.vehiculos-editor input[type="file"] {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: var(--field-radius);
+    background-color: #ffffff !important; /* Parte derecha blanca */
     padding: 0;
-    border-radius: 8px;
-    position: relative;
-    z-index: 3;
+    height: 42px;
+    cursor: pointer;
+    color: #000;
+    font-size: 13px;
 }
 
-.action-btn .bi {
-    font-size: 1rem;
-    line-height: 1;
+/* Botón izquierdo — gris entero */
+.vehiculos-editor input[type="file"]::-webkit-file-upload-button {
+    background-color: #e5e7eb !important;  /* gris */
+    color: #000;
+    height: 100%;
+    padding: 0 14px;
+    border: none;
+    border-radius: 12px 0 0 12px;
+    border-right: 1px solid #cbd5e1;
+    cursor: pointer;
 }
 
-/* Evitar overlay blanco y mantener rojo puro en borrar */
+/* Hover botón */
+.vehiculos-editor input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #d1d5db !important;
+}
+
+/* ===== Botones de acción específicos ===== */
 .btn-outline-danger.action-btn {
-    background-color: #ff4b5c;
-    border-color: #ff4b5c;
-    color: #fff;
+    background-color: #ef4444;
+    border-color: #ef4444;
+    color: white;
 }
 
-.btn-outline-danger.action-btn:hover,
-.btn-outline-danger.action-btn:focus,
-.btn-outline-danger.action-btn:active {
-    background-color: #ff4b5c !important;
-    border-color: #ff4b5c !important;
-    color: #fff !important;
-    box-shadow: none;
-}
-
-/* (Opcional) Mantener el lápiz sin cambio de fondo si lo deseas */
 .btn-outline-primary.action-btn {
     background: #ffffff;
-    border: 1px solid #dbeafe;
-    color: #2563eb;
+    border: 1px solid #cbd5e1;
+    color: #000;
 }
 
 .btn-outline-primary.action-btn:hover {
-    background: transparent;
-    border-color: #bfdbfe;
-    color: #1d4ed8;
+    background: #eff6ff;
+    border-color: #60a5fa;
 }
 
-/* Asegurar que el stretched-link no tape los botones */
-.vehiculos-editor .list-group-item {
-    position: relative;
+/* ===== Boton volver ===== */
+.btn-gold {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+    color: #1f2937;
+    border: none;
+    box-shadow: 0 8px 18px rgba(234, 179, 8, 0.2);
 }
 
-.vehiculos-editor .list-group-item .stretched-link::after {
-    z-index: 1 !important;
+.btn-gold:hover {
+    filter: brightness(1.05);
 }
 
 
-/* =====  Responsive  ===== */
+
+/* ===== Responsive ===== */
 @media (max-width: 991.98px) {
     .vehiculos-editor .border-end {
+        border-bottom: 1px solid #000;
         border-right: 0 !important;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
-    }
-}
-
-/* =====  Dark mode (mantiene base clara; solo texto)  ===== */
-@media (prefers-color-scheme: dark) {
-    .vehiculos-editor {
-        color: #e2e8f0;
     }
 }

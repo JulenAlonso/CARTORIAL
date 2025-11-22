@@ -15,7 +15,7 @@
         $currentYear = now()->year; // Definir el año actual
     @endphp
 
-    {{ Auth::user()->user_name }}
+    {{-- {{ Auth::user()->user_name }} --}}
 
     <div class="container py-5">
         <div class="card p-4">

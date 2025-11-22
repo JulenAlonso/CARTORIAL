@@ -5,11 +5,13 @@
 
 @section('content')
     <style>
-        /* ================
-               GLOBAL STYLING
-               ================ */
+        nav {
+            display: none !important;
+        }
+
+        /* ================ GLOBAL STYLING ================ */
         body {
-            background: #020617 !important;
+            background: url('{{ asset("./assets/images/AI-Background-Image-Generator-How-It-Works-and-Why-You-Need-It.jpg") }}') center/cover no-repeat !important;
             /* deep black / navy */
         }
 
@@ -18,26 +20,22 @@
             min-height: calc(100vh - 64px);
             width: 100vw;
             overflow: hidden;
-            padding: 24px 32px;
+            padding: 0px 40px;
             display: flex;
             flex-direction: column;
             gap: 24px;
             color: #e5e7eb;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         /* Animated neon grid background */
         .adminzone-bg-grid {
             position: absolute;
             inset: 0;
-            background-image:
-                linear-gradient(rgba(31, 41, 55, 0.45) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(31, 41, 55, 0.45) 1px, transparent 1px);
-            background-size: 40px 40px;
             opacity: 0.45;
             transform: perspective(600px) rotateX(60deg) translateY(-120px);
             transform-origin: top center;
-            filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.5));
+            /* filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.5)); */
             pointer-events: none;
         }
 
@@ -52,7 +50,7 @@
         .adminzone-blob--cyan {
             width: 260px;
             height: 260px;
-            background: radial-gradient(circle at 30% 30%, #22d3ee, transparent 60%);
+            /* background: radial-gradient(circle at 30% 30%, #22d3ee, transparent 60%); */
             top: -40px;
             left: -40px;
         }
@@ -61,14 +59,13 @@
             width: 320px;
             height: 320px;
             background: radial-gradient(circle at 70% 70%, #a855f7, transparent 60%);
-            bottom: -60px;
-            right: -60px;
+            /* bottom: -60px; */
+            /* right: -60px; */
         }
 
-        /* ============
-               TOP BAR
-               ============ */
+        /* ============ TOP BAR ============ */
         .adminzone-topbar {
+            color: #e5e7eb;
             position: relative;
             display: flex;
             align-items: center;
@@ -94,7 +91,7 @@
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color: #67e8f9;
-            background: linear-gradient(90deg, rgba(8, 47, 73, 0.9), rgba(30, 64, 175, 0.45));
+            /* background: linear-gradient(90deg, rgba(8, 47, 73, 0.9), rgba(30, 64, 175, 0.45)); */
         }
 
         .adminzone-title {
@@ -167,9 +164,7 @@
             box-shadow: 0 0 26px rgba(59, 130, 246, 0.85);
         }
 
-        /* ==================
-               MAIN LAYOUT GRID
-               ================== */
+        /* ================== MAIN LAYOUT GRID ================== */
         .adminzone-main {
             position: relative;
             display: grid;
@@ -185,14 +180,10 @@
         }
 
         .adminzone-panel {
-            background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.35), transparent 55%),
-                radial-gradient(circle at bottom right, rgba(8, 47, 73, 0.5), transparent 60%),
-                rgba(15, 23, 42, 0.92);
+            background: #1e293b;
+            /* << fondo limpio sin rayas */
             border-radius: 22px;
             border: 1px solid rgba(148, 163, 184, 0.4);
-            box-shadow:
-                0 0 0 1px rgba(15, 23, 42, 0.8),
-                0 18px 40px rgba(0, 0, 0, 0.9);
             padding: 16px 18px 18px;
             position: relative;
             overflow: hidden;
@@ -237,14 +228,14 @@
             padding: 3px 9px;
             border-radius: 999px;
             font-size: 10px;
-            color: #a5b4fc;
-            border: 1px solid rgba(129, 140, 248, 0.6);
+            /* color: #a5b4fc; */
+            /* border: 1px solid rgba(129, 140, 248, 0.6); */
             background: rgba(15, 23, 42, 0.9);
         }
 
         /* ============
-               STATS STRIP
-               ============ */
+                                                                   STATS STRIP
+                                                                   ============ */
         .adminzone-stats-strip {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -284,8 +275,8 @@
         }
 
         /* ================
-               USERS TABLE
-               ================ */
+                                                                   USERS TABLE
+                                                                   ================ */
         .adminzone-table {
             margin-top: 6px;
             border-radius: 14px;
@@ -503,8 +494,6 @@
             background: rgba(75, 85, 99, 0.8);
             border-radius: 999px;
         }
-
-        
     </style>
 
     <div class="adminzone-wrapper">
@@ -514,19 +503,12 @@
 
         {{-- TOP BAR --}}
         <div class="adminzone-topbar">
+            {{-- Izquierda vacía (sin encabezado) --}}
             <div class="adminzone-title-group">
-                <div class="adminzone-badge">
-                    <span>ADMIN ZONE</span>
-                    <span>v1.0 NEON</span>
-                </div>
-                <div class="adminzone-title">
-                    Panel <span class="highlight">AutoControl</span>
-                </div>
-                <div class="adminzone-subtitle">
-                    Monitoriza usuarios, vehículos y actividad del sistema en una interfaz futurista.
-                </div>
+                {{-- Encabezado eliminado: sin badge, sin título, sin subtítulo --}}
             </div>
 
+            {{-- Acciones derecha --}}
             <div class="adminzone-top-actions">
                 <div class="adminzone-chip">
                     Sesión: <strong>{{ $user->user_name ?? 'admin' }}</strong>
@@ -534,12 +516,8 @@
                 <a href="{{ route('perfil') }}" class="btn-admin-outline">
                     ← Volver al perfil
                 </a>
-                <button type="button" class="btn-admin-primary">
-                    ⚙️ Configuración global
-                </button>
             </div>
         </div>
-
         {{-- MAIN GRID --}}
         <div class="adminzone-main">
 
@@ -789,8 +767,10 @@
                                                             value="{{ $veh->precio_segunda_mano }}">
                                                     </div>
                                                 </div>
-
                                                 <div class="mt-2 d-flex gap-2">
+                                                    @csrf
+                                                    @method('PUT')
+
                                                     <button type="submit" class="btn btn-sm btn-primary">
                                                         Guardar vehículo
                                                     </button>
@@ -802,6 +782,7 @@
                                                 onsubmit="return confirm('¿Seguro que quieres eliminar este vehículo?');">
                                                 @csrf
                                                 @method('DELETE')
+
                                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                                     Eliminar vehículo
                                                 </button>
@@ -875,8 +856,8 @@
             </div>
         </div>
 
-<div class="adminzone-panel adminzone-panel-graph">
-    <div class="adminzone-panel-header">
+        <div class="adminzone-panel adminzone-panel-graph">
+            <div class="adminzone-panel-header">
                 <div>
                     <div class="adminzone-panel-title">Indicadores clave</div>
                     <div class="adminzone-panel-subtitle">
@@ -924,37 +905,38 @@
     </div>
 
     {{-- CanvasJS --}}
-<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-    var chart = new CanvasJS.Chart("adminGastosChart", {
-        animationEnabled: true,
-        backgroundColor: "transparent",  // <<<<<< FONDO GRIS OSCURO
-        
-        title: {
-            text: "Distribución de gastos por categoría",
-            fontColor: "#E5E7EB",
-        },
-        subtitles: [{
-            text: "AutoControl — Gastos totales",
-            fontColor: "#9CA3AF",
-        }],
-        data: [{
-            type: "pie",
-            yValueFormatString: "€#,##0.00",
-            indexLabelFontColor: "#E5E7EB",
-            indexLabelLineColor: "#6B7280",
-            indexLabel: "{label} ({y})",
-            dataPoints: {!! json_encode($categoriaDataPoints, JSON_NUMERIC_CHECK) !!}
-        }]
-    });
+            var chart = new CanvasJS.Chart("adminGastosChart", {
+                animationEnabled: true,
+                backgroundColor: "transparent", // <<<<<< FONDO GRIS OSCURO
 
-    chart.render();
+                title: {
+                    text: "Distribución de gastos por categoría",
+                    fontColor: "#E5E7EB",
+                    fontSize: 16,
+                },
+                subtitles: [{
+                    text: "AutoControl — Gastos totales",
+                    fontColor: "#9CA3AF",
+                }],
+                data: [{
+                    type: "pie",
+                    yValueFormatString: "€#,##0.00",
+                    indexLabelFontColor: "#E5E7EB",
+                    indexLabelLineColor: "#6B7280",
+                    indexLabel: "{label} ({y})",
+                    dataPoints: {!! json_encode($categoriaDataPoints, JSON_NUMERIC_CHECK) !!}
+                }]
+            });
 
-});
-</script>
+            chart.render();
+
+        });
+    </script>
 
     <script>
         // Accordion behavior for user details

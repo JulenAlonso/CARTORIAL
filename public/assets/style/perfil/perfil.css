@@ -23,9 +23,16 @@ body {
     background-color: #ffffff;
     color: #333;
     margin: 0;
-    display: flex;
     min-height: 100vh;
 }
+
+#perfil-layout {
+    display: grid;
+    grid-template-columns: clamp(220px, 22vw, 260px) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 100vh;
+}
+
 
 h1,
 h2,
@@ -49,7 +56,10 @@ p {
 /* ============================= */
 /*              MAIN             */
 /* ============================= */
-main {
+#perfil-layout main {
+    grid-column: 2;
+    grid-row: 1;
+
     flex-grow: 1;
     background: linear-gradient(135deg, #e8f0ff, #ffffff);
     padding: clamp(16px, 3vw, 30px) clamp(12px, 3vw, 20px);
@@ -59,7 +69,7 @@ main {
     gap: clamp(16px, 2vw, 30px);
 }
 
-main h1 {
+#perfil-layout main h1 {
     color: #0d6efd;
     font-weight: 700;
     font-size: clamp(1.6rem, 1rem + 2vw, 2.2rem);
@@ -76,7 +86,11 @@ main h1 {
 /* ============================= */
 /*            SIDEBAR            */
 /* ============================= */
-aside {
+#perfil-layout aside {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    /* ocupa alto de contenido + footer */
+
     width: clamp(220px, 22vw, 260px);
     background-color: #f8f9fa;
     display: flex;
@@ -84,9 +98,12 @@ aside {
     align-items: center;
     padding: 30px 20px;
     box-shadow: 3px 0 10px rgba(0, 0, 0, .05);
-    position: sticky;
-    top: 0;
-    max-height: 100svh;
+
+    /* 🔹 Ya NO es sticky */
+    position: relative;
+    top: auto;
+    max-height: none;
+    z-index: 1;
 }
 
 .profile-pic img {
@@ -474,6 +491,10 @@ aside {
     }
 }
 
+/* ============================= */
+/*        CALENDARIO             */
+/* ============================= */
+
 .calendar-panel {
     margin: 32px auto 48px;
     max-width: 1100px;
@@ -525,29 +546,19 @@ aside {
     transform: translateY(-1px);
 }
 
-.calendar-legend {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 0.85rem;
-    color: #6b7280;
-    flex-wrap: wrap;
-}
-
-.legend-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    margin-right: 6px;
-}
-
+/* 📌 IMPORTANTE:
+   Izquierda = Calendario = el doble (2fr)
+   Derecha = Detalles = 1fr
+*/
 .calendar-card-body {
     display: grid;
     grid-template-columns: 2fr 1fr;
+    /* ⬅⬅ Calendario el doble de ancho */
+    align-items: flex-start;
     gap: 24px;
 }
 
+/* Versión móvil */
 @media (max-width: 992px) {
     .calendar-card-body {
         grid-template-columns: 1fr;
@@ -633,9 +644,11 @@ aside {
     color: #1d4ed8;
 }
 
-/* Panel lateral detalles */
+/* Panel lateral detalles (derecha) */
 .calendar-details {
     width: 100%;
+    /* ⬅ deja que ocupe solo su columna */
+    height: 100%;
     background-color: #f9fafb;
     border-radius: 14px;
     padding: 16px 18px;
@@ -683,6 +696,66 @@ aside {
     font-size: 0.7rem;
     margin-left: 2px;
 }
+
+/* ============================= */
+/*        BOTONES             */
+/* ============================= */
+
+.btn_guardar {
+    background: linear-gradient(to right, #1976D2, #0D47A1); /* azul equivalente */
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(25, 118, 210, 0.25); /* sombra azul equivalente */
+}
+
+.btn_guardar:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(to right, #1E88E5, #1565C0); /* azul más vivo */
+    box-shadow: 0 6px 14px rgba(13, 71, 161, 0.35);
+}
+
+.btn_guardar:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(13, 71, 161, 0.25);
+}
+
+.btn_grafico {
+    background: linear-gradient(to right, #8e24aa, #6a1b9a); /* morado más claro */
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(142, 36, 170, 0.25);
+}
+
+.btn_grafico:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(to right, #9c3ac0, #7b2bb5);
+    box-shadow: 0 6px 14px rgba(81, 45, 109, 0.35);
+}
+
+.btn_grafico:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(81, 45, 109, 0.25);
+}
+
+/* ============================= */
 
 /* ============================= */
 /*        COLLAPSIBLE / MODOS    */
@@ -782,18 +855,17 @@ aside {
 .vehiculo-gastos-form .form-select {
     font-size: 0.85rem;
     border-radius: 8px;
-
+    width: max-content;
 }
 
-.cometarioText {
+/* .cometarioText {
     height: 10vh;
     border-radius: 8px;
     font-size: 0.85rem;
     border: 1px solid #ced4da;
     padding: 8px;
-    width: 100%;
-
-}
+    width: 200%;
+} */
 
 .vehiculo-km-form .row,
 .vehiculo-gastos-form .row {
@@ -877,9 +949,6 @@ aside {
     display: block;
 }
 
-
-
-
 /* ============================= */
 /*          MODAL       */
 /* ============================= */
@@ -924,11 +993,18 @@ dialog::backdrop {
 }
 
 @media (max-width: 820px) {
+
+    /* En móvil usamos layout en columna normal */
     body {
+        display: flex;
         flex-direction: column;
     }
 
+    /* El aside pasa arriba, ocupa todo el ancho y no es sticky */
     aside {
+        grid-column: auto;
+        grid-row: auto;
+
         width: 100%;
         flex-direction: row;
         justify-content: flex-start;
@@ -937,9 +1013,10 @@ dialog::backdrop {
         padding: 12px 16px;
         box-shadow: none;
         border-bottom: 2px solid #e8f0ff;
-        position: sticky;
-        top: 0;
-        z-index: 10;
+
+        position: relative;
+        top: auto;
+        z-index: 1;
         overflow-x: auto;
         overflow-y: hidden;
         scrollbar-width: thin;
@@ -966,6 +1043,11 @@ dialog::backdrop {
         height: 56px;
         border-width: 2px;
         margin: 0;
+    }
+
+    main {
+        grid-column: auto;
+        grid-row: auto;
     }
 
     .vehiculo-card {
@@ -1031,5 +1113,154 @@ dialog::backdrop {
     to {
         opacity: 1;
         transform: translate3d(0, 0, 0);
+    }
+}
+
+/* ======================= */
+/*         FOOTER          */
+/* ======================= */
+
+#perfil-layout .ayuda-footer {
+    grid-column: 1 / -1;
+    /* ocupa todo el ancho del grid */
+    grid-row: 2;
+    /* va en la fila inferior */
+
+    position: static;
+    width: 100%;
+    background: #111827;
+    color: #e5e7eb;
+    padding: 10px 40px 8px;
+    border-radius: 0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* nada de centrado vertical */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Cada bloque (redes / soporte / legal) */
+.footer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Títulos y textos más pequeños para que quepan */
+.footer-subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #f3f4f6;
+}
+
+.footer-text {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+/* Listas de enlaces */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 1px;
+}
+
+.footer-links a {
+    font-size: 11px;
+    text-decoration: none;
+    color: #e5e7eb;
+    transition: color .2s;
+}
+
+.footer-links a:hover {
+    color: #facc15;
+}
+
+/* Redes centradas */
+.footer-socials {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+/* Links legales en una sola línea debajo del título */
+.footer-links-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    text-align: center;
+}
+
+.footer-links-legal li {
+    margin-bottom: 0;
+    list-style: none;
+}
+
+/* Iconos sociales más pequeños */
+.social-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e5e7eb;
+    font-size: 11px;
+    transition: all .2s ease;
+}
+
+.social-icon:hover {
+    background: #facc15;
+    color: #111827;
+}
+
+/* Línea inferior compacta */
+.footer-bottom {
+    text-align: center;
+    margin-top: 2px;
+    font-size: 10px;
+    color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .footer-content {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    #perfil-layout .ayuda-footer {
+        height: 80px;
+        /* un pelín más de altura en móviles por si hay dos líneas */
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 4px;
     }
 }

@@ -133,4 +133,10 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/vehiculos/{id}', [AdminController::class, 'deleteVehiculo'])
                 ->name('vehiculos.delete');
         });
+
+        Route::put('/admin/vehiculos/{id}', [AdminController::class, 'updateVehiculo'])
+    ->name('admin.vehiculos.update');
+
+    Route::delete('/admin/vehiculos/{id}', [AdminController::class, 'deleteVehiculo'])
+        ->name('admin.vehiculos.delete');
 });
