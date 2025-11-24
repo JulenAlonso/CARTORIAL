@@ -20,11 +20,13 @@ class VehiculoController extends Controller
 
         // Normaliza dinero: "1.234,56" -> "1234.56"
         $money = function (?string $v) {
-            if ($v === null)
+            if ($v === null) {
                 return null;
+            }
             $v = trim($v);
-            if ($v === '')
+            if ($v === '') {
                 return null;
+            }
             $v = str_replace('.', '', $v);
             $v = str_replace(',', '.', $v);
             return is_numeric($v) ? $v : null;
@@ -74,7 +76,7 @@ class VehiculoController extends Controller
             ])->withInput();
         }
 
-        // Normalizaciones numéricas
+        // Normalizaciones numéricas (enteros)
         foreach (['anio_fabricacion', 'anio_matriculacion', 'km', 'cv'] as $k) {
             if (isset($validated[$k])) {
                 $validated[$k] = (int) preg_replace('/\D+/', '', (string) $validated[$k]);
@@ -98,7 +100,19 @@ class VehiculoController extends Controller
         // Asignar propietario
         $validated['id_usuario'] = $userId;
 
-        Vehiculo::create($validated);
+        // 🔹 Crear el vehículo y obtener la instancia
+        $vehiculo = Vehiculo::create($validated);
+
+        // 🔹 Crear automáticamente el primer registro en registros_km
+        // Solo si tenemos un km inicial (por si algún día lo dejas vacío)
+        if (!is_null($vehiculo->km)) {
+            // Usa la relación registrosKm() definida en el modelo Vehiculo
+            $vehiculo->registrosKm()->create([
+                'km_actual'  => $vehiculo->km,
+                'comentario' => 'Kilometraje inicial al registrar el vehículo',
+                // fecha_registro se rellena sola con CURRENT_TIMESTAMP en la BBDD
+            ]);
+        }
 
         return redirect()
             ->route('perfil')
@@ -115,11 +129,13 @@ class VehiculoController extends Controller
         }
 
         $money = function (?string $v) {
-            if ($v === null)
+            if ($v === null) {
                 return null;
+            }
             $v = trim($v);
-            if ($v === '')
+            if ($v === '') {
                 return null;
+            }
             $v = str_replace('.', '', $v);
             $v = str_replace(',', '.', $v);
             return is_numeric($v) ? $v : null;

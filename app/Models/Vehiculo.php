@@ -12,13 +12,10 @@ class Vehiculo extends Model
     // Clave primaria personalizada
     protected $primaryKey = 'id_vehiculo';
 
-    // Si tu ID es autoincremental
     public $incrementing = true;
-
-    // Tipo de clave primaria
     protected $keyType = 'int';
 
-    // Desactivar timestamps si no usas created_at / updated_at
+    // No tienes created_at / updated_at
     public $timestamps = false;
 
     // Campos que se pueden asignar masivamente
@@ -26,23 +23,24 @@ class Vehiculo extends Model
         'matricula',
         'marca',
         'modelo',
-        'anio_fabricacion',
-        'anio_matriculacion',
+        'anio',          // en la BBDD se llama anio
         'fecha_compra',
         'km',
         'cv',
         'combustible',
         'etiqueta',
         'precio',
-        'precio_segunda_mano',
-        'car_avatar',
         'id_usuario',
+        // Si más adelante añades columnas nuevas (car_avatar, precio_segunda_mano, etc.),
+        // las puedes añadir aquí.
     ];
+
     /**
      * 🔹 Relación: un vehículo pertenece a un usuario.
      */
     public function usuario()
     {
+        // Ojo: aquí debe ir tu modelo de usuario real (Usuario o User)
         return $this->belongsTo(\App\Models\User::class, 'id_usuario', 'id_usuario');
     }
 
@@ -55,8 +53,7 @@ class Vehiculo extends Model
     }
 
     /**
-     * 🔹 Accessor para obtener la URL pública del avatar del coche.
-     * Permite usar {{ $vehiculo->car_avatar_url }} directamente en las vistas.
+     * 🔹 Accessor opcional para avatar (si luego añades la columna car_avatar).
      */
     public function getCarAvatarUrlAttribute()
     {
@@ -69,17 +66,21 @@ class Vehiculo extends Model
         }
 
         return asset('storage/' . ltrim($this->car_avatar, '/'));
-
-
     }
+
+    /**
+     * 🔹 Relación: un vehículo tiene muchos registros de km.
+     */
     public function registrosKm()
     {
         return $this->hasMany(\App\Models\RegistroKm::class, 'id_vehiculo', 'id_vehiculo');
     }
 
-public function registrosGastos()
-{
-    return $this->hasMany(\App\Models\Gasto::class, 'id_vehiculo', 'id_vehiculo');
-}
-
+    /**
+     * 🔹 Relación: un vehículo tiene muchos gastos.
+     */
+    public function registrosGastos()
+    {
+        return $this->hasMany(\App\Models\Gasto::class, 'id_vehiculo', 'id_vehiculo');
+    }
 }
