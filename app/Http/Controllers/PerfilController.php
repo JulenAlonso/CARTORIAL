@@ -11,15 +11,18 @@ class PerfilController extends Controller
     public function mostrarPerfil()
     {
         // ============================
-        // AVATAR
+        // 1) USUARIO + AVATAR
         // ============================
         $user = Auth::user();
 
         if (empty($user->user_avatar) || $user->user_avatar === '0') {
+            // Avatar por defecto
             $avatarPath = asset('assets/images/user.png');
         } elseif (preg_match('/^https?:\/\//', $user->user_avatar)) {
+            // Si es una URL absoluta (ej: https://...)
             $avatarPath = $user->user_avatar;
         } else {
+            // Ruta relativa guardada en user_avatar (storage)
             $relativePath = ltrim($user->user_avatar, '/');
             $avatarPath = Storage::disk('public')->exists($relativePath)
                 ? asset('storage/' . $relativePath)
@@ -27,7 +30,7 @@ class PerfilController extends Controller
         }
 
         // ============================
-        // VEHÍCULOS + KM + GASTOS
+        // 2) VEHÍCULOS + KM + GASTOS
         // ============================
         $vehiculos = $user->vehiculos()
             ->with([
@@ -37,23 +40,23 @@ class PerfilController extends Controller
             ->orderBy('anio_matriculacion', 'desc')
             ->get();
 
-        // 👇 aquí calculas el gasto total de CADA vehículo
+        // Calcular gasto total por vehículo
         $vehiculos->each(function ($v) {
             $v->gastoCalc = $v->registrosGastos->sum('importe');
         });
 
+        // Totales para las tarjetas del perfil
         $totalVehiculos = $vehiculos->count();
         $valorTotal     = $vehiculos->sum('precio');
         $kmTotal        = $vehiculos->sum('km');
         $gastosTotales  = $vehiculos->sum(fn($v) => $v->gastoCalc);
 
         /* =======================================================
-         *   CALENDARIO (KM + GASTOS + NOTAS CON HORA)
+         * 3) CALENDARIO (KM + GASTOS + NOTAS CON HORA)
          * ======================================================= */
-
         $calendarEvents = collect();
 
-        // --- 1) KM ---
+        // --- 3.1) Registros de KM ---
         foreach ($vehiculos as $vehiculo) {
             foreach ($vehiculo->registrosKm as $rk) {
                 $calendarEvents->push([
@@ -66,7 +69,7 @@ class PerfilController extends Controller
             }
         }
 
-        // --- 2) GASTOS ---
+        // --- 3.2) Gastos ---
         foreach ($vehiculos as $vehiculo) {
             foreach ($vehiculo->registrosGastos as $g) {
                 $calendarEvents->push([
@@ -79,7 +82,7 @@ class PerfilController extends Controller
             }
         }
 
-        // --- 3) NOTAS DEL CALENDARIO (CON HORA) ---
+        // --- 3.3) Notas del calendario ---
         $userId = $user->id_usuario ?? $user->id;
 
         $notas = DB::table('notas_calendario')
@@ -98,6 +101,12 @@ class PerfilController extends Controller
             ]);
         }
 
+        // (Opcional) podrías ordenar los eventos por fecha/hora aquí
+        // $calendarEvents = $calendarEvents->sortBy(['fecha', 'hora_evento'])->values();
+
+        // ============================
+        // 4) DEVOLVER VISTA
+        // ============================
         return view('auth.perfil', compact(
             'user',
             'avatarPath',

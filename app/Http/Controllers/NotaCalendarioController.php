@@ -12,33 +12,34 @@ class NotaCalendarioController extends Controller
     {
         $user = Auth::user();
 
-        // Algunos proyectos usan id_usuario, otros id.
-        $userId = $user->id_usuario ?? $user->id;
+        if (!$user) {
+            abort(403);
+        }
+
+        // En tu bbdd el campo es id_usuario
+        $userId = $user->id_usuario;
 
         // Validación básica
         $data = $request->validate([
-            'fecha_evento' => 'required|date',
-            'hora_evento'  => 'nullable',
-            'titulo'       => 'required|string|max:200',
-            'descripcion'  => 'nullable|string',
-            'id_vehiculo'  => 'nullable|integer',
+            'fecha_evento' => ['required', 'date'],
+            'hora_evento' => ['nullable', 'date_format:H:i'], // TIME en formato HH:MM
+            'titulo' => ['required', 'string', 'max:200'],
+            'descripcion' => ['nullable', 'string'],
+            'id_vehiculo' => ['nullable', 'integer'],
         ]);
 
         DB::table('notas_calendario')->insert([
-            'id_usuario'    => $userId,
-            'id_vehiculo'   => $data['id_vehiculo'] ?: null,
-            'titulo'        => $data['titulo'],
-            'descripcion'   => $data['descripcion'] ?? null,
-            'fecha_evento'  => $data['fecha_evento'],
-            'hora_evento'   => $data['hora_evento'] ?: null,
-            'fecha_creacion'=> now(),
+            'id_usuario' => $userId,
+            'id_vehiculo' => !empty($data['id_vehiculo']) ? $data['id_vehiculo'] : null,
+            'titulo' => $data['titulo'],
+            'descripcion' => $data['descripcion'] ?? null,
+            'fecha_evento' => $data['fecha_evento'],
+            'hora_evento' => $data['hora_evento'] ?? null,
+            'fecha_creacion' => now(), // tu tabla tiene DEFAULT CURRENT_TIMESTAMP, pero así queda explícito
         ]);
 
         return redirect()
             ->route('perfil')
             ->with('success', 'Nota guardada correctamente.');
-    
-    
-    
-        }
+    }
 }

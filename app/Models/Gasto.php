@@ -4,11 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Modelo Gasto
+ *
+ * Representa un gasto asociado a un vehículo.
+ */
 class Gasto extends Model
 {
     protected $table = 'gastos';
     protected $primaryKey = 'id_gasto';
-    public $timestamps = false; // tu tabla no usa created_at / updated_at
+    public $timestamps = false;
 
     protected $fillable = [
         'id_vehiculo',
@@ -17,23 +22,26 @@ class Gasto extends Model
         'tipo_gasto',
         'importe',
         'descripcion',
-
-        // 📎 NUEVOS CAMPOS PARA ARCHIVO
-        'archivo_path',
-        'archivo_nombre',
-        'archivo_mime',
-        'archivo_size',
+        'archivo_path',   // 🔹 nueva columna para la ruta del archivo
     ];
 
-    // 🔗 Relación con Vehiculo
+    // Un gasto pertenece a un vehículo
     public function vehiculo()
     {
-        return $this->belongsTo(\App\Models\Vehiculo::class, 'id_vehiculo', 'id_vehiculo');
+        return $this->belongsTo(
+            \App\Models\Vehiculo::class,
+            'id_vehiculo',
+            'id_vehiculo'
+        );
     }
 
-    // 🔗 Relación con User
+    // Un gasto pertenece a un usuario
     public function usuario()
     {
-        return $this->belongsTo(\App\Models\User::class, 'id_usuario', 'id');
+        return $this->belongsTo(
+            \App\Models\Usuario::class,
+            'id_usuario',
+            'id_usuario'
+        );
     }
 }

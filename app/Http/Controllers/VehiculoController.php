@@ -43,8 +43,8 @@ class VehiculoController extends Controller
                 // - M-1234          (provincial numérico)
                 // - M-1234-AB       (provincial alfanumérico)
                 'regex:/^(\d{4}\s?[BCDFGHJKLMNPRSTVWXYZ]{3}|[A-Z]{1,2}-\d{4}-[A-Z]{2}|[A-Z]{1,2}-\d{4})$/i',
-                Rule::unique('vehiculos', 'matricula')
-                    ->where(fn($q) => $q->where('id_usuario', $userId)),
+                // 🔹 En la BBDD la matrícula es UNIQUE global, no por usuario
+                Rule::unique('vehiculos', 'matricula'),
             ],
 
             'marca' => ['required', 'string', 'max:100'],
@@ -56,8 +56,8 @@ class VehiculoController extends Controller
             'fecha_compra' => ['nullable', 'date'],
             'km' => ['nullable', 'integer', 'min:0'],
             'cv' => ['nullable', 'integer', 'min:0'],
-            'combustible' => ['nullable', 'string', 'max:50'],
-            'etiqueta' => ['nullable', 'string', 'max:20'],
+            'combustible' => ['nullable', 'string', 'max:30'], // DB: VARCHAR(30)
+            'etiqueta' => ['nullable', 'string', 'max:10'],    // DB: VARCHAR(10)
             'precio' => ['nullable', 'string', 'max:30'],
             'precio_segunda_mano' => ['nullable', 'string', 'max:30'],
             'car_avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
@@ -83,6 +83,11 @@ class VehiculoController extends Controller
             }
         }
 
+        // 🔹 Ajustar campo anio (columna de la BBDD)
+        $anioFab = $validated['anio_fabricacion'] ?? null;
+        $anioMat = $validated['anio_matriculacion'] ?? null;
+        $validated['anio'] = $anioMat ?? $anioFab ?? null;
+
         // Normalizar precios
         $validated['precio'] = $money($validated['precio'] ?? null);
         $validated['precio_segunda_mano'] = $money($validated['precio_segunda_mano'] ?? null);
@@ -100,13 +105,11 @@ class VehiculoController extends Controller
         // Asignar propietario
         $validated['id_usuario'] = $userId;
 
-        // 🔹 Crear el vehículo y obtener la instancia
+        // Crear el vehículo
         $vehiculo = Vehiculo::create($validated);
 
-        // 🔹 Crear automáticamente el primer registro en registros_km
-        // Solo si tenemos un km inicial (por si algún día lo dejas vacío)
+        // Crear automáticamente el primer registro en registros_km
         if (!is_null($vehiculo->km)) {
-            // Usa la relación registrosKm() definida en el modelo Vehiculo
             $vehiculo->registrosKm()->create([
                 'km_actual'  => $vehiculo->km,
                 'comentario' => 'Kilometraje inicial al registrar el vehículo',
@@ -148,8 +151,10 @@ class VehiculoController extends Controller
                 'required',
                 'string',
                 'max:20',
-                // Misma lógica que en store, pero sin unique
                 'regex:/^(\d{4}\s?[BCDFGHJKLMNPRSTVWXYZ]{3}|[A-Z]{1,2}-\d{4}-[A-Z]{2}|[A-Z]{1,2}-\d{4})$/i',
+                // 🔹 Mantener UNIQUE global pero permitiendo la matrícula actual del vehículo
+                Rule::unique('vehiculos', 'matricula')
+                    ->ignore($vehiculo->id_vehiculo, 'id_vehiculo'),
             ],
 
             'marca' => ['required', 'string', 'max:100'],
@@ -161,8 +166,8 @@ class VehiculoController extends Controller
             'fecha_compra' => ['nullable', 'date'],
             'km' => ['nullable', 'integer', 'min:0'],
             'cv' => ['nullable', 'integer', 'min:0'],
-            'combustible' => ['nullable', 'string', 'max:50'],
-            'etiqueta' => ['nullable', 'string', 'max:20'],
+            'combustible' => ['nullable', 'string', 'max:30'], // DB: VARCHAR(30)
+            'etiqueta' => ['nullable', 'string', 'max:10'],    // DB: VARCHAR(10)
             'precio' => ['nullable', 'string', 'max:30'],
             'precio_segunda_mano' => ['nullable', 'string', 'max:30'],
             'car_avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,avif', 'max:4096'],
@@ -187,6 +192,11 @@ class VehiculoController extends Controller
                 $validated[$k] = (int) preg_replace('/\D+/', '', (string) $validated[$k]);
             }
         }
+
+        // 🔹 Ajustar campo anio también en actualización
+        $anioFab = $validated['anio_fabricacion'] ?? $vehiculo->anio_fabricacion;
+        $anioMat = $validated['anio_matriculacion'] ?? $vehiculo->anio_matriculacion;
+        $validated['anio'] = $anioMat ?? $anioFab ?? null;
 
         // Normalizar precios
         $validated['precio'] = $money($validated['precio'] ?? null);
@@ -220,6 +230,7 @@ class VehiculoController extends Controller
                 'matricula',
                 'anio_fabricacion',
                 'anio_matriculacion',
+                'anio',
                 'km',
                 'cv',
                 'combustible',

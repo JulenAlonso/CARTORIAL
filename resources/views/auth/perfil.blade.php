@@ -19,9 +19,40 @@
 <body>
     <div id="perfil-layout">
         <aside>
+            @php
+                // Usuario autenticado
+                $user = Auth::user();
+
+                // Imagen por defecto
+                $avatarSrc = asset('assets/images/user.png');
+
+                if ($user) {
+                    // 1) Si viene $avatarPath desde el controlador, lo respetamos
+                    if (!empty($avatarPath ?? null)) {
+                        $avatarSrc = $avatarPath;
+
+                        // 2) Si el modelo tiene accessor "avatar_url"
+                    } elseif (isset($user->avatar_url)) {
+                        $avatarSrc = $user->avatar_url;
+
+                        // 3) Si solo tenemos el campo "user_avatar" en BD
+                    } elseif (!empty($user->user_avatar) && $user->user_avatar !== '0') {
+                        // Si es URL absoluta (por ejemplo avatar externo)
+                        if (preg_match('/^https?:\/\//', $user->user_avatar)) {
+                            $avatarSrc = $user->user_avatar;
+                        } else {
+                            // Guardado en storage/app/public -> public/storage
+                            $avatarSrc = asset('storage/' . ltrim($user->user_avatar, '/'));
+                        }
+                    }
+                }
+            @endphp
+
             <div class="profile-pic">
-                <img src="{{ $avatarPath }}" alt="Usuario">
+                <img src="{{ $avatarSrc }}" alt="Usuario"
+                    onerror="this.onerror=null;this.src='{{ asset('assets/images/user.png') }}';">
             </div>
+            
             <!-- Información del perfil del usuario -->
             <div class="user-info">
                 <p><strong>Nombre de usuario:</strong> {{ Auth::user()->user_name }}</p>
@@ -61,11 +92,9 @@
             @endphp
 
             <div class="cards">
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                <!-- 🚗 Vehículos -->
+                {{-- ===================== --}}
+                {{-- 🚗 Vehículos          --}}
+                {{-- ===================== --}}
                 <div class="card" id="card-vehiculos-registrados" role="button" tabindex="0" aria-expanded="false"
                     aria-controls="seccion-mis-vehiculos">
                     <h3>🚗 Vehículos</h3>
@@ -75,21 +104,26 @@
                             <div class="vehiculo-mini">
                                 <div>
                                     <strong>{{ $v->marca }} {{ $v->modelo }}</strong>
-                                    ({{ $v->anio_matriculacion }})
                                     <br>
-                                    <span style="font-size:0.9rem;color:#666;">Matrícula: {{ $v->matricula }}</span>
-                                    <p>
+                                    <span style="font-size:0.9rem;color:#666;">
+                                        Matrícula: {{ $v->matricula }}
+                                    </span>
+                                    <br>
+                                    <span style="font-size:0.9rem;color:#444;">
+                                        Año matriculación: {{ $v->anio_matriculacion }}
+                                    </span>
+                                    <p></p>
                                 </div>
                             </div>
                         @endforeach
                     </div>
+
                     <p class="text-muted ver-detalles">Ver detalles</p>
                 </div>
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                <!-- 💰 Valor  -->
+
+                {{-- ===================== --}}
+                {{-- 💰 Valor (2ª mano)   --}}
+                {{-- ===================== --}}
                 <div class="card" id="card-valor" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
                     <h3>💰 Valor</h3>
 
@@ -101,29 +135,36 @@
                                 <div class="vehiculo-mini">
                                     <div>
                                         <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
-                                        <span style="font-size:0.9rem;color:#666;">
-                                            {{ number_format($v->precio, 2, ',', '.') }} €
-                                            @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
-                                                <br>
-                                                <span style="font-size:0.85rem;color:#999;">
-                                                    (2ª mano: {{ number_format($v->precio_segunda_mano, 2, ',', '.') }}
-                                                    €)
-                                                </span>
-                                            @endif
-                                        </span>
-                                        <p>
+
+                                        @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
+                                            <span style="font-size:0.9rem;color:#444; display:inline-block;">
+                                                <strong>Valor 2ª mano:</strong>
+                                                {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €
+                                            </span>
+                                        @elseif (!empty($v->precio) && $v->precio > 0)
+                                            <span style="font-size:0.9rem;color:#666; display:inline-block;">
+                                                <strong>Valor nuevo:</strong>
+                                                {{ number_format($v->precio, 2, ',', '.') }} €
+                                            </span>
+                                        @else
+                                            <span style="font-size:0.9rem;color:#999; display:inline-block;">
+                                                Sin precio registrado
+                                            </span>
+                                        @endif
+
+                                        <p></p>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
+
                         <p class="text-muted ver-detalles">Ver detalles</p>
                     @endif
                 </div>
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                <!-- 📍 Kilometraje (ÚNICO con gráfico) -->
+
+                {{-- ===================== --}}
+                {{-- 📍 Kilómetros         --}}
+                {{-- ===================== --}}
                 <div class="card" id="card-km" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
                     <h3>📍 Kilómetros</h3>
 
@@ -146,11 +187,10 @@
                         <p class="text-muted ver-detalles">Ver detalles</p>
                     @endif
                 </div>
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                <!-- 🧾 Gastos -->
+
+                {{-- ===================== --}}
+                {{-- 🧾 Gastos             --}}
+                {{-- ===================== --}}
                 <div class="card" id="card-gastos" role="button" tabindex="0"
                     aria-controls="seccion-mis-vehiculos">
                     <h3>🧾 Gastos</h3>
@@ -177,11 +217,10 @@
                         <p class="text-muted ver-detalles">Ver detalles</p>
                     @endif
                 </div>
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                {{--  --}}
-                <!-- 📅 Calendario -->
+
+                {{-- ===================== --}}
+                {{-- 📅 Calendario (mini) --}}
+                {{-- ===================== --}}
                 <div class="card" id="card-calendario" role="button" tabindex="0" aria-controls="panel-calendario">
                     <h3>📅 Calendario</h3>
 
@@ -268,7 +307,7 @@
                                         <span>({{ $v->anio_matriculacion }})</span>
                                     </h3>
 
-                                    {{-- 🟩 VISTA COMPLETA → para tarjeta "Vehículos" --}}
+                                    {{-- 🟩 Datos generales --}}
                                     <div class="tarjeta-detalle">
                                         <ul class="vehiculo-datos">
                                             <li><strong>Matrícula:</strong> {{ $v->matricula }}</li>
@@ -279,13 +318,13 @@
                                             <li><strong>Etiqueta:</strong> {{ $v->etiqueta }}</li>
 
                                             <li class="precio">
-                                                <strong>Precio:</strong>
+                                                <strong>Precio nuevo:</strong>
                                                 {{ number_format($v->precio, 2, ',', '.') }} €
                                             </li>
 
                                             @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
                                                 <li class="precio2">
-                                                    <strong>2ª mano:</strong>
+                                                    <strong>Precio 2ª mano:</strong>
                                                     {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €
                                                 </li>
                                             @endif
@@ -303,11 +342,8 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    {{--  --}}
-                                    {{--  --}}
-                                    {{--  --}}
-                                    {{--  --}}
-                                    {{-- 🟦 VISTA KM → para tarjeta "Kilómetros" --}}
+
+                                    {{-- 🟦 Tarjeta KM --}}
                                     <div class="tarjeta-km">
                                         <ul class="vehiculo-datos">
                                             <li class="km">
@@ -316,6 +352,7 @@
                                             </li>
                                         </ul>
                                         <p></p>
+
                                         {{-- FORMULARIO: NUEVO REGISTRO DE KM --}}
                                         <form action="{{ route('km.store', $v->id_vehiculo) }}" method="POST"
                                             class="vehiculo-km-form mt-3">
@@ -323,7 +360,7 @@
 
                                             <div class="row g-3">
 
-                                                <!-- COLUMNA 1 — FECHA -->
+                                                <!-- COLUMNA 1 — FECHA + KM -->
                                                 <div class="col-md-4">
                                                     <label for="fecha_{{ $v->id_vehiculo }}" class="form-label">
                                                         Fecha del registro
@@ -342,7 +379,7 @@
                                                     <br>
                                                 </div>
 
-                                                <!-- COLUMNA 2 — KM + COMENTARIO DEBAJO -->
+                                                <!-- COLUMNA 2 — COMENTARIO -->
                                                 <div class="col-md-4">
                                                     <label for="comentario_{{ $v->id_vehiculo }}"
                                                         class="form-label mt-3">
@@ -353,13 +390,10 @@
                                                         placeholder="Ej: viaje, revisión, trayecto diario..." style="width: 100%; height: 50%"></textarea>
                                                 </div>
 
-                                                <!-- COLUMNA 3 — VACÍA (TUS TABLAS VAN AQUÍ) -->
+                                                <!-- COLUMNA 3 — TABLA REGISTROS KM + GRÁFICO -->
                                                 <div class="col-md-4">
-                                                    {{-- Aquí metes tu tabla --}}
                                                     <div class="km-tabla">
-                                                        {{-- TABLA REGISTRO VEHÍCULOS CON SU ID --}}
                                                         @php
-                                                            // Usamos la relación registrosKm si existe, y la ordenamos por fecha descendente
                                                             $registrosKm =
                                                                 $v->registrosKm->sortByDesc('fecha_registro') ??
                                                                 collect();
@@ -389,7 +423,6 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                        @else
                                                         @endif
                                                     </div>
 
@@ -416,7 +449,6 @@
                                                         </div>
                                                     </dialog>
 
-                                                    {{--  --}}
                                                 </div>
                                             </div>
 
@@ -425,18 +457,14 @@
                                             </button>
                                         </form>
                                     </div>
-                                    {{--  --}}
-                                    {{--  --}}
-                                    {{--  --}}
-                                    {{--  --}}
-                                    {{-- 🟥 VISTA GASTOS → para tarjeta "Gastos" --}}
+
+                                    {{-- 🟥 Tarjeta GASTOS --}}
                                     <div class="tarjeta-gastos mt-4">
                                         <ul class="vehiculo-datos">
                                             <li class="gastos">
                                                 <strong>Gastos totales:</strong>
 
                                                 @php
-                                                    // Igual que arriba: gasto por vehículo
                                                     $gastoCalc = $v->gastoCalc ?? 0;
                                                 @endphp
 
@@ -446,11 +474,12 @@
 
                                         {{-- FORMULARIO: NUEVO GASTO --}}
                                         <form action="{{ route('gastos.store', $v->id_vehiculo) }}" method="POST"
-                                            enctype="multipart/form-data" class="vehiculo-gastos-form mt-3"> @csrf
+                                            enctype="multipart/form-data" class="vehiculo-gastos-form mt-3">
+                                            @csrf
 
                                             <div class="row g-3">
 
-                                                <!-- COLUMNA 1 — FECHA GASTO -->
+                                                <!-- COLUMNA 1 — FECHA + IMPORTE + TIPO -->
                                                 <div class="col-md-4">
                                                     <label for="fecha_gasto_{{ $v->id_vehiculo }}"
                                                         class="form-label">
@@ -468,7 +497,6 @@
                                                         step="0.01" min="0" placeholder="Ej: 45.90"
                                                         required>
                                                     <p></p>
-                                                    {{-- Si quieres también el tipo, puedes meterlo aquí arriba o debajo de importe --}}
                                                     <label for="tipo_gasto_{{ $v->id_vehiculo }}"
                                                         class="form-label mt-3">
                                                         Tipo de gasto
@@ -485,7 +513,7 @@
                                                     </select>
                                                 </div>
 
-                                                <!-- COLUMNA 2 — IMPORTE + COMENTARIO/ DESCRIPCIÓN DEBAJO -->
+                                                <!-- COLUMNA 2 — DESCRIPCIÓN + ARCHIVO -->
                                                 <div class="col-md-4">
                                                     <label for="descripcion_gasto_{{ $v->id_vehiculo }}"
                                                         class="form-label mt-3">
@@ -505,11 +533,10 @@
                                                         style="border-radius: 0px;">
                                                 </div>
 
-                                                <!-- COLUMNA 3 — TABLA GASTOS -->
+                                                <!-- COLUMNA 3 — TABLA GASTOS + GRÁFICO -->
                                                 <div class="col-md-4">
                                                     <div class="gastos-tabla">
                                                         @php
-                                                            // Relación registrosGastos ordenada por fecha descendente
                                                             $registrosGastos =
                                                                 $v->registrosGastos->sortByDesc('fecha_gasto') ??
                                                                 collect();
@@ -531,30 +558,26 @@
                                                                     <tbody>
                                                                         @foreach ($registrosGastos as $g)
                                                                             @php
-                                                                                // Soportar tanto 'archivo_path' como 'archivo' por si en la BD se usó otro nombre
                                                                                 $rawPath =
                                                                                     $g->archivo_path ??
                                                                                     ($g->archivo ?? null);
                                                                                 $archivoUrl = null;
 
                                                                                 if (!empty($rawPath)) {
-                                                                                    // Normalizamos cualquier cosa:
-                                                                                    // puede venir como "gastos/...", "storage/gastos/...", "public/storage/gastos/..."
                                                                                     $path = ltrim($rawPath, '/');
 
                                                                                     if (
                                                                                         strpos($path, 'public/') === 0
                                                                                     ) {
-                                                                                        $path = substr($path, 7); // quitamos "public/"
+                                                                                        $path = substr($path, 7);
                                                                                     }
 
                                                                                     if (
                                                                                         strpos($path, 'storage/') === 0
                                                                                     ) {
-                                                                                        $path = substr($path, 8); // quitamos "storage/"
+                                                                                        $path = substr($path, 8);
                                                                                     }
 
-                                                                                    // Resultado final: siempre servimos desde /storage/...
                                                                                     $archivoUrl = asset(
                                                                                         'storage/' . $path,
                                                                                     );
@@ -571,7 +594,6 @@
                                                                                 <td>
                                                                                     @if (!empty($g->archivo_path))
                                                                                         @php
-                                                                                            // Normalizamos la ruta por si viene con o sin "storage/"
                                                                                             $path = ltrim(
                                                                                                 $g->archivo_path,
                                                                                                 '/',
@@ -602,9 +624,6 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                        @else
-                                                            <p class="text-muted mt-2">
-                                                            </p>
                                                         @endif
                                                     </div>
                                                     <p></p>
@@ -636,18 +655,13 @@
                                             </button>
                                         </form>
                                     </div>
-
-
                                 </div>
                             </article>
                         @endforeach
                     </div>
                 @endif
             </section>
-            {{--  --}}
-            {{--  --}}
-            {{--  --}}
-            {{--  --}}
+
             {{-- PANEL CALENDARIO GRANDE --}}
             <section id="panel-calendario" class="calendar-panel" style="margin-top: 24px; display:none;">
                 <div class="calendar-card">
@@ -664,9 +678,7 @@
                     <!-- GRID: CALENDARIO IZQUIERDA — DETALLES DERECHA -->
                     <div class="calendar-card-body">
 
-                        <!-- ============================= -->
-                        <!--   CALENDARIO — COLUMNA 1      -->
-                        <!-- ============================= -->
+                        <!-- CALENDARIO -->
                         <table class="calendar-table">
                             <thead>
                                 <tr>
@@ -684,9 +696,7 @@
                             </tbody>
                         </table>
 
-                        <!-- ============================= -->
-                        <!-- DETALLES + FORMULARIO — COL 2 -->
-                        <!-- ============================= -->
+                        <!-- DETALLES + FORMULARIO -->
                         <div class="calendar-details">
 
                             <h5 id="cal-details-title">Detalles del día</h5>
@@ -769,8 +779,6 @@
 
         {{-- Datos para el calendario: mezcla de km, gastos y notas_calendario --}}
         <script>
-            // Espera un array de objetos con:
-            // { fecha: 'YYYY-MM-DD', km: number, gastos: number, nota: string }
             const CALENDAR_EVENTS = @json($calendarEvents ?? []);
         </script>
 
@@ -789,10 +797,8 @@
                 const detailsTitle = document.getElementById('cal-details-title');
                 const detailsContent = document.getElementById('cal-details-content');
 
-                // inputs del formulario de nota
                 const notaFechaInput = document.getElementById('nota_fecha_evento');
 
-                // Indexar eventos por fecha YYYY-MM-DD
                 const eventsByDate = {};
                 (CALENDAR_EVENTS || []).forEach(e => {
                     if (!e.fecha) return;
@@ -800,14 +806,13 @@
                     eventsByDate[e.fecha].push(e);
                 });
 
-                let current = new Date(); // mes actual
+                let current = new Date();
 
                 const monthNames = [
                     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
                     'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
                 ];
 
-                // para resaltar el día seleccionado
                 let selectedCell = null;
                 let selectedDate = null;
 
@@ -827,9 +832,8 @@
 
                     calBody.innerHTML = '';
 
-                    // Primer día del mes (Lunes=1... Domingo=7)
                     const first = new Date(year, month, 1);
-                    let startDay = first.getDay(); // 0 domingo, 1 lunes...
+                    let startDay = first.getDay();
                     if (startDay === 0) startDay = 7;
 
                     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -858,7 +862,6 @@
                             dayNumber.textContent = day;
                             td.appendChild(dayNumber);
 
-                            // Si hay datos para este día
                             const items = eventsByDate[iso];
                             if (items && items.length) {
                                 td.classList.add('has-data');
@@ -883,23 +886,18 @@
                                     gastoBadge.textContent = `${totalGastos.toFixed(2)} €`;
                                     badges.appendChild(gastoBadge);
                                 }
-                                // Muestra hora de la primera nota si existe
+
                                 if (hasNota) {
                                     const notaBadge = document.createElement('span');
                                     notaBadge.classList.add('badge', 'badge-nota');
 
-                                    // buscar la primera nota del día
                                     const firstNota = items.find(i => i.nota);
-
-                                    // extraer la hora si existe
                                     let hora = firstNota?.hora_evento || '';
 
-                                    // Formato bonito HH:MM
                                     if (hora && hora.length >= 5) {
                                         hora = hora.slice(0, 5);
                                     }
 
-                                    // Texto final
                                     notaBadge.textContent = hora ? `📝 ${hora}` : '📝';
 
                                     badges.appendChild(notaBadge);
@@ -908,14 +906,12 @@
                                 td.appendChild(badges);
                             }
 
-                            // si este día es el seleccionado, mantén la clase al re-renderizar
                             if (iso === selectedDate) {
                                 td.classList.add('selected-day');
                                 selectedCell = td;
                             }
 
                             td.addEventListener('click', function() {
-                                // resaltar el día seleccionado
                                 if (selectedCell) {
                                     selectedCell.classList.remove('selected-day');
                                 }
@@ -940,7 +936,6 @@
                     const [year, month, day] = iso.split('-');
                     detailsTitle.textContent = `Detalles del ${day}/${month}/${year}`;
 
-                    // Sincronizar fecha seleccionada con el formulario de nota
                     if (notaFechaInput) {
                         notaFechaInput.value = iso;
                     }
@@ -965,7 +960,6 @@
                     detailsContent.innerHTML = html;
                 }
 
-                // Navegación meses
                 prevBtn.addEventListener('click', function() {
                     current.setMonth(current.getMonth() - 1);
                     renderCalendar();
@@ -976,11 +970,12 @@
                     renderCalendar();
                 });
 
-                // Pintar la primera vez
                 renderCalendar();
 
             });
         </script>
+
+        {{-- Gráficos de KM --}}
         <script>
             document.addEventListener("DOMContentLoaded", function() {
 
@@ -989,18 +984,16 @@
                         $kmPoints = [];
 
                         foreach ($v->registrosKm as $rk) {
-                            // Convertir fecha a timestamp en milisegundos
                             $ts = $rk->fecha_registro instanceof \Carbon\Carbon ? $rk->fecha_registro->timestamp : strtotime($rk->fecha_registro);
 
                             if ($ts) {
                                 $kmPoints[] = [
-                                    'x' => $ts * 1000, // CanvasJS usa ms
+                                    'x' => $ts * 1000,
                                     'y' => (int) $rk->km_actual,
                                 ];
                             }
                         }
 
-                        // 🔥 Ordenar ASC por fecha: primera fecha → hoy
                         usort($kmPoints, fn($a, $b) => $a['x'] <=> $b['x']);
                     @endphp
 
@@ -1025,7 +1018,7 @@
                                     axisY: {
                                         title: "Kilómetros",
                                         includeZero: true,
-                                        maximum: null // si quieres un límite, pon un número
+                                        maximum: null
                                     },
                                     data: [{
                                         type: "splineArea",
@@ -1045,19 +1038,15 @@
             });
         </script>
 
+        {{-- Gráficos de GASTOS --}}
         <script>
             document.addEventListener("DOMContentLoaded", function() {
 
                 @foreach ($vehiculos as $v)
                     @php
-                        // ============================
-                        // 1) AGRUPAR POR FECHA + TIPO
-                        // ============================
-                        // Estructura: [ tipo => [ fechaKey => [label, y] ] ]
                         $seriesMap = [];
 
                         foreach ($v->registrosGastos as $g) {
-                            // --- Fecha normalizada ---
                             if ($g->fecha_gasto instanceof \Carbon\Carbon) {
                                 $fechaKey = $g->fecha_gasto->format('Y-m-d');
                                 $labelFecha = $g->fecha_gasto->format('d/m/Y');
@@ -1067,8 +1056,7 @@
                                 $labelFecha = $fecha->format('d/m/Y');
                             }
 
-                            // --- Tipo de gasto (ajusta el nombre del campo si es distinto) ---
-                            $tipo = $g->tipo ?? 'Otros'; // <-- cambia 'tipo' por el campo real (ej: categoria)
+                            $tipo = $g->tipo_gasto ?? 'Otros';
 
                             if (!isset($seriesMap[$tipo])) {
                                 $seriesMap[$tipo] = [];
@@ -1084,10 +1072,9 @@
                             $seriesMap[$tipo][$fechaKey]['y'] += (float) $g->importe;
                         }
 
-                        // Ordenar las fechas dentro de cada serie
                         foreach ($seriesMap as $tipo => $pointsByDate) {
-                            ksort($pointsByDate); // orden cronológico
-                            $seriesMap[$tipo] = array_values($pointsByDate); // reset índices para CanvasJS
+                            ksort($pointsByDate);
+                            $seriesMap[$tipo] = array_values($pointsByDate);
                         }
                     @endphp
 
@@ -1128,7 +1115,6 @@
                                         }
                                     },
                                     data: [
-                                        @php $firstTipo = true; @endphp
                                         @foreach ($seriesMap as $tipo => $points)
                                             {
                                                 type: "stackedColumn",
@@ -1174,7 +1160,6 @@
                 </div>
 
                 <!-- Columna 3 - Legal -->
-                <!-- Columna 3 - Legal -->
                 <div class="footer-section">
                     <h4 class="footer-subtitle">Legal</h4>
                     <ul class="footer-links footer-links-legal">
@@ -1191,6 +1176,7 @@
             </div>
         </footer>
     </div>
+
     <!-- Bootstrap JS necesario para los modales -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

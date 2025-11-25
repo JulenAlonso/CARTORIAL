@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Vehiculo;
 use App\Models\Gasto;
 
@@ -19,12 +19,17 @@ class AdminController extends Controller
     {
         $user = Auth::user();
 
-        // Totales básicos
-        $totalUsers = User::count();
-        $totalVehiculos = Vehiculo::count();
-        $gastoTotal = (float) Gasto::sum('importe');
+        // Solo admins
+        if (!$user || !$user->admin) {
+            abort(403);
+        }
 
-        // Vehículos que tienen gastos
+        // Totales básicos
+        $totalUsers     = Usuario::count();
+        $totalVehiculos = Vehiculo::count();
+        $gastoTotal     = (float) Gasto::sum('importe');
+
+        // Vehículos que tienen gastos (requiere relación registrosGastos() o gastos() en Vehiculo)
         $vehiculosConGasto = Vehiculo::whereHas('registrosGastos')->count();
 
         // Promedio
@@ -45,22 +50,22 @@ class AdminController extends Controller
             // Mapeo flexible
             $mapCategorias = [
                 'mantenimiento' => 'Mantenimiento',
-                'mant' => 'Mantenimiento',
-                'reparacion' => 'Mantenimiento',
-                'reparación' => 'Mantenimiento',
+                'mant'          => 'Mantenimiento',
+                'reparacion'    => 'Mantenimiento',
+                'reparación'    => 'Mantenimiento',
 
-                'combustible' => 'Combustible',
-                'gasolina' => 'Combustible',
-                'diesel' => 'Combustible',
+                'combustible'   => 'Combustible',
+                'gasolina'      => 'Combustible',
+                'diesel'        => 'Combustible',
 
-                'seguro' => 'Seguro',
+                'seguro'        => 'Seguro',
 
-                'impuesto' => 'Impuestos',
-                'impuestos' => 'Impuestos',
-                'tasa' => 'Impuestos',
+                'impuesto'      => 'Impuestos',
+                'impuestos'     => 'Impuestos',
+                'tasa'          => 'Impuestos',
 
-                'peaje' => 'Peajes',
-                'peajes' => 'Peajes',
+                'peaje'         => 'Peajes',
+                'peajes'        => 'Peajes',
             ];
 
             $acumuladoPorCategoria = [];
@@ -79,22 +84,22 @@ class AdminController extends Controller
             foreach ($acumuladoPorCategoria as $label => $total) {
                 $categoriaDataPoints[] = [
                     'label' => $label,
-                    'y' => round($total, 2),
+                    'y'     => round($total, 2),
                 ];
             }
 
-            usort($categoriaDataPoints, fn($a, $b) => $b['y'] <=> $a['y']);
+            usort($categoriaDataPoints, fn ($a, $b) => $b['y'] <=> $a['y']);
         } else {
             $categoriaDataPoints[] = [
                 'label' => 'Total',
-                'y' => $gastoTotal,
+                'y'     => $gastoTotal,
             ];
         }
 
         /* ==============================
          *  Últimos usuarios + vehículos
          * ==============================*/
-        $latestUsers = User::withCount('vehiculos')
+        $latestUsers = Usuario::withCount('vehiculos')
             ->with('vehiculos')
             ->orderByDesc('id_usuario')
             ->take(5)
@@ -118,14 +123,24 @@ class AdminController extends Controller
      * ============================================================*/
     public function updateUser(Request $request, $id)
     {
-        $user = User::findOrFail($id);
+        $user = Usuario::findOrFail($id);
 
         $data = $request->validate([
-            'nombre' => ['nullable', 'string', 'max:255'],
-            'apellidos' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'telefono' => ['nullable', 'string', 'max:50'],
-            'user_name' => ['required', 'string', 'max:255'],
+            'nombre'    => ['nullable', 'string', 'max:100'],  // VARCHAR(100)
+            'apellidos' => ['nullable', 'string', 'max:150'],  // VARCHAR(150)
+            'email'     => [
+                'required',
+                'email',
+                'max:255', // VARCHAR(255)
+                'unique:usuarios,email,' . $user->id_usuario . ',id_usuario',
+            ],
+            'telefono'  => ['nullable', 'string', 'max:50'],   // VARCHAR(50)
+            'user_name' => [
+                'required',
+                'string',
+                'max:100', // VARCHAR(100)
+                'unique:usuarios,user_name,' . $user->id_usuario . ',id_usuario',
+            ],
         ]);
 
         // Checkbox rol admin
@@ -143,9 +158,9 @@ class AdminController extends Controller
      * ============================================================*/
     public function deleteUser($id)
     {
-        $user = User::findOrFail($id);
+        $user = Usuario::findOrFail($id);
 
-        if (auth()->id() === $user->id_usuario) {
+        if (Auth::check() && Auth::user()->id_usuario === $user->id_usuario) {
             return redirect()
                 ->route('admin.dashboard')
                 ->with('error', 'No puedes eliminar tu propio usuario.');
@@ -163,24 +178,44 @@ class AdminController extends Controller
      * ============================================================*/
     public function updateVehiculo(Request $request, $id)
     {
-        // Buscamos el vehículo
         $vehiculo = Vehiculo::findOrFail($id);
+        $currentYear = now()->year;
 
-        // Validamos solo lo que editas en el adminzone
         $data = $request->validate([
-            'matricula' => ['nullable', 'string', 'max:20'],
-            'marca' => ['nullable', 'string', 'max:100'],
-            'modelo' => ['nullable', 'string', 'max:100'],
-            'anio_matriculacion' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y') + 1],
-            'anio_fabricacion' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y') + 1],
-            'km' => ['nullable', 'integer', 'min:0'],
-            'combustible' => ['nullable', 'string', 'max:50'],
-            'etiqueta' => ['nullable', 'string', 'max:10'],
-            'precio' => ['nullable', 'numeric', 'min:0'],
+            'matricula' => [
+                'nullable',
+                'string',
+                'max:20',
+                // matrícula es UNIQUE global en la tabla vehiculos
+                'unique:vehiculos,matricula,' . $vehiculo->id_vehiculo . ',id_vehiculo',
+            ],
+            'marca'             => ['nullable', 'string', 'max:100'],
+            'modelo'            => ['nullable', 'string', 'max:100'],
+            'anio_matriculacion'=> ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'anio_fabricacion'  => ['nullable', 'integer', 'between:1886,' . $currentYear],
+            'km'                => ['nullable', 'integer', 'min:0'],
+            'combustible'       => ['nullable', 'string', 'max:30'], // VARCHAR(30)
+            'etiqueta'          => ['nullable', 'string', 'max:10'], // VARCHAR(10)
+            'precio'            => ['nullable', 'numeric', 'min:0'],
             'precio_segunda_mano' => ['nullable', 'numeric', 'min:0'],
         ]);
 
-        // Actualizamos el vehículo con los datos validados
+        // regla lógica: fabricación <= matriculación (si ambos vienen informados)
+        if (
+            !empty($data['anio_fabricacion']) &&
+            !empty($data['anio_matriculacion']) &&
+            $data['anio_matriculacion'] < $data['anio_fabricacion']
+        ) {
+            return back()->withErrors([
+                'anio_matriculacion' => 'El año de matriculación no puede ser anterior al de fabricación.',
+            ])->withInput();
+        }
+
+        // Ajustamos también el campo anio de la tabla vehiculos
+        $anioFab = $data['anio_fabricacion'] ?? $vehiculo->anio_fabricacion;
+        $anioMat = $data['anio_matriculacion'] ?? $vehiculo->anio_matriculacion;
+        $data['anio'] = $anioMat ?? $anioFab ?? null;
+
         $vehiculo->update($data);
 
         return back()->with('success', 'Vehículo actualizado correctamente.');
@@ -200,7 +235,7 @@ class AdminController extends Controller
         } catch (\Throwable $e) {
             Log::error('Error al eliminar vehículo en AdminZone', [
                 'vehiculo_id' => $id,
-                'error' => $e->getMessage(),
+                'error'       => $e->getMessage(),
             ]);
 
             return back()->with('error', 'No se ha podido eliminar el vehículo. Revisa el log para más detalles.');

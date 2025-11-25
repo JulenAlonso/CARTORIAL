@@ -118,6 +118,15 @@ CREATE TABLE `gastos` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+-- PARA LA SUBIDA DE ARCHIVOS SE AÑADIO:
+ALTER TABLE `gastos`
+  ADD COLUMN `archivo_path` VARCHAR(255) NULL AFTER `descripcion`;
+
+ALTER TABLE `gastos`
+  ADD COLUMN `archivo_nombre` VARCHAR(255) NULL AFTER `archivo_path`,
+  ADD COLUMN `archivo_mime`   VARCHAR(100) NULL AFTER `archivo_nombre`,
+  ADD COLUMN `archivo_size`   INT UNSIGNED NULL AFTER `archivo_mime`;
 ----------------------------------------------------------------------
 -- Índices
 ----------------------------------------------------------------------

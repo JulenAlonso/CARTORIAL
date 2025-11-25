@@ -410,7 +410,7 @@
 
                             <div class="faq-item">
                                 <div class="faq-question">¿Puedo guardar notas o mantenimientos?</div>
-                                <div class="faq-answer">Sí, desde la sección de Notas y Calendario.</div>
+                                <div class="faq-answer">Sí, desde la sección de Notas y Calendario en tu perfil.</div>
                             </div>
                         </div>
                     </div>
@@ -461,7 +461,8 @@
                     <ul class="footer-links">
                         <li><a href="{{ route('perfil') }}">Mi Perfil</a></li>
                         <li><a href="{{ route('vehiculo.create') }}">Añadir Vehículo</a></li>
-                        <li><a href="{{ route('notas.index') }}">Notas y Mantenimientos</a></li>
+                        {{-- Antes: route('notas.index') que no existe --}}
+                        <li><a href="{{ route('perfil') }}#panel-calendario">Notas y Mantenimientos</a></li>
                         <li><a href="#">Gastos</a></li>
                     </ul>
                 </div>
