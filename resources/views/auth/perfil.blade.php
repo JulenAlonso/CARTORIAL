@@ -52,7 +52,7 @@
                 <img src="{{ $avatarSrc }}" alt="Usuario"
                     onerror="this.onerror=null;this.src='{{ asset('assets/images/user.png') }}';">
             </div>
-            
+
             <!-- Información del perfil del usuario -->
             <div class="user-info">
                 <p><strong>Nombre de usuario:</strong> {{ Auth::user()->user_name }}</p>
@@ -135,7 +135,6 @@
                                 <div class="vehiculo-mini">
                                     <div>
                                         <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
-
                                         @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
                                             <span style="font-size:0.9rem;color:#444; display:inline-block;">
                                                 <strong>Valor 2ª mano:</strong>
@@ -179,7 +178,7 @@
                                         <span style="font-size:0.9rem;color:#666;">
                                             {{ number_format($v->km, 0, ',', '.') }} km
                                         </span>
-                                        <p>
+                                        <p></p>
                                     </div>
                                 </div>
                             @endforeach
@@ -209,7 +208,7 @@
                                         <span style="font-size:0.9rem;color:#666;">
                                             {{ number_format($gastoCalc, 2, ',', '.') }} €
                                         </span>
-                                        <p>
+                                        <p></p>
                                     </div>
                                 </div>
                             @endforeach
@@ -342,7 +341,59 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    {{-- ========================================= --}}
+                                    {{-- TARJETA GLOBAL · VALOR (SOLO MODO-VALOR) --}}
+                                    {{-- ========================================= --}}
+                                    {{-- ========================================= --}}
+                                    {{-- REVISAR --}}
+                                    {{-- ========================================= --}}
 
+                                    <div class="tarjeta-valor-global">
+                                        <h3>💰 Valor actual del vehículo</h3>
+
+                                        @foreach ($vehiculos as $v)
+                                            <div class="valor-item">
+                                                <h4>{{ $v->marca }} {{ $v->modelo }}
+                                                    ({{ $v->anio_matriculacion }})
+                                                </h4>
+
+                                                {{-- Gama --}}
+                                                <p><strong>Gama:</strong> {{ ucfirst($v->gama) }}</p>
+
+                                                {{-- NUEVO --}}
+                                                @if ($v->precio > 0)
+                                                    <p><strong>Precio nuevo (origen):</strong>
+                                                        {{ number_format($v->precio, 2, ',', '.') }} €</p>
+                                                    <p><strong>Valor actual (nuevo):</strong>
+                                                        {{ number_format($v->valor_nuevo_actual, 2, ',', '.') }} €</p>
+                                                    <p><strong>Devaluación nuevo:</strong>
+                                                        -{{ number_format($v->precio - $v->valor_nuevo_actual, 2, ',', '.') }}
+                                                        €
+                                                        ({{ number_format((($v->precio - $v->valor_nuevo_actual) / $v->precio) * 100, 1, ',', '.') }}
+                                                        %)
+                                                    </p>
+                                                @endif
+
+                                                {{-- SEGUNDA MANO --}}
+                                                @if ($v->precio_segunda_mano > 0)
+                                                    <p><strong>Precio 2ª mano (origen):</strong>
+                                                        {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €</p>
+                                                    <p><strong>Valor actual (2ª mano):</strong>
+                                                        {{ number_format($v->valor_segunda_mano_actual, 2, ',', '.') }}
+                                                        €</p>
+                                                    <p><strong>Devaluación 2ª mano:</strong>
+                                                        -{{ number_format($v->precio_segunda_mano - $v->valor_segunda_mano_actual, 2, ',', '.') }}
+                                                        €
+                                                        ({{ number_format((($v->precio_segunda_mano - $v->valor_segunda_mano_actual) / $v->precio_segunda_mano) * 100, 1, ',', '.') }}
+                                                        %)
+                                                    </p>
+                                                @endif
+
+                                                <hr>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    {{-- --------------------------- --}}
                                     {{-- 🟦 Tarjeta KM --}}
                                     <div class="tarjeta-km">
                                         <ul class="vehiculo-datos">

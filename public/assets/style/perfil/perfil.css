@@ -756,6 +756,15 @@ p {
 }
 
 /* ============================= */
+/* Oculta por defecto la tarjeta global de valor */
+.tarjeta-valor-global {
+    display: none;
+}
+
+/* Cuando se activa modo valor → mostrarla */
+.modo-valor .tarjeta-valor-global {
+    display: block;
+}
 
 /* ============================= */
 /*        COLLAPSIBLE / MODOS    */

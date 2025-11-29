@@ -34,6 +34,7 @@
                                 @php $isActive = $vehiculoSelId === $v->id_vehiculo; @endphp
                                 <li class="list-group-item vehiculo-card d-flex justify-content-between align-items-center {{ $isActive ? 'active' : '' }}"
                                     style="position:relative;">
+
                                     <div class="me-2" style="min-width:0;">
                                         <div class="fw-semibold text-truncate">{{ $v->marca }} {{ $v->modelo }}</div>
                                         <small class="texto-secundario">
@@ -41,7 +42,7 @@
                                         </small>
                                     </div>
 
-                                    <div class="d-flex align-items-center gap-1">
+                                    <div class="d-flex align-items-center gap-1" style="position:relative; z-index:3;">
                                         {{-- Editar --}}
                                         <a href="{{ route('editarVehiculo.create', ['vehiculo' => $v->id_vehiculo]) }}"
                                             class="btn btn-outline-primary btn-sm action-btn" title="Editar"
@@ -50,19 +51,20 @@
                                         </a>
 
                                         {{-- Borrar --}}
-                                        <form method="POST" action="{{ route('vehiculos.destroy', $v->id_vehiculo) }}"
-                                            onsubmit="event.stopPropagation(); return confirm('¿Seguro que quieres eliminar este vehículo?');"
-                                            class="m-0 p-0">
+                                        <form method="POST"
+                                            action="{{ route('vehiculos.destroy', ['vehiculo' => $v->id_vehiculo]) }}"
+                                            class="m-0 p-0"
+                                            onsubmit="event.stopPropagation(); return confirm('¿Seguro que quieres eliminar este vehículo?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
-                                                title="Eliminar">
+                                                title="Eliminar" onclick="event.stopPropagation();">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
                                     </div>
 
-                                    {{-- Link estirado para abrir/editar --}}
+                                    {{-- Link estirado para abrir/editar (solo sobre el resto del li) --}}
                                     <a class="stretched-link"
                                         href="{{ route('editarVehiculo.create', ['vehiculo' => $v->id_vehiculo]) }}"></a>
                                 </li>
@@ -250,10 +252,14 @@
 
                                         {{-- Precio --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label" for="precio">Precio (€)</label>
+                                            <label class="form-label" for="precio">
+                                                Precio:
+                                                <strong>{{ number_format($vehiculoSel->precio, 2, ',', '.') }} €</strong>
+                                            </label>
+
                                             <input type="text" inputmode="decimal" name="precio" id="precio"
                                                 class="form-control js-format-money @error('precio') is-invalid @enderror"
-                                                value="{{ old('precio', $vehiculoSel->precio) }}">
+                                                value="">
                                             @error('precio')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -261,12 +267,16 @@
 
                                         {{-- Precio 2ª mano --}}
                                         <div class="col-12 col-md-6 col-xl-4">
-                                            <label class="form-label" for="precio_segunda_mano">Precio de Segunda Mano
-                                                (€)</label>
+                                            <label class="form-label" for="precio_segunda_mano">
+                                                Precio de Segunda Mano:
+                                                <strong>{{ number_format($vehiculoSel->precio_segunda_mano, 2, ',', '.') }}
+                                                    €</strong>
+                                            </label>
+
                                             <input type="text" inputmode="decimal" name="precio_segunda_mano"
                                                 id="precio_segunda_mano"
                                                 class="form-control js-format-money @error('precio_segunda_mano') is-invalid @enderror"
-                                                value="{{ old('precio_segunda_mano', $vehiculoSel->precio_segunda_mano) }}">
+                                                value="">
                                             @error('precio_segunda_mano')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

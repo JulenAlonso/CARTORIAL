@@ -259,20 +259,27 @@ class VehiculoController extends Controller
         return view('auth.vehiculo', compact('currentYear'));
     }
 
-    public function destroy(Vehiculo $vehiculo)
-    {
-        if ((int) $vehiculo->id_usuario !== (int) Auth::id()) {
-            abort(403);
-        }
-
-        if (!empty($vehiculo->car_avatar) && Storage::disk('public')->exists($vehiculo->car_avatar)) {
-            Storage::disk('public')->delete($vehiculo->car_avatar);
-        }
-
-        $vehiculo->delete();
-
-        return redirect()
-            ->route('perfil')
-            ->with('status', 'Vehículo eliminado correctamente.');
+public function destroy(Vehiculo $vehiculo)
+{
+    if ((int) $vehiculo->id_usuario !== (int) Auth::id()) {
+        abort(403);
     }
+
+    try {
+        $vehiculo->registrosKm()->delete();
+        $vehiculo->registrosGastos()->delete();
+    } catch (\Throwable $e) {
+        // Log opcional
+    }
+
+    if (!empty($vehiculo->car_avatar) && Storage::disk('public')->exists($vehiculo->car_avatar)) {
+        Storage::disk('public')->delete($vehiculo->car_avatar);
+    }
+
+    $vehiculo->delete();
+
+    return redirect()
+        ->route('perfil')
+        ->with('status', 'Vehículo eliminado correctamente.');
+}
 }
