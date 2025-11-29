@@ -1273,3 +1273,23 @@ dialog::backdrop {
         gap: 4px;
     }
 }
+
+/* ============================= */
+/*        DEVALUACIÓN        */
+/* ============================= */
+.tarjeta-valor-global .valor-item {
+    margin-bottom: 1rem;
+}
+
+.tarjeta-valor-global .valor-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.tarjeta-valor-global .valor-col {
+    flex: 1 1 250px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+}
