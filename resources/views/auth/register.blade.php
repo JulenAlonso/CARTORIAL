@@ -136,8 +136,8 @@
                                             <p class="mb-0 me-2">¿Ya tienes cuenta?</p>
                                             <a href="{{ route('login') }}" class="btn btn-outline-danger">Login</a>
                                         </div>
-
                                 </form>
+                                @include('components.loadingRegister')
 
                                 <a href="{{ Auth::check() ? route('home') : url('/') }}" class="btn btn-volver">Volver
                                     al Inicio</a>

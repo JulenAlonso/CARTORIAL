@@ -34,8 +34,9 @@
                                         <p>Introduce tu usuario y contraseña</p>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="email" name="email" id="form2Example11" class="form-control"
-                                                placeholder="Correo electrónico" required autofocus />
+                                            <input type="email" name="email" id="form2Example11"
+                                                class="form-control" placeholder="Correo electrónico" required
+                                                autofocus />
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
@@ -55,6 +56,7 @@
                                                 class="btn btn-outline-danger">Regístrate</a>
                                         </div>
                                     </form>
+                                    @include('components.loadingLogin')
 
                                     <a href="{{ Auth::check() ? route('perfil') : url('/') }}" class="btn btn-volver">
                                         Volver al Inicio

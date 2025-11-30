@@ -3,293 +3,235 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- Meta para responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Favicon de Cartorial -->
     <link rel="shortcut icon" href="{{ asset('assets/images/CARTORIAL2.png') }}" type="image/x-icon">
-
     <title>Perfil de Usuario — Cartorial</title>
 
-    <!-- Estilos unificados para prevenir errores -->
-    {{-- <link rel="stylesheet" href="{{ asset('assets/style/perfil/perfil.css') }}"> --}}
-    {{-- Estilos --}}
     <link rel="stylesheet" href="{{ asset('assets/style/perfil/perfilImports.css') }}">
 
-
-    {{-- Bootstrap Icons para iconos del footer y otros elementos --}}
+    {{-- Bootstrap Icons para los iconos del footer --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    {{-- Librería CanvasJS para los gráficos --}}
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-
-    {{-- Template para llamadas AJAX de km si lo necesitas en JS --}}
     <meta name="km-data-url-template" content="{{ url('/vehiculos/__ID__/km/data') }}">
 </head>
 
 <body>
-    <div id="perfil-layout">
-        <aside>
-            @php
-                // ===============================
-                // BLOQUE: Datos del usuario logueado
-                // ===============================
+<div id="perfil-layout">
+    <aside>
+        @php
+            // Usuario autenticado
+            $user = Auth::user();
 
-                // Usuario autenticado
-                $user = Auth::user();
+            // Imagen por defecto
+            $avatarSrc = asset('assets/images/user.png');
 
-                // Imagen por defecto por si no hay avatar
-                $avatarSrc = asset('assets/images/user.png');
+            if ($user) {
+                // 1) Si viene $avatarPath desde el controlador, lo respetamos
+                if (!empty($avatarPath ?? null)) {
+                    $avatarSrc = $avatarPath;
 
-                if ($user) {
-                    // 1) Si viene $avatarPath desde el controlador, lo respetamos
-                    if (!empty($avatarPath ?? null)) {
-                        $avatarSrc = $avatarPath;
+                    // 2) Si el modelo tiene accessor "avatar_url"
+                } elseif (isset($user->avatar_url)) {
+                    $avatarSrc = $user->avatar_url;
 
-                        // 2) Si el modelo tiene accessor "avatar_url"
-                    } elseif (isset($user->avatar_url)) {
-                        $avatarSrc = $user->avatar_url;
-
-                        // 3) Si solo tenemos el campo "user_avatar" en BD
-                    } elseif (!empty($user->user_avatar) && $user->user_avatar !== '0') {
-                        // Si es URL absoluta (por ejemplo un avatar externo)
-                        if (preg_match('/^https?:\/\//', $user->user_avatar)) {
-                            $avatarSrc = $user->user_avatar;
-                        } else {
-                            // Avatar guardado en storage/app/public → public/storage
-                            $avatarSrc = asset('storage/' . ltrim($user->user_avatar, '/'));
-                        }
+                    // 3) Si solo tenemos el campo "user_avatar" en BD
+                } elseif (!empty($user->user_avatar) && $user->user_avatar !== '0') {
+                    // Si es URL absoluta (por ejemplo avatar externo)
+                    if (preg_match('/^https?:\/\//', $user->user_avatar)) {
+                        $avatarSrc = $user->user_avatar;
+                    } else {
+                        // Guardado en storage/app/public -> public/storage
+                        $avatarSrc = asset('storage/' . ltrim($user->user_avatar, '/'));
                     }
                 }
-            @endphp
+            }
+        @endphp
 
-            <!-- FOTO / AVATAR DEL USUARIO -->
-            <div class="profile-pic">
-                <img src="{{ $avatarSrc }}" alt="Usuario"
-                    onerror="this.onerror=null;this.src='{{ asset('assets/images/user.png') }}';">
-            </div>
+        <div class="profile-pic">
+            <img src="{{ $avatarSrc }}" alt="Usuario"
+                 onerror="this.onerror=null;this.src='{{ asset('assets/images/user.png') }}';">
+        </div>
 
-            <!-- Información del perfil del usuario (datos básicos) -->
-            <div class="user-info">
-                <p><strong>Nombre de usuario:</strong> {{ Auth::user()->user_name }}</p>
-                <p><strong>Nombre:</strong> {{ Auth::user()->nombre }}</p>
-                <p><strong>Apellidos:</strong> {{ Auth::user()->apellidos }}</p>
-                <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
-                <p><strong>Teléfono:</strong> {{ Auth::user()->telefono }}</p>
-            </div>
+        <!-- Información del perfil del usuario -->
+        <div class="user-info">
+            <p><strong>Nombre de usuario:</strong> {{ Auth::user()->user_name }}</p>
+            <p><strong>Nombre:</strong> {{ Auth::user()->nombre }}</p>
+            <p><strong>Apellidos:</strong> {{ Auth::user()->apellidos }}</p>
+            <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
+            <p><strong>Teléfono:</strong> {{ Auth::user()->telefono }}</p>
+        </div>
 
-            <!-- Menú lateral del perfil -->
-            <div class="sidebar-menu">
-                <a href="{{ route('editarPerfil.create') }}" class="btn-sidebar">👤 Editar Perfil</a>
-                <a href="{{ route('vehiculo.create') }}" class="btn-sidebar">➕ Añadir Vehículo</a>
-                <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">🛠️ Editar Vehiculo</a>
-                <a href="{{ route('ayuda') }}" class="btn-sidebar">❓ Ayuda</a>
-                <p></p>
+        <div class="sidebar-menu">
+            <a href="{{ route('editarPerfil.create') }}" class="btn-sidebar">👤 Editar Perfil</a>
+            <a href="{{ route('vehiculo.create') }}" class="btn-sidebar">➕ Añadir Vehículo</a>
+            <a href="{{ route('editarVehiculo.create') }}" class="btn-sidebar">🛠️ Editar Vehiculo</a>
+            <a href="{{ route('ayuda') }}" class="btn-sidebar">❓ Ayuda</a>
+            <p></p>
+            @if (auth()->user()?->admin == 1)
+                <a href="{{ route('admin.dashboard') }}" class="btn-sidebar-adminzone">
+                    ⚙️ Admin Zone
+                </a>
+            @endif
+        </div>
 
-                {{-- Enlace a Admin Zone solo visible si el usuario es admin --}}
-                @if (auth()->user()?->admin == 1)
-                    <a href="{{ route('admin.dashboard') }}" class="btn-sidebar-adminzone">
-                        ⚙️ Admin Zone
-                    </a>
-                @endif
-            </div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="logout">Cerrar Sesión</button>
+        </form>
+    </aside>
 
-            {{-- Botón de cierre de sesión --}}
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout">Cerrar Sesión</button>
-            </form>
-        </aside>
-
-        <main>
-            <h1>Mi Perfil</h1>
-
-            @php
-                // ===============================
-                // Preparación de variables globales del perfil
-                // ===============================
-
-                // Aseguramos que $vehiculos siempre sea una colección
-                $vehiculos = $vehiculos ?? collect();
-
-                // Totales pre-calculados (por si vienen del controlador o no)
-                $totalVehiculos = $totalVehiculos ?? ($vehiculos->count() ?? 0);
-                $valorTotal = $valorTotal ?? ($vehiculos->sum('precio') ?? 0);
-                $kmTotal = $kmTotal ?? ($vehiculos->sum('km') ?? 0);
-                $gastosTotales = $gastosTotales ?? 0;
-            @endphp
-
-            @php
-                // ===============================================================
-                // Helper: calcularValorVehiculoView()
-                // ---------------------------------------------------------------
-                // Esta función calcula el valor estimado actual de un vehículo a
-                // partir de su precio inicial (nuevo o de segunda mano) y los años
-                // transcurridos desde la compra/matriculación.
-                //
-                // Está ENVUELTA en un "if (!function_exists())" para evitar errores
-                // si se carga esta vista varias veces o si el helper se declara
-                // en otra parte del proyecto.
-                // ===============================================================
-
-                if (!function_exists('calcularValorVehiculoView')) {
-                    /**
-                     * Calcula la depreciación de un vehículo según:
-                     *  - su precio inicial (nuevo o 2ª mano),
-                     *  - la "gama" asignada según ese precio,
-                     *  - una curva de devaluación dividida en 0–15 años y +15 años.
-                     *
-                     * @param float $precioInicial  Precio de referencia para calcular
-                     *                              la devaluación. Puede ser:
-                     *                              → el precio NUEVO del coche
-                     *                              → el precio de SEGUNDA MANO
-                     * @param int   $anios          Años transcurridos desde matriculación
-                     *
-                     * @return array {
-                     *      gama: "Baja" | "Media" | "Alta" | "Lujo",
-                     *      valor_actual: número calculado,
-                     *      devaluacion_abs: euros perdidos,
-                     *      devaluacion_pct: porcentaje perdido
-                     * }
-                     */
-                    function calcularValorVehiculoView(float $precioInicial, int $anios): array
-                    {
-                        // ---------------------------------------------------------------
-                        // 1) Validaciones básicas
-                        // ---------------------------------------------------------------
-                        // Si el precio inicial es ≤ 0 o los años son negativos,
-                        // devolvemos valores nulos para evitar errores o cálculos absurdos.
-                        if ($precioInicial <= 0 || $anios < 0) {
-                            return [
-                                'gama' => null,
-                                'valor_actual' => 0,
-                                'devaluacion_abs' => 0,
-                                'devaluacion_pct' => 0,
-                            ];
-                        }
-
-                        // ---------------------------------------------------------------
-                        // 2) Clasificación en gama según el precio
-                        // ---------------------------------------------------------------
-                        // Esta gama determina qué fórmula de depreciación aplicamos.
-                        // Se basa SOLO en el precio inicial recibido.
-                        if ($precioInicial >= 80001) {
-                            $gama = 'Lujo'; // +80.000€
-                        } elseif ($precioInicial >= 40001) {
-                            $gama = 'Alta'; // 40.000–80.000€
-                        } elseif ($precioInicial >= 20001) {
-                            $gama = 'Media'; // 20.000–40.000€
-                        } else {
-                            $gama = 'Baja'; // menos de 20.000€
-                        }
-
-                        // ---------------------------------------------------------------
-                        // 3) Variables base
-                        // ---------------------------------------------------------------
-                        // $P → precio inicial del vehículo
-                        // $valor → valor que vamos a ir recalculando
-                        $P = $precioInicial;
-                        $valor = $P;
-
-                        // ---------------------------------------------------------------
-                        // 4) Curvas de devaluación por gama
-                        // ---------------------------------------------------------------
-                        // Todas las gamas utilizan una fórmula diferente para
-                        // los primeros 15 años y para los años extra (> 15).
-                        //
-                        // Se calcula: valor = precio_inicial * (1 - coeficiente * años)
-                        // O, si han pasado más de 15 años:
-                        //    valor15 = precio_inicial tras 15 años
-                        //    valor   = valor15 * (1 - coef_extra * años_extra)
-                        // ---------------------------------------------------------------
-                        switch ($gama) {
-                            // ======= GAMA LUJO =======
-                            case 'Lujo':
-                                if ($anios <= 15) {
-                                    // Pérdida muy leve: 1,5% por año hasta los 15 años
-                                    $valor = $P * (1 - 0.015 * $anios);
-                                } else {
-                                    // Después de 15 años → pérdida del 2% por año extra
-                                    $valor15 = $P * (1 - 0.015 * 15);
-                                    $aniosExtra = $anios - 15;
-                                    $valor = $valor15 * (1 - 0.02 * $aniosExtra);
-                                }
-                                break;
-
-                            // ======= GAMA ALTA =======
-                            case 'Alta':
-                                if ($anios <= 15) {
-                                    // 3,33% anual hasta 15 años
-                                    $valor = $P * (1 - 0.0333 * $anios);
-                                } else {
-                                    // +5% anual después de 15 años
-                                    $valor15 = $P * (1 - 0.0333 * 15);
-                                    $aniosExtra = $anios - 15;
-                                    $valor = $valor15 * (1 - 0.05 * $aniosExtra);
-                                }
-                                break;
-
-                            // ======= GAMA MEDIA / BAJA =======
-                            case 'Media':
-                            case 'Baja':
-                                if ($anios <= 15) {
-                                    // 3,33% anual hasta 15 años (igual que gama Alta)
-                                    $valor = $P * (1 - 0.0333 * $anios);
-                                } else {
-                                    // Después de 15 años la caída es mayor → -6% anual
-                                    $valor15 = $P * (1 - 0.0333 * 15);
-                                    $aniosExtra = $anios - 15;
-                                    $valor = $valor15 * (1 - 0.06 * $aniosExtra);
-                                }
-                                break;
-                        }
-
-                        // ---------------------------------------------------------------
-                        // 5) Seguridad: nunca devolver valores negativos
-                        // ---------------------------------------------------------------
-                        $valor = max($valor, 0);
-
-                        // ---------------------------------------------------------------
-                        // 6) Cálculo final de devaluación
-                        // ---------------------------------------------------------------
-                        $devaluacionAbs = $P - $valor; // € perdidos
-                        $devaluacionPct = ($devaluacionAbs / $P) * 100; // % perdido
-
-                        // ---------------------------------------------------------------
-                        // 7) Resultado final
-                        // ---------------------------------------------------------------
+    <main>
+        <h1>Mi Perfil</h1>
+        @php
+            $vehiculos = $vehiculos ?? collect();
+            $totalVehiculos = $totalVehiculos ?? ($vehiculos->count() ?? 0);
+            $valorTotal = $valorTotal ?? ($vehiculos->sum('precio') ?? 0);
+            $kmTotal = $kmTotal ?? ($vehiculos->sum('km') ?? 0);
+            $gastosTotales = $gastosTotales ?? 0;
+        @endphp
+        @php
+            if (!function_exists('calcularValorVehiculoView')) {
+                function calcularValorVehiculoView(float $precioInicial, int $anios): array
+                {
+                    if ($precioInicial <= 0 || $anios < 0) {
                         return [
-                            'gama' => $gama,
-                            'valor_actual' => $valor,
-                            'devaluacion_abs' => $devaluacionAbs,
-                            'devaluacion_pct' => $devaluacionPct,
+                            'gama' => null,
+                            'valor_actual' => 0,
+                            'devaluacion_abs' => 0,
+                            'devaluacion_pct' => 0,
                         ];
                     }
+
+                    // 1) Determinar gama según precio inicial
+                    if ($precioInicial >= 80001) {
+                        $gama = 'Lujo';
+                    } elseif ($precioInicial >= 40001) {
+                        $gama = 'Alta';
+                    } elseif ($precioInicial >= 20001) {
+                        $gama = 'Media';
+                    } else {
+                        $gama = 'Baja';
+                    }
+
+                    $P = $precioInicial;
+                    $valor = $P;
+
+                    switch ($gama) {
+                        case 'Lujo':
+                            if ($anios <= 15) {
+                                // 1,5% del valor inicial por año
+                                $valor = $P * (1 - 0.015 * $anios);
+                            } else {
+                                $valor15 = $P * (1 - 0.015 * 15);
+                                $aniosExtra = $anios - 15;
+                                // 2% anual sobre el valor del año 15
+                                $valor = $valor15 * (1 - 0.02 * $aniosExtra);
+                            }
+                            break;
+
+                        case 'Alta':
+                            if ($anios <= 15) {
+                                // 3,33% del valor inicial por año
+                                $valor = $P * (1 - 0.0333 * $anios);
+                            } else {
+                                $valor15 = $P * (1 - 0.0333 * 15);
+                                $aniosExtra = $anios - 15;
+                                // 5% anual sobre el valor del año 15
+                                $valor = $valor15 * (1 - 0.05 * $aniosExtra);
+                            }
+                            break;
+
+                        case 'Media':
+                        case 'Baja':
+                            if ($anios <= 15) {
+                                // 3,33% del valor inicial por año
+                                $valor = $P * (1 - 0.0333 * $anios);
+                            } else {
+                                $valor15 = $P * (1 - 0.0333 * 15);
+                                $aniosExtra = $anios - 15;
+                                // 6% anual sobre el valor del año 15
+                                $valor = $valor15 * (1 - 0.06 * $aniosExtra);
+                            }
+                            break;
+                    }
+
+                    // Nunca negativo
+                    $valor = max($valor, 0);
+
+                    $devaluacionAbs = $P - $valor;
+                    $devaluacionPct = ($devaluacionAbs / $P) * 100;
+
+                    return [
+                        'gama' => $gama,
+                        'valor_actual' => $valor,
+                        'devaluacion_abs' => $devaluacionAbs,
+                        'devaluacion_pct' => $devaluacionPct,
+                    ];
                 }
-            @endphp
+            }
+        @endphp
 
-            <div class="cards">
-                {{-- ===================== --}}
-                {{-- 🚗 Tarjeta: Vehículos --}}
-                {{-- ===================== --}}
-                <div class="card" id="card-vehiculos-registrados" role="button" tabindex="0" aria-expanded="false"
-                    aria-controls="seccion-mis-vehiculos">
-                    <h3>🚗 Vehículos</h3>
+        <div class="cards">
+            {{-- ===================== --}}
+            {{-- 🚗 Vehículos          --}}
+            {{-- ===================== --}}
+            <div class="card" id="card-vehiculos-registrados" role="button" tabindex="0" aria-expanded="false"
+                 aria-controls="seccion-mis-vehiculos">
+                <h3>🚗 Vehículos</h3>
 
-                    {{-- Lista compacta de vehículos en la tarjeta superior --}}
+                <div class="vehiculos-lista">
+                    @foreach ($vehiculos as $v)
+                        <div class="vehiculo-mini">
+                            <div>
+                                <strong>{{ $v->marca }} {{ $v->modelo }}</strong>
+                                <br>
+                                <span style="font-size:0.9rem;color:#666;">
+                                    Matrícula: {{ $v->matricula }}
+                                </span>
+                                <br>
+                                <span style="font-size:0.9rem;color:#444;">
+                                    Año matriculación: {{ $v->anio_matriculacion }}
+                                </span>
+                                <p></p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <p class="text-muted ver-detalles">Ver detalles</p>
+            </div>
+
+            {{-- ===================== --}}
+            {{-- 💰 Valor (2ª mano)   --}}
+            {{-- ===================== --}}
+            <div class="card" id="card-valor" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
+                <h3>💰 Valor</h3>
+
+                @if ($vehiculos->isEmpty())
+                    <p class="text-muted">Sin vehículos registrados.</p>
+                @else
                     <div class="vehiculos-lista">
                         @foreach ($vehiculos as $v)
                             <div class="vehiculo-mini">
                                 <div>
-                                    <strong>{{ $v->marca }} {{ $v->modelo }}</strong>
-                                    <br>
-                                    <span style="font-size:0.9rem;color:#666;">
-                                        Matrícula: {{ $v->matricula }}
-                                    </span>
-                                    <br>
-                                    <span style="font-size:0.9rem;color:#444;">
-                                        Año matriculación: {{ $v->anio_matriculacion }}
-                                    </span>
+                                    <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
+                                    @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
+                                        <span style="font-size:0.9rem;color:#444; display:inline-block;">
+                                            <strong>Valor 2ª mano:</strong>
+                                            {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €
+                                        </span>
+                                    @elseif (!empty($v->precio) && $v->precio > 0)
+                                        <span style="font-size:0.9rem;color:#666; display:inline-block;">
+                                            <strong>Valor nuevo:</strong>
+                                            {{ number_format($v->precio, 2, ',', '.') }} €
+                                        </span>
+                                    @else
+                                        <span style="font-size:0.9rem;color:#999; display:inline-block;">
+                                            Sin precio registrado
+                                        </span>
+                                    @endif
+
                                     <p></p>
                                 </div>
                             </div>
@@ -297,1037 +239,1261 @@
                     </div>
 
                     <p class="text-muted ver-detalles">Ver detalles</p>
-                </div>
+                @endif
+            </div>
 
-                {{-- ===================== --}}
-                {{-- 💰 Tarjeta: Valor     --}}
-                {{-- ===================== --}}
-                <div class="card" id="card-valor" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
-                    <h3>💰 Valor</h3>
-
-                    @if ($vehiculos->isEmpty())
-                        {{-- Mensaje si no hay vehículos --}}
-                        <p class="text-muted">Sin vehículos registrados.</p>
-                    @else
-                        {{-- Lista compacta de valor por vehículo (nuevo o 2ª mano) --}}
-                        <div class="vehiculos-lista">
-                            @foreach ($vehiculos as $v)
-                                <div class="vehiculo-mini">
-                                    <div>
-                                        <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
-
-                                        {{-- Mostramos valor de 2ª mano si existe; si no, precio nuevo; si no, mensaje --}}
-                                        @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
-                                            <span style="font-size:0.9rem;color:#444; display:inline-block;">
-                                                <strong>Valor 2ª mano:</strong>
-                                                {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €
-                                            </span>
-                                        @elseif (!empty($v->precio) && $v->precio > 0)
-                                            <span style="font-size:0.9rem;color:#666; display:inline-block;">
-                                                <strong>Valor nuevo:</strong>
-                                                {{ number_format($v->precio, 2, ',', '.') }} €
-                                            </span>
-                                        @else
-                                            <span style="font-size:0.9rem;color:#999; display:inline-block;">
-                                                Sin precio registrado
-                                            </span>
-                                        @endif
-
-                                        <p></p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <p class="text-muted ver-detalles">Ver detalles</p>
-                    @endif
-                </div>
-
-                {{-- ===================== --}}
-                {{-- 📍 Tarjeta: Kilómetros --}}
-                {{-- ===================== --}}
-                <div class="card" id="card-km" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
-                    <h3>📍 Kilómetros</h3>
-
-                    @if ($vehiculos->isEmpty())
-                        {{-- Mensaje si no hay vehículos --}}
-                        <p class="text-muted">Sin vehículos registrados.</p>
-                    @else
-                        {{-- Lista compacta de km por vehículo --}}
-                        <div class="vehiculos-lista">
-                            @foreach ($vehiculos as $v)
-                                <div class="vehiculo-mini">
-                                    <div>
-                                        <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
-                                        <span style="font-size:0.9rem;color:#666;">
-                                            {{ number_format($v->km, 0, ',', '.') }} km
-                                        </span>
-                                        <p></p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <p class="text-muted ver-detalles">Ver detalles</p>
-                    @endif
-                </div>
-
-                {{-- ===================== --}}
-                {{-- 🧾 Tarjeta: Gastos    --}}
-                {{-- ===================== --}}
-                <div class="card" id="card-gastos" role="button" tabindex="0"
-                    aria-controls="seccion-mis-vehiculos">
-                    <h3>🧾 Gastos</h3>
-
-                    @if ($vehiculos->isEmpty())
-                        {{-- Mensaje si no hay vehículos --}}
-                        <p class="text-muted">Sin vehículos registrados.</p>
-                    @else
-                        {{-- Lista compacta de gastos totales por vehículo --}}
-                        <div class="vehiculos-lista">
-                            @foreach ($vehiculos as $v)
-                                @php
-                                    // gastoCalc viene normalmente precalculado desde el controlador
-                                    $gastoCalc = $v->gastoCalc;
-                                @endphp
-                                <div class="vehiculo-mini">
-                                    <div>
-                                        <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
-                                        <span style="font-size:0.9rem;color:#666;">
-                                            {{ number_format($gastoCalc, 2, ',', '.') }} €
-                                        </span>
-                                        <p></p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <p class="text-muted ver-detalles">Ver detalles</p>
-                    @endif
-                </div>
-
-                {{-- ===================== --}}
-                {{-- 📅 Tarjeta: Calendario mini --}}
-                {{-- ===================== --}}
-                <div class="card" id="card-calendario" role="button" tabindex="0"
-                    aria-controls="panel-calendario">
-                    <h3>📅 Calendario</h3>
-
-                    <div class="mini-calendar small">
-                        @php
-                            // ⚠ IMPORTANTE:
-                            // En Blade no usamos "use Carbon\Carbon;" aquí.
-                            // Usamos el namespace completo \Carbon\Carbon para evitar errores.
-
-                            // Obtenemos la fecha actual
-                            $now = \Carbon\Carbon::now();
-
-                            // Primer día del mes actual
-                            $first = $now->copy()->startOfMonth();
-
-                            // Número de días del mes
-                            $daysInMonth = $now->daysInMonth;
-
-                            // Número de huecos iniciales (Lunes=1 ... Domingo=7)
-                            $leading = $first->isoWeekday() - 1;
-
-                            // Días de ejemplo marcados como "evento" (demo visual)
-                            $sampleEvents = [5, 12, 21];
-                        @endphp
-
-                        <div class="mc-header">
-                            {{-- Nombre del mes y año en formato localizado --}}
-                            <span class="mc-month">{{ $now->translatedFormat('F Y') }}</span>
-                        </div>
-
-                        {{-- Cabecera de días de la semana --}}
-                        <div class="mc-grid mc-days">
-                            <div>Lu</div>
-                            <div>Ma</div>
-                            <div>Mi</div>
-                            <div>Ju</div>
-                            <div>Vi</div>
-                            <div>Sa</div>
-                            <div>Do</div>
-                        </div>
-
-                        {{-- Celdas del calendario (mini) --}}
-                        <div class="mc-grid mc-dates">
-                            {{-- Huecos vacíos antes del día 1 (para cuadrar lunes-domingo) --}}
-                            @for ($i = 0; $i < $leading; $i++)
-                                <div class="mc-date mc-empty"></div>
-                            @endfor
-
-                            {{-- Días reales del mes --}}
-                            @for ($d = 1; $d <= $daysInMonth; $d++)
-                                @php
-                                    $date = $first->copy()->day($d);
-                                    $isToday = $date->isToday();
-                                @endphp
-                                <div class="mc-date {{ $isToday ? 'mc-today' : '' }}">
-                                    <span>{{ $d }}</span>
-
-                                    {{-- Punto indicador si el día está en sampleEvents (modo demo) --}}
-                                    @if (in_array($d, $sampleEvents))
-                                        <span class="mc-dot" title="Evento"></span>
-                                    @endif
-                                </div>
-                            @endfor
-                        </div>
-                    </div>
-                </div>
-            </div> {{-- /div.cards --}}
-
-            {{-- ===================================== --}}
-            {{-- Sección: listado de vehículos (detalle) --}}
-            {{-- ===================================== --}}
-            <section id="seccion-mis-vehiculos" class="collapsible" style="margin-top: 24px">
-                <h2 class="h2_mis_vehiculos">Mis vehículos</h2>
+            {{-- ===================== --}}
+            {{-- 📍 Kilómetros         --}}
+            {{-- ===================== --}}
+            <div class="card" id="card-km" role="button" tabindex="0" aria-controls="seccion-mis-vehiculos">
+                <h3>📍 Kilómetros</h3>
 
                 @if ($vehiculos->isEmpty())
-                    {{-- Mensaje si no hay vehículos registrados --}}
-                    <p class="text-muted">
-                        <a href="{{ route('vehiculo.create') }}">Añadir vehículo</a>.
-                    </p>
+                    <p class="text-muted">Sin vehículos registrados.</p>
                 @else
-                    {{-- Grid principal de tarjetas de vehículo --}}
-                    <div class="vehiculos-grid">
+                    <div class="vehiculos-lista">
+                        @foreach ($vehiculos as $v)
+                            <div class="vehiculo-mini">
+                                <div>
+                                    <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
+                                    <span style="font-size:0.9rem;color:#666;">
+                                        {{ number_format($v->km, 0, ',', '.') }} km
+                                    </span>
+                                    <p></p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="text-muted ver-detalles">Ver detalles</p>
+                @endif
+            </div>
+
+            {{-- ===================== --}}
+            {{-- 🧾 Gastos             --}}
+            {{-- ===================== --}}
+            <div class="card" id="card-gastos" role="button" tabindex="0"
+                 aria-controls="seccion-mis-vehiculos">
+                <h3>🧾 Gastos</h3>
+
+                @if ($vehiculos->isEmpty())
+                    <p class="text-muted">Sin vehículos registrados.</p>
+                @else
+                    <div class="vehiculos-lista">
                         @foreach ($vehiculos as $v)
                             @php
-                                // ===============================
-                                // BLOQUE: Imagen del vehículo (car_avatar)
-                                // Fallbacks si no hay imagen, si es URL externa o si está en storage
-                                // ===============================
-
-                                if (empty($v->car_avatar)) {
-                                    // Sin avatar → imagen por defecto
-                                    $carSrc = asset('assets/images/default-car.png');
-                                } elseif (preg_match('/^https?:\/\//', $v->car_avatar)) {
-                                    // Si el valor es una URL completa, la usamos tal cual
-                                    $carSrc = $v->car_avatar;
-                                } else {
-                                    // Avatar almacenado en storage/app/public
-                                    $carSrc = asset('storage/' . ltrim($v->car_avatar, '/'));
-                                }
-
-                                // Cálculo rápido de gasto por defecto (por ejemplo 5% del precio)
-                                // Si ya viene gastoCalc precalculado, normalmente no usarás esta línea.
-                                $gastoCalc = $v->gastos_total ?? $v->precio * 0.05;
+                                $gastoCalc = $v->gastoCalc; // ← viene calculado del controlador
                             @endphp
+                            <div class="vehiculo-mini">
+                                <div>
+                                    <strong>{{ $v->marca }} {{ $v->modelo }}</strong><br>
+                                    <span style="font-size:0.9rem;color:#666;">
+                                        {{ number_format($gastoCalc, 2, ',', '.') }} €
+                                    </span>
+                                    <p></p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="text-muted ver-detalles">Ver detalles</p>
+                @endif
+            </div>
 
-                            <article class="vehiculo-card">
-                                {{-- Imagen destacada del vehículo --}}
-                                <div class="vehiculo-media">
-                                    <img src="{{ $carSrc }}"
-                                        alt="Imagen de {{ $v->marca }} {{ $v->modelo }}"
-                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/default-car.png') }}';">
+            {{-- ===================== --}}
+            {{-- 📅 Calendario (mini) --}}
+            {{-- ===================== --}}
+            <div class="card" id="card-calendario" role="button" tabindex="0" aria-controls="panel-calendario">
+                <h3>📅 Calendario</h3>
+
+                <div class="mini-calendar small">
+                    @php
+                        use Carbon\Carbon;
+                        $now = Carbon::now();
+                        $first = $now->copy()->startOfMonth();
+                        $daysInMonth = $now->daysInMonth;
+                        $leading = $first->isoWeekday() - 1;
+                        $sampleEvents = [5, 12, 21];
+                    @endphp
+
+                    <div class="mc-header">
+                        <span class="mc-month">{{ $now->translatedFormat('F Y') }}</span>
+                    </div>
+
+                    <div class="mc-grid mc-days">
+                        <div>Lu</div>
+                        <div>Ma</div>
+                        <div>Mi</div>
+                        <div>Ju</div>
+                        <div>Vi</div>
+                        <div>Sa</div>
+                        <div>Do</div>
+                    </div>
+
+                    <div class="mc-grid mc-dates">
+                        @for ($i = 0; $i < $leading; $i++)
+                            <div class="mc-date mc-empty"></div>
+                        @endfor
+
+                        @for ($d = 1; $d <= $daysInMonth; $d++)
+                            @php
+                                $date = $first->copy()->day($d);
+                                $isToday = $date->isToday();
+                            @endphp
+                            <div class="mc-date {{ $isToday ? 'mc-today' : '' }}">
+                                <span>{{ $d }}</span>
+                                @if (in_array($d, $sampleEvents))
+                                    <span class="mc-dot" title="Evento"></span>
+                                @endif
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Sección listado de vehículos (colapsable) --}}
+        <section id="seccion-mis-vehiculos" class="collapsible" style="margin-top: 24px">
+            <h2 class="h2_mis_vehiculos">Mis vehículos</h2>
+
+            @if ($vehiculos->isEmpty())
+                <p class="text-muted">
+                    <a href="{{ route('vehiculo.create') }}">Añadir vehículo</a>.
+                </p>
+            @else
+                <div class="vehiculos-grid">
+                    @foreach ($vehiculos as $v)
+                        @php
+                            // Fallback robusto para car_avatar
+                            if (empty($v->car_avatar)) {
+                                $carSrc = asset('assets/images/default-car.png');
+                            } elseif (preg_match('/^https?:\/\//', $v->car_avatar)) {
+                                $carSrc = $v->car_avatar;
+                            } else {
+                                $carSrc = asset('storage/' . ltrim($v->car_avatar, '/'));
+                            }
+
+                            $gastoCalc = $v->gastos_total ?? $v->precio * 0.05;
+                        @endphp
+
+                        <article class="vehiculo-card">
+                            <div class="vehiculo-media">
+                                <img src="{{ $carSrc }}"
+                                     alt="Imagen de {{ $v->marca }} {{ $v->modelo }}"
+                                     onerror="this.onerror=null;this.src='{{ asset('assets/images/default-car.png') }}';">
+                            </div>
+
+                            <div class="vehiculo-body">
+                                <h3 class="vehiculo-titulo">
+                                    {{ $v->marca }} {{ $v->modelo }}
+                                    <span>({{ $v->anio_matriculacion }})</span>
+                                </h3>
+
+                                {{-- 🟩 Datos generales --}}
+                                <div class="tarjeta-detalle">
+                                    <ul class="vehiculo-datos">
+                                        <li><strong>Matrícula:</strong> {{ $v->matricula }}</li>
+
+                                        <li class="km"><strong>Km:</strong>
+                                            {{ number_format($v->km, 0, ',', '.') }} km
+                                        </li>
+
+                                        <li><strong>CV:</strong> {{ $v->cv }}</li>
+                                        <li><strong>Combustible:</strong> {{ $v->combustible }}</li>
+                                        <li><strong>Etiqueta:</strong> {{ $v->etiqueta }}</li>
+
+                                        {{-- 🔵 PRECIO NUEVO --}}
+                                        @if ($v->precio > 0)
+                                            <li class="precio">
+                                                <strong>Precio nuevo:</strong>
+                                                {{ number_format($v->precio, 2, ',', '.') }} €
+                                            </li>
+                                        @endif
+
+                                        {{-- 🟠 PRECIO 2ª MANO --}}
+                                        @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
+                                            <li class="precio2">
+                                                <strong>Precio 2ª mano:</strong>
+                                                {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €
+                                            </li>
+                                        @endif
+
+                                        {{-- 🧾 GASTOS --}}
+                                        <li class="gastos">
+                                            <strong>Gastos:</strong><br>
+                                            <span style="font-size:0.9rem;color:#666;">
+                                                {{ number_format($v->gastoCalc, 2, ',', '.') }} €
+                                            </span>
+                                        </li>
+
+                                        {{-- 📅 FECHA DE COMPRA --}}
+                                        <li>
+                                            <strong>Compra:</strong>
+                                            {{ \Carbon\Carbon::parse($v->fecha_compra)->format('d/m/Y') }}
+                                        </li>
+                                    </ul>
                                 </div>
 
-                                <div class="vehiculo-body">
-                                    {{-- Título de la tarjeta: Marca + Modelo + Año --}}
-                                    <h3 class="vehiculo-titulo">
-                                        {{ $v->marca }} {{ $v->modelo }}
-                                        <span>({{ $v->anio_matriculacion }})</span>
-                                    </h3>
+                                {{-- ========================================= --}}
+                                {{-- TARJETA GLOBAL · VALOR (SOLO MODO-VALOR) --}}
+                                {{-- ========================================= --}}
+                                <div class="tarjeta-valor-global">
+                                    <h3>💰 Valor actual del vehículo</h3>
 
-                                    {{-- ============================= --}}
-                                    {{-- 🟩 Tarjeta interna: Datos generales --}}
-                                    {{-- ============================= --}}
-                                    <div class="tarjeta-detalle">
-                                        <ul class="vehiculo-datos">
-                                            <li><strong>Matrícula:</strong> {{ $v->matricula }}</li>
+                                    @foreach ($vehiculos as $v2)
+                                        @php
+                                            // Años desde la matriculación
+                                            $anios2 = now()->year - (int) $v2->anio_matriculacion;
 
-                                            <li class="km">
-                                                <strong>Km:</strong>
-                                                {{ number_format($v->km, 0, ',', '.') }} km
-                                            </li>
+                                            // Cálculo para precio nuevo y 2ª mano (si existen)
+                                            $datosNuevo =
+                                                ($v2->precio ?? 0) > 0
+                                                    ? calcularValorVehiculoView((float) $v2->precio, $anios2)
+                                                    : null;
 
-                                            <li><strong>CV:</strong> {{ $v->cv }}</li>
-                                            <li><strong>Combustible:</strong> {{ $v->combustible }}</li>
-                                            <li><strong>Etiqueta:</strong> {{ $v->etiqueta }}</li>
+                                            $datosSegunda =
+                                                ($v2->precio_segunda_mano ?? 0) > 0
+                                                    ? calcularValorVehiculoView(
+                                                        (float) $v2->precio_segunda_mano,
+                                                        $anios2,
+                                                    )
+                                                    : null;
 
-                                            {{-- 🔵 PRECIO NUEVO --}}
-                                            @if ($v->precio > 0)
-                                                <li class="precio">
-                                                    <strong>Precio nuevo:</strong>
-                                                    {{ number_format($v->precio, 2, ',', '.') }} €
-                                                </li>
-                                            @endif
+                                            // Usamos la gama que salga del precio nuevo; si no hay, de la 2ª mano
+                                            $datosBase = $datosNuevo ?? $datosSegunda;
+                                        @endphp
 
-                                            {{-- 🟠 PRECIO 2ª MANO --}}
-                                            @if (!empty($v->precio_segunda_mano) && $v->precio_segunda_mano > 0)
-                                                <li class="precio2">
-                                                    <strong>Precio 2ª mano:</strong>
-                                                    {{ number_format($v->precio_segunda_mano, 2, ',', '.') }} €
-                                                </li>
-                                            @endif
+                                        <div class="valor-item">
+                                            <h4>{{ $v2->marca }} {{ $v2->modelo }}
+                                                ({{ $v2->anio_matriculacion }})</h4>
 
-                                            {{-- 🧾 GASTOS TOTALES (por vehículo) --}}
-                                            <li class="gastos">
-                                                <strong>Gastos:</strong><br>
-                                                <span style="font-size:0.9rem;color:#666;">
-                                                    {{ number_format($v->gastoCalc, 2, ',', '.') }} €
-                                                </span>
-                                            </li>
+                                            {{-- Gama --}}
+                                            <p>
+                                                <strong>Gama:</strong>
+                                                {{ $datosBase['gama'] ?? 'N/D' }}
+                                            </p>
 
-                                            {{-- 📅 FECHA DE COMPRA --}}
-                                            <li>
-                                                <strong>Compra:</strong>
-                                                {{ \Carbon\Carbon::parse($v->fecha_compra)->format('d/m/Y') }}
-                                            </li>
-                                        </ul>
-                                    </div>
+                                            {{-- 🔹 DOS COLUMNAS: NUEVO / 2ª MANO --}}
+                                            <div class="valor-columns">
+                                                {{-- Columna 1: Precio nuevo --}}
+                                                <div class="valor-col">
+                                                    <h5>🚘 Precio nuevo</h5>
 
-                                    {{-- ================================================== --}}
-                                    {{-- TARJETA GLOBAL · VALOR (SOLO EN MODO-VALOR VISUAL) --}}
-                                    {{-- ================================================== --}}
-                                    <div class="tarjeta-valor-global">
-                                        <h3>💰 Valor actual del vehículo</h3>
+                                                    @if ($datosNuevo)
+                                                        <p>
+                                                            <strong>Valor estimado actual:</strong>
+                                                            {{ number_format($datosNuevo['valor_actual'], 2, ',', '.') }}
+                                                            €
+                                                        </p>
 
-                                        {{-- Recorremos todos los vehículos de nuevo para mostrar un bloque de valoración --}}
-                                        @foreach ($vehiculos as $v)
-                                            @php
-                                                // Años desde la matriculación hasta el año actual
-                                                $anios = now()->year - (int) $v->anio_matriculacion;
-
-                                                // Cálculo de devaluación para precio nuevo (si existe)
-                                                $datosNuevo =
-                                                    ($v->precio ?? 0) > 0
-                                                        ? calcularValorVehiculoView((float) $v->precio, $anios)
-                                                        : null;
-
-                                                // Cálculo de devaluación para precio de 2ª mano (si existe)
-                                                $datosSegunda =
-                                                    ($v->precio_segunda_mano ?? 0) > 0
-                                                        ? calcularValorVehiculoView(
-                                                            (float) $v->precio_segunda_mano,
-                                                            $anios,
-                                                        )
-                                                        : null;
-
-                                                // Gama base: preferimos gama calculada sobre precio nuevo
-                                                // y si no existe, usamos la de segunda mano
-                                                $datosBase = $datosNuevo ?? $datosSegunda;
-                                            @endphp
-
-                                            <div class="valor-item">
-                                                <h4>{{ $v->marca }} {{ $v->modelo }}
-                                                    ({{ $v->anio_matriculacion }})</h4>
-
-                                                {{-- Gama del vehículo (Lujo, Alta, Media, Baja) --}}
-                                                <p>
-                                                    <strong>Gama:</strong>
-                                                    {{ $datosBase['gama'] ?? 'N/D' }}
-                                                </p>
-
-                                                {{-- =============================== --}}
-                                                {{-- 🔹 DOS COLUMNAS: NUEVO / 2ª MANO --}}
-                                                {{-- =============================== --}}
-                                                <div class="valor-columns">
-                                                    {{-- Columna 1: Precio nuevo --}}
-                                                    <div class="valor-col">
-                                                        <h5>🚘 Precio nuevo</h5>
-
-                                                        @if ($datosNuevo)
-                                                            <p>
-                                                                <strong>Valor estimado actual:</strong>
-                                                                {{ number_format($datosNuevo['valor_actual'], 2, ',', '.') }}
-                                                                €
-                                                            </p>
-
-                                                            <p>
-                                                                <strong>Devaluación desde nuevo:</strong>
-                                                                -{{ number_format($datosNuevo['devaluacion_abs'], 2, ',', '.') }}
-                                                                €
-                                                                ({{ number_format($datosNuevo['devaluacion_pct'], 1, ',', '.') }}
-                                                                %)
-                                                            </p>
-                                                        @else
-                                                            <p class="text-muted">Sin precio nuevo registrado.</p>
-                                                        @endif
-                                                    </div>
-
-                                                    {{-- Columna 2: Precio 2ª mano --}}
-                                                    <div class="valor-col">
-                                                        <h5>🔁 Precio 2ª mano</h5>
-
-                                                        @if ($datosSegunda)
-                                                            <p>
-                                                                <strong>Valor estimado actual:</strong>
-                                                                {{ number_format($datosSegunda['valor_actual'], 2, ',', '.') }}
-                                                                €
-                                                            </p>
-
-                                                            <p>
-                                                                <strong>Devaluación desde 2ª mano:</strong>
-                                                                -{{ number_format($datosSegunda['devaluacion_abs'], 2, ',', '.') }}
-                                                                €
-                                                                ({{ number_format($datosSegunda['devaluacion_pct'], 1, ',', '.') }}
-                                                                %)
-                                                            </p>
-                                                        @else
-                                                            <p class="text-muted">Sin precio de 2ª mano registrado.</p>
-                                                        @endif
-                                                    </div>
+                                                        <p>
+                                                            <strong>Devaluación desde nuevo:</strong>
+                                                            -{{ number_format($datosNuevo['devaluacion_abs'], 2, ',', '.') }}
+                                                            €
+                                                            ({{ number_format($datosNuevo['devaluacion_pct'], 1, ',', '.') }}
+                                                            %)
+                                                        </p>
+                                                    @else
+                                                        <p class="text-muted">Sin precio nuevo registrado.</p>
+                                                    @endif
                                                 </div>
 
-                                                <hr>
+                                                {{-- Columna 2: Precio 2ª mano --}}
+                                                <div class="valor-col">
+                                                    <h5>🔁 Precio 2ª mano</h5>
 
-                                                {{-- Botón para abrir modal de gráfico de valor --}}
-                                                <button class="btn_grafico"
-                                                    onclick="document.getElementById('modalValor_{{ $v->id_vehiculo }}').showModal();">
-                                                    Ver gráfico de valor
+                                                    @if ($datosSegunda)
+                                                        <p>
+                                                            <strong>Valor estimado actual:</strong>
+                                                            {{ number_format($datosSegunda['valor_actual'], 2, ',', '.') }}
+                                                            €
+                                                        </p>
+
+                                                        <p>
+                                                            <strong>Devaluación desde 2ª mano:</strong>
+                                                            -{{ number_format($datosSegunda['devaluacion_abs'], 2, ',', '.') }}
+                                                            €
+                                                            ({{ number_format($datosSegunda['devaluacion_pct'], 1, ',', '.') }}
+                                                            %)
+                                                        </p>
+                                                    @else
+                                                        <p class="text-muted">Sin precio de 2ª mano registrado.</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <hr>
+
+                                            {{-- Botón + Modal gráfico valor --}}
+                                            <button type="button" class="btn_grafico"
+                                                    onclick="openValorModal_{{ $v2->id_vehiculo }}()">
+                                                Ver gráfico de valor
+                                            </button>
+
+                                            <dialog id="modalValor_{{ $v2->id_vehiculo }}" class="chart-dialog">
+                                                <h3>📉 Valor del vehículo — {{ $v2->marca }}
+                                                    {{ $v2->modelo }}</h3>
+
+                                                <div id="chartValor_{{ $v2->id_vehiculo }}"
+                                                     style="height: 420px; width: 100%;"></div>
+
+                                                <div class="dialog-buttons">
+                                                    <button
+                                                        onclick="document.getElementById('modalValor_{{ $v2->id_vehiculo }}').close();"
+                                                        class="btn btn-secondary">
+                                                        Cerrar
+                                                    </button>
+                                                </div>
+                                            </dialog>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                {{-- --------------------------- --}}
+                                {{-- 🟦 Tarjeta KM --}}
+                                <div class="tarjeta-km">
+                                    <ul class="vehiculo-datos">
+                                        <li class="km">
+                                            <strong>Kilometraje actual:</strong>
+                                            {{ number_format($v->km, 0, ',', '.') }} km
+                                        </li>
+                                    </ul>
+                                    <p></p>
+
+                                    {{-- FORMULARIO: NUEVO REGISTRO DE KM --}}
+                                    <form action="{{ route('km.store', $v->id_vehiculo) }}" method="POST"
+                                          class="vehiculo-km-form mt-3">
+                                        @csrf
+
+                                        <div class="row g-3">
+
+                                            <!-- COLUMNA 1 — FECHA + KM -->
+                                            <div class="col-md-4">
+                                                <label for="fecha_{{ $v->id_vehiculo }}" class="form-label">
+                                                    Fecha del registro
+                                                </label>
+                                                <input type="date" id="fecha_{{ $v->id_vehiculo }}"
+                                                       name="fecha_registro" class="form-control form-control-sm"
+                                                       value="{{ now()->format('Y-m-d') }}" required>
+                                                <p></p>
+                                                <label for="km_actual_{{ $v->id_vehiculo }}" class="form-label">
+                                                    Kilómetros actuales
+                                                </label>
+                                                <input type="number" id="km_actual_{{ $v->id_vehiculo }}"
+                                                       name="km_actual" class="form-control form-control-sm"
+                                                       min="{{ $v->km ?? 0 }}" required
+                                                       placeholder="Introduce los km actuales">
+                                                <br>
+                                            </div>
+
+                                            <!-- COLUMNA 2 — COMENTARIO -->
+                                            <div class="col-md-4">
+                                                <label for="comentario_{{ $v->id_vehiculo }}"
+                                                       class="form-label mt-3">
+                                                    Comentario (opcional)
+                                                </label>
+                                                <p></p>
+                                                <textarea id="comentario_{{ $v->id_vehiculo }}" name="comentario" rows="2"
+                                                          placeholder="Ej: viaje, revisión, trayecto diario..." style="width: 100%; height: 50%"></textarea>
+                                            </div>
+
+                                            <!-- COLUMNA 3 — TABLA REGISTROS KM + GRÁFICO -->
+                                            <div class="col-md-4">
+                                                <div class="km-tabla">
+                                                    @php
+                                                        $registrosKm =
+                                                            $v->registrosKm->sortByDesc('fecha_registro') ??
+                                                            collect();
+                                                    @endphp
+
+                                                    @if ($registrosKm->isNotEmpty())
+                                                        <div class="tabla-registros-km-wrapper mt-3">
+                                                            <table class="tabla-registros-km">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Fecha</th>
+                                                                    <th>Km</th>
+                                                                    <th>Comentario</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                @foreach ($registrosKm as $rk)
+                                                                    <tr>
+                                                                        <td>{{ \Carbon\Carbon::parse($rk->fecha_registro)->format('d/m/Y') }}
+                                                                        </td>
+                                                                        <td>{{ number_format($rk->km_actual, 0, ',', '.') }}
+                                                                            km
+                                                                        </td>
+                                                                        <td>{{ $rk->comentario ?: '—' }}</td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <p></p>
+                                                {{-- BOTON GRAFICO --}}
+                                                <button type="button" class="btn_grafico"
+                                                        onclick="openKmModal_{{ $v->id_vehiculo }}()">
+                                                    Ver gráfico
                                                 </button>
 
-                                                {{-- Modal CanvasJS para gráfico de evolución de valor --}}
-                                                <dialog id="modalValor_{{ $v->id_vehiculo }}" class="chart-dialog">
-                                                    <h3>📉 Valor del vehículo — {{ $v->marca }}
-                                                        {{ $v->modelo }}</h3>
+                                                <dialog id="modalKm_{{ $v->id_vehiculo }}" class="chart-dialog">
+                                                    <h3>📉 Kilómetros — {{ $v->marca }} {{ $v->modelo }}
+                                                    </h3>
 
-                                                    <div id="chartValor_{{ $v->id_vehiculo }}"
-                                                        style="height: 420px; width: 100%;"></div>
+                                                    <div id="chartKm_{{ $v->id_vehiculo }}"
+                                                         style="height: 420px; width: 100%;"></div>
 
                                                     <div class="dialog-buttons">
                                                         <button
-                                                            onclick="document.getElementById('modalValor_{{ $v->id_vehiculo }}').close();"
+                                                            onclick="document.getElementById('modalKm_{{ $v->id_vehiculo }}').close();"
+                                                            class="btn btn-secondary">
+                                                            Cerrar
+                                                        </button>
+                                                    </div>
+                                                </dialog>
+
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn_guardar">
+                                            Guardar kilometraje
+                                        </button>
+                                    </form>
+                                </div>
+
+                                {{-- 🟥 Tarjeta GASTOS --}}
+                                <div class="tarjeta-gastos mt-4">
+                                    <ul class="vehiculo-datos">
+                                        <li class="gastos">
+                                            <strong>Gastos totales:</strong>
+
+                                            @php
+                                                $gastoCalc = $v->gastoCalc ?? 0;
+                                            @endphp
+
+                                            {{ number_format($gastoCalc, 2, ',', '.') }} €
+                                        </li>
+                                    </ul>
+
+                                    {{-- FORMULARIO: NUEVO GASTO --}}
+                                    <form action="{{ route('gastos.store', $v->id_vehiculo) }}" method="POST"
+                                          enctype="multipart/form-data" class="vehiculo-gastos-form mt-3">
+                                        @csrf
+
+                                        <div class="row g-3">
+
+                                            <!-- COLUMNA 1 — FECHA + IMPORTE + TIPO -->
+                                            <div class="col-md-4">
+                                                <label for="fecha_gasto_{{ $v->id_vehiculo }}"
+                                                       class="form-label">
+                                                    Fecha del gasto
+                                                </label>
+                                                <input type="date" id="fecha_gasto_{{ $v->id_vehiculo }}"
+                                                       name="fecha_gasto" class="form-control form-control-sm"
+                                                       value="{{ now()->format('Y-m-d') }}" required>
+                                                <p></p>
+                                                <label for="importe_{{ $v->id_vehiculo }}" class="form-label">
+                                                    Importe (€)
+                                                </label>
+                                                <input type="number" id="importe_{{ $v->id_vehiculo }}"
+                                                       name="importe" class="form-control form-control-sm"
+                                                       step="0.01" min="0" placeholder="Ej: 45.90"
+                                                       required>
+                                                <p></p>
+                                                <label for="tipo_gasto_{{ $v->id_vehiculo }}"
+                                                       class="form-label mt-3">
+                                                    Tipo de gasto
+                                                </label>
+                                                <select id="tipo_gasto_{{ $v->id_vehiculo }}" name="tipo_gasto"
+                                                        class="form-select form-select-sm" required>
+                                                    <option value="">Selecciona tipo...</option>
+                                                    <option value="combustible">Combustible</option>
+                                                    <option value="mantenimiento">Mantenimiento</option>
+                                                    <option value="seguro">Seguro</option>
+                                                    <option value="impuestos">Impuestos</option>
+                                                    <option value="peajes">Peajes</option>
+                                                    <option value="otros">Otros</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- COLUMNA 2 — DESCRIPCIÓN + ARCHIVO -->
+                                            <div class="col-md-4">
+                                                <label for="descripcion_gasto_{{ $v->id_vehiculo }}"
+                                                       class="form-label mt-3">
+                                                    Descripción (opcional)
+                                                </label>
+                                                <p></p>
+                                                <textarea id="descripcion_gasto_{{ $v->id_vehiculo }}" name="descripcion" class="cometarioText" rows="2"
+                                                          placeholder="Ej: gasolina, peaje, revisión, seguro..." style="width: 100%; height: 50%"></textarea>
+
+                                                <p></p>
+                                                <label for="archivo_{{ $v->id_vehiculo }}"
+                                                       class="form-label mt-3">
+                                                    Archivo adjunto (opcional)
+                                                </label>
+                                                <input type="file" id="archivo_{{ $v->id_vehiculo }}"
+                                                       name="archivo" class="form-control form-control-sm"
+                                                       style="border-radius: 0px;">
+                                            </div>
+
+                                            <!-- COLUMNA 3 — TABLA GASTOS + GRÁFICO -->
+                                            <div class="col-md-4">
+                                                <div class="gastos-tabla">
+                                                    @php
+                                                        $registrosGastos =
+                                                            $v->registrosGastos->sortByDesc('fecha_gasto') ??
+                                                            collect();
+                                                    @endphp
+
+                                                    @if ($registrosGastos->isNotEmpty())
+                                                        <div class="tabla-registros-gastos-wrapper mt-3">
+                                                            <table class="tabla-registros-gastos">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Fecha</th>
+                                                                    <th>Tipo</th>
+                                                                    <th>Importe</th>
+                                                                    <th>Descripción</th>
+                                                                    <th>Archivo</th>
+                                                                </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                @foreach ($registrosGastos as $g)
+                                                                    @php
+                                                                        $rawPath =
+                                                                            $g->archivo_path ??
+                                                                            ($g->archivo ?? null);
+                                                                        $archivoUrl = null;
+
+                                                                        if (!empty($rawPath)) {
+                                                                            $path = ltrim($rawPath, '/');
+
+                                                                            if (
+                                                                                strpos($path, 'public/') === 0
+                                                                            ) {
+                                                                                $path = substr($path, 7);
+                                                                            }
+
+                                                                            if (
+                                                                                strpos($path, 'storage/') === 0
+                                                                            ) {
+                                                                                $path = substr($path, 8);
+                                                                            }
+
+                                                                            $archivoUrl = asset(
+                                                                                'storage/' . $path,
+                                                                            );
+                                                                        }
+                                                                    @endphp
+
+                                                                    <tr>
+                                                                        <td>{{ \Carbon\Carbon::parse($g->fecha_gasto)->format('d/m/Y') }}
+                                                                        </td>
+                                                                        <td>{{ $g->tipo_gasto }}</td>
+                                                                        <td>{{ number_format($g->importe, 2, ',', '.') }}
+                                                                            €</td>
+                                                                        <td>{{ $g->descripcion ?: '—' }}</td>
+                                                                        <td>
+                                                                            @if (!empty($g->archivo_path))
+                                                                                @php
+                                                                                    $path = ltrim(
+                                                                                        $g->archivo_path,
+                                                                                        '/',
+                                                                                    );
+                                                                                    if (
+                                                                                        strpos(
+                                                                                            $path,
+                                                                                            'storage/',
+                                                                                        ) === 0
+                                                                                    ) {
+                                                                                        $path = substr(
+                                                                                            $path,
+                                                                                            8,
+                                                                                        );
+                                                                                    }
+                                                                                @endphp
+
+                                                                                <a href="{{ asset('storage/' . $path) }}"
+                                                                                   target="_blank">
+                                                                                    Ver archivo
+                                                                                </a>
+                                                                            @else
+                                                                                Sin archivo.
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <p></p>
+                                                {{-- BOTÓN + MODAL GRÁFICO GASTOS --}}
+                                                <button type="button" class="btn_grafico"
+                                                        onclick="openGastosModal_{{ $v->id_vehiculo }}()">
+                                                    Ver gráfico
+                                                </button>
+
+                                                <dialog id="modalGastos_{{ $v->id_vehiculo }}"
+                                                        class="chart-dialog">
+                                                    <h3>📉 Gastos — {{ $v->marca }} {{ $v->modelo }}</h3>
+
+                                                    <div id="chartGastos_{{ $v->id_vehiculo }}"
+                                                         style="height: 420px; width: 100%;"></div>
+
+                                                    <div class="dialog-buttons">
+                                                        <button
+                                                            onclick="document.getElementById('modalGastos_{{ $v->id_vehiculo }}').close();"
                                                             class="btn btn-secondary">
                                                             Cerrar
                                                         </button>
                                                     </div>
                                                 </dialog>
                                             </div>
-                                        @endforeach
-                                    </div>
-
-                                    {{-- ============================= --}}
-                                    {{-- 🟦 Tarjeta interna: KM        --}}
-                                    {{-- ============================= --}}
-                                    <div class="tarjeta-km">
-                                        {{-- Resumen de km actual --}}
-                                        <ul class="vehiculo-datos">
-                                            <li class="km">
-                                                <strong>Kilometraje actual:</strong>
-                                                {{ number_format($v->km, 0, ',', '.') }} km
-                                            </li>
-                                        </ul>
-                                        <p></p>
-
-                                        {{-- FORMULARIO: Nuevo registro de km --}}
-                                        <form action="{{ route('km.store', $v->id_vehiculo) }}" method="POST"
-                                            class="vehiculo-km-form mt-3">
-                                            @csrf
-
-                                            <div class="row g-3">
-                                                <!-- COLUMNA 1 — FECHA + KM -->
-                                                <div class="col-md-4">
-                                                    <label for="fecha_{{ $v->id_vehiculo }}" class="form-label">
-                                                        Fecha del registro
-                                                    </label>
-                                                    {{-- Fecha inicial por defecto: hoy --}}
-                                                    <input type="date" id="fecha_{{ $v->id_vehiculo }}"
-                                                        name="fecha_registro" class="form-control form-control-sm"
-                                                        value="{{ now()->format('Y-m-d') }}" required>
-                                                    <p></p>
-
-                                                    <label for="km_actual_{{ $v->id_vehiculo }}" class="form-label">
-                                                        Kilómetros actuales
-                                                    </label>
-                                                    {{-- Km actuales, no puede ser menor que el ya registrado --}}
-                                                    <input type="number" id="km_actual_{{ $v->id_vehiculo }}"
-                                                        name="km_actual" class="form-control form-control-sm"
-                                                        min="{{ $v->km ?? 0 }}" required
-                                                        placeholder="Introduce los km actuales">
-                                                    <br>
-                                                </div>
-
-                                                <!-- COLUMNA 2 — COMENTARIO -->
-                                                <div class="col-md-4">
-                                                    <label for="comentario_{{ $v->id_vehiculo }}"
-                                                        class="form-label mt-3">
-                                                        Comentario (opcional)
-                                                    </label>
-                                                    <p></p>
-                                                    <textarea id="comentario_{{ $v->id_vehiculo }}" name="comentario" rows="2"
-                                                        placeholder="Ej: viaje, revisión, trayecto diario..." style="width: 100%; height: 50%"></textarea>
-                                                </div>
-
-                                                <!-- COLUMNA 3 — TABLA REGISTROS KM + GRÁFICO -->
-                                                <div class="col-md-4">
-                                                    <div class="km-tabla">
-                                                        @php
-                                                            // Ordenamos los registros de km de más reciente a más antiguo
-                                                            $registrosKm =
-                                                                $v->registrosKm->sortByDesc('fecha_registro') ??
-                                                                collect();
-                                                        @endphp
-
-                                                        @if ($registrosKm->isNotEmpty())
-                                                            {{-- Tabla con el histórico de km --}}
-                                                            <div class="tabla-registros-km-wrapper mt-3">
-                                                                <table class="tabla-registros-km">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Fecha</th>
-                                                                            <th>Km</th>
-                                                                            <th>Comentario</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach ($registrosKm as $rk)
-                                                                            <tr>
-                                                                                <td>{{ \Carbon\Carbon::parse($rk->fecha_registro)->format('d/m/Y') }}
-                                                                                </td>
-                                                                                <td>{{ number_format($rk->km_actual, 0, ',', '.') }}
-                                                                                    km
-                                                                                </td>
-                                                                                <td>{{ $rk->comentario ?: '—' }}</td>
-                                                                            </tr>
-                                                                        @endforeach
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-
-                                                    <p></p>
-
-                                                    {{-- BOTÓN para abrir el gráfico de KM --}}
-                                                    <button class="btn_grafico"
-                                                        onclick="document.getElementById('modalKm_{{ $v->id_vehiculo }}').showModal();">
-                                                        Ver gráfico
-                                                    </button>
-
-                                                    {{-- MODAL con el gráfico de KM (CanvasJS) --}}
-                                                    <dialog id="modalKm_{{ $v->id_vehiculo }}" class="chart-dialog">
-                                                        <h3>📉 Kilómetros — {{ $v->marca }} {{ $v->modelo }}
-                                                        </h3>
-
-                                                        {{-- 🔵 BOTONES DE FILTRO (Día / Mes / Año) --}}
-                                                        <div class="chart-filters"
-                                                            style="margin-bottom: 10px; text-align:center;">
-                                                            <button type="button" class="btnFiltro"
-                                                                data-view="day">Día</button>
-                                                            <button type="button" class="btnFiltro"
-                                                                data-view="month">Mes</button>
-                                                            <button type="button" class="btnFiltro"
-                                                                data-view="year">Año</button>
-                                                        </div>
-
-                                                        {{-- Contenedor del gráfico de KM --}}
-                                                        <div id="chartKm_{{ $v->id_vehiculo }}"
-                                                            style="height: 420px; width: 100%;"></div>
-
-                                                        <div class="dialog-buttons">
-                                                            <button
-                                                                onclick="document.getElementById('modalKm_{{ $v->id_vehiculo }}').close();"
-                                                                class="btn btn-secondary">
-                                                                Cerrar
-                                                            </button>
-                                                        </div>
-                                                    </dialog>
-                                                </div>
-                                            </div>
-
-                                            {{-- Botón para guardar el nuevo registro de km --}}
-                                            <button type="submit" class="btn_guardar">
-                                                Guardar kilometraje
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    {{-- ============================= --}}
-                                    {{-- 🟥 Tarjeta interna: GASTOS    --}}
-                                    {{-- ============================= --}}
-                                    <div class="tarjeta-gastos mt-4">
-                                        <ul class="vehiculo-datos">
-                                            <li class="gastos">
-                                                <strong>Gastos totales:</strong>
-
-                                                @php
-                                                    // gastoCalc puede venir precalculado en el modelo
-                                                    $gastoCalc = $v->gastoCalc ?? 0;
-                                                @endphp
-
-                                                {{ number_format($gastoCalc, 2, ',', '.') }} €
-                                            </li>
-                                        </ul>
-
-                                        {{-- FORMULARIO: nuevo gasto asociado al vehículo --}}
-                                        <form action="{{ route('gastos.store', $v->id_vehiculo) }}" method="POST"
-                                            enctype="multipart/form-data" class="vehiculo-gastos-form mt-3">
-                                            @csrf
-
-                                            <div class="row g-3">
-                                                <!-- COLUMNA 1 — FECHA + IMPORTE + TIPO -->
-                                                <div class="col-md-4">
-                                                    <label for="fecha_gasto_{{ $v->id_vehiculo }}"
-                                                        class="form-label">
-                                                        Fecha del gasto
-                                                    </label>
-                                                    {{-- Fecha del gasto, por defecto hoy --}}
-                                                    <input type="date" id="fecha_gasto_{{ $v->id_vehiculo }}"
-                                                        name="fecha_gasto" class="form-control form-control-sm"
-                                                        value="{{ now()->format('Y-m-d') }}" required>
-                                                    <p></p>
-
-                                                    <label for="importe_{{ $v->id_vehiculo }}" class="form-label">
-                                                        Importe (€)
-                                                    </label>
-                                                    {{-- Importe del gasto en euros --}}
-                                                    <input type="number" id="importe_{{ $v->id_vehiculo }}"
-                                                        name="importe" class="form-control form-control-sm"
-                                                        step="0.01" min="0" placeholder="Ej: 45.90"
-                                                        required>
-                                                    <p></p>
-
-                                                    <label for="tipo_gasto_{{ $v->id_vehiculo }}"
-                                                        class="form-label mt-3">
-                                                        Tipo de gasto
-                                                    </label>
-                                                    {{-- Tipo de gasto (combustible, seguro, etc.) --}}
-                                                    <select id="tipo_gasto_{{ $v->id_vehiculo }}" name="tipo_gasto"
-                                                        class="form-select form-select-sm" required>
-                                                        <option value="">Selecciona tipo...</option>
-                                                        <option value="combustible">Combustible</option>
-                                                        <option value="mantenimiento">Mantenimiento</option>
-                                                        <option value="seguro">Seguro</option>
-                                                        <option value="impuestos">Impuestos</option>
-                                                        <option value="peajes">Peajes</option>
-                                                        <option value="otros">Otros</option>
-                                                    </select>
-                                                </div>
-
-                                                <!-- COLUMNA 2 — DESCRIPCIÓN + ARCHIVO -->
-                                                <div class="col-md-4">
-                                                    <label for="descripcion_gasto_{{ $v->id_vehiculo }}"
-                                                        class="form-label mt-3">
-                                                        Descripción (opcional)
-                                                    </label>
-                                                    <p></p>
-                                                    {{-- Descripción libre del gasto --}}
-                                                    <textarea id="descripcion_gasto_{{ $v->id_vehiculo }}" name="descripcion" class="cometarioText" rows="2"
-                                                        placeholder="Ej: gasolina, peaje, revisión, seguro..." style="width: 100%; height: 50%"></textarea>
-
-                                                    <p></p>
-                                                    <label for="archivo_{{ $v->id_vehiculo }}"
-                                                        class="form-label mt-3">
-                                                        Archivo adjunto (opcional)
-                                                    </label>
-                                                    {{-- Factura / ticket del gasto --}}
-                                                    <input type="file" id="archivo_{{ $v->id_vehiculo }}"
-                                                        name="archivo" class="form-control form-control-sm"
-                                                        style="border-radius: 0px;">
-                                                </div>
-
-                                                <!-- COLUMNA 3 — TABLA GASTOS + GRÁFICO -->
-                                                <div class="col-md-4">
-                                                    <div class="gastos-tabla">
-                                                        @php
-                                                            // Ordenamos los registros de gasto de más reciente a más antiguo
-                                                            $registrosGastos =
-                                                                $v->registrosGastos->sortByDesc('fecha_gasto') ??
-                                                                collect();
-                                                        @endphp
-
-                                                        @if ($registrosGastos->isNotEmpty())
-                                                            {{-- Tabla con el histórico de gastos --}}
-                                                            <div class="tabla-registros-gastos-wrapper mt-3">
-                                                                <table class="tabla-registros-gastos">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Fecha</th>
-                                                                            <th>Tipo</th>
-                                                                            <th>Importe</th>
-                                                                            <th>Descripción</th>
-                                                                            <th>Archivo</th>
-                                                                        </tr>
-                                                                    </thead>
-
-                                                                    <tbody>
-                                                                        @foreach ($registrosGastos as $g)
-                                                                            @php
-                                                                                // ===============================
-                                                                                // BLOQUE: Normalización de la ruta del archivo del gasto
-                                                                                // Permite que funcione aunque en BD se guarde con "public/" o "storage/"
-                                                                                // ===============================
-
-                                                                                $rawPath =
-                                                                                    $g->archivo_path ??
-                                                                                    ($g->archivo ?? null);
-                                                                                $archivoUrl = null;
-
-                                                                                if (!empty($rawPath)) {
-                                                                                    $path = ltrim($rawPath, '/');
-
-                                                                                    // Si empieza por public/, se lo quitamos
-                                                                                    if (
-                                                                                        strpos($path, 'public/') === 0
-                                                                                    ) {
-                                                                                        $path = substr($path, 7);
-                                                                                    }
-
-                                                                                    // Si empieza por storage/, también lo limpiamos
-                                                                                    if (
-                                                                                        strpos($path, 'storage/') === 0
-                                                                                    ) {
-                                                                                        $path = substr($path, 8);
-                                                                                    }
-
-                                                                                    // URL final del archivo guardado en storage
-                                                                                    $archivoUrl = asset(
-                                                                                        'storage/' . $path,
-                                                                                    );
-                                                                                }
-                                                                            @endphp
-
-                                                                            <tr>
-                                                                                <td>{{ \Carbon\Carbon::parse($g->fecha_gasto)->format('d/m/Y') }}
-                                                                                </td>
-                                                                                <td>{{ $g->tipo_gasto }}</td>
-                                                                                <td>{{ number_format($g->importe, 2, ',', '.') }}
-                                                                                    €</td>
-                                                                                <td>{{ $g->descripcion ?: '—' }}</td>
-                                                                                <td>
-                                                                                    @if (!empty($g->archivo_path))
-                                                                                        @php
-                                                                                            // Igual que arriba, normalizamos la ruta
-                                                                                            $path = ltrim(
-                                                                                                $g->archivo_path,
-                                                                                                '/',
-                                                                                            );
-                                                                                            if (
-                                                                                                strpos(
-                                                                                                    $path,
-                                                                                                    'storage/',
-                                                                                                ) === 0
-                                                                                            ) {
-                                                                                                $path = substr(
-                                                                                                    $path,
-                                                                                                    8,
-                                                                                                );
-                                                                                            }
-                                                                                        @endphp
-
-                                                                                        <a href="{{ asset('storage/' . $path) }}"
-                                                                                            target="_blank">
-                                                                                            Ver archivo
-                                                                                        </a>
-                                                                                    @else
-                                                                                        Sin archivo.
-                                                                                    @endif
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endforeach
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                    <p></p>
-
-                                                    {{-- BOTÓN + MODAL GRÁFICO GASTOS --}}
-                                                    <button type="button" class="btn_grafico"
-                                                        onclick="document.getElementById('modalGastos_{{ $v->id_vehiculo }}').showModal();">
-                                                        Ver gráfico
-                                                    </button>
-
-                                                    {{-- MODAL para el gráfico de gastos (día/mes/año) --}}
-                                                    <dialog id="modalGastos_{{ $v->id_vehiculo }}"
-                                                        class="chart-dialog">
-                                                        <h3>📉 Gastos — {{ $v->marca }} {{ $v->modelo }}</h3>
-
-                                                        {{-- Filtros de vista (agregación por día/mes/año) --}}
-                                                        <div class="chart-filters"
-                                                            style="margin-bottom: 10px; text-align:center;">
-                                                            <button type="button" class="btnFiltro"
-                                                                data-view="day">Día</button>
-                                                            <button type="button" class="btnFiltro"
-                                                                data-view="month">Mes</button>
-                                                            <button type="button" class="btnFiltro"
-                                                                data-view="year">Año</button>
-                                                        </div>
-
-                                                        {{-- Contenedor del gráfico de gastos --}}
-                                                        <div id="chartGastos_{{ $v->id_vehiculo }}"
-                                                            style="height: 420px; width: 100%;"></div>
-
-                                                        <div class="dialog-buttons">
-                                                            <button
-                                                                onclick="document.getElementById('modalGastos_{{ $v->id_vehiculo }}').close();"
-                                                                class="btn btn-secondary">
-                                                                Cerrar
-                                                            </button>
-                                                        </div>
-                                                    </dialog>
-                                                </div>
-                                            </div>
-
-                                            {{-- Botón para guardar el nuevo gasto --}}
-                                            <button type="submit" class="btn_guardar">
-                                                Añadir gasto
-                                            </button>
-                                        </form>
-                                    </div>
+                                        </div>
+                                        <button type="submit" class="btn_guardar">
+                                            Añadir gasto
+                                        </button>
+                                    </form>
                                 </div>
-                            </article>
-                        @endforeach
-                    </div>
-                @endif
-            </section>
-
-            {{-- ===================================== --}}
-            {{-- PANEL CALENDARIO GRANDE (detallado)  --}}
-            {{-- ===================================== --}}
-            <section id="panel-calendario" class="calendar-panel" style="margin-top: 24px; display:none;">
-                <div class="calendar-card">
-
-                    <!-- NAV DEL MES (prev / next) -->
-                    <div class="calendar-card-header">
-                        <div class="calendar-nav">
-                            <button id="cal-prev" type="button" class="calendar-nav-btn">&laquo;</button>
-                            <h4 id="cal-month-label" class="calendar-month-label"></h4>
-                            <button id="cal-next" type="button" class="calendar-nav-btn">&raquo;</button>
-                        </div>
-                    </div>
-
-                    <!-- GRID: Calendario (izquierda) — Detalles (derecha) -->
-                    <div class="calendar-card-body">
-
-                        <!-- CALENDARIO PRINCIPAL -->
-                        <table class="calendar-table">
-                            <thead>
-                                <tr>
-                                    <th>Lun</th>
-                                    <th>Mar</th>
-                                    <th>Mié</th>
-                                    <th>Jue</th>
-                                    <th>Vie</th>
-                                    <th>Sáb</th>
-                                    <th>Dom</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cal-body">
-                                {{-- El cuerpo del calendario se rellena por JavaScript --}}
-                            </tbody>
-                        </table>
-
-                        <!-- DETALLES + FORMULARIO DE NOTA -->
-                        <div class="calendar-details">
-
-                            {{-- Título dinámico de los detalles del día seleccionado --}}
-                            <h5 id="cal-details-title">Detalles del día</h5>
-
-                            {{-- Contenedor donde se muestran los eventos (km, gastos, notas...) --}}
-                            <div id="cal-details-content" class="calendar-details-content">
-                                Pulsa un día con datos para ver los detalles.
                             </div>
+                        </article>
+                    @endforeach
+                </div>
+            @endif
+        </section>
 
-                            <hr class="calendar-divider">
+        {{-- PANEL CALENDARIO GRANDE --}}
+        <section id="panel-calendario" class="calendar-panel" style="margin-top: 24px; display:none;">
+            <div class="calendar-card">
 
-                            {{-- FORMULARIO DE NOTA EN EL CALENDARIO --}}
-                            <form action="{{ route('notas-calendario.store') }}" method="POST"
-                                class="calendar-note-form">
-                                @csrf
-
-                                <!-- Fecha de la nota -->
-                                <div class="form-group">
-                                    <label for="nota_fecha_evento">Fecha</label><br>
-                                    <input type="date" id="nota_fecha_evento" name="fecha_evento"
-                                        class="form-control form-control-sm" value="{{ now()->format('Y-m-d') }}"
-                                        style="width: 50%" required>
-                                </div>
-                                <p></p>
-
-                                <!-- Hora opcional de la nota -->
-                                <div class="form-group">
-                                    <label for="nota_hora_evento">Hora (opcional)</label><br>
-                                    <input type="time" id="nota_hora_evento" name="hora_evento"
-                                        class="form-control form-control-sm" style="width: 50%">
-                                </div>
-                                <p></p>
-
-                                <!-- Título de la nota -->
-                                <div class="form-group">
-                                    <label for="nota_titulo">Título</label><br>
-                                    <input type="text" id="nota_titulo" name="titulo"
-                                        class="form-control form-control-sm" placeholder="Revisión, ITV, viaje..."
-                                        style="width: 100%; height: 30px;" required>
-                                </div>
-                                <p></p>
-
-                                <!-- Descripción de la nota -->
-                                <div class="form-group">
-                                    <label for="nota_descripcion">Descripción</label><br>
-                                    <textarea id="nota_descripcion" name="descripcion" rows="2" class="form-control form-control-sm"
-                                        placeholder="Detalles de la nota..." style="width: 100%; height: 60px;"></textarea>
-                                </div>
-                                <p></p>
-
-                                <!-- Vehículo asociado a la nota (opcional) -->
-                                @if ($vehiculos->isNotEmpty())
-                                    <div class="form-group">
-                                        <label for="nota_id_vehiculo">Vehículo (opcional)</label><br>
-                                        <select id="nota_id_vehiculo" name="id_vehiculo"
-                                            class="form-select form-select-sm" style="width: 100%; height: 20px;">
-                                            <option value="">Sin vehículo asociado</option>
-                                            @foreach ($vehiculos as $v)
-                                                <option value="{{ $v->id_vehiculo }}">
-                                                    {{ $v->marca }} {{ $v->modelo }} ({{ $v->matricula }})
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endif
-                                <p></p>
-
-                                <!-- Botón para guardar nota -->
-                                <button type="submit" class="btn_guardar">
-                                    Guardar
-                                </button>
-
-                            </form>
-
-                        </div>
-
+                <!-- NAV DEL MES -->
+                <div class="calendar-card-header">
+                    <div class="calendar-nav">
+                        <button id="cal-prev" type="button" class="calendar-nav-btn">&laquo;</button>
+                        <h4 id="cal-month-label" class="calendar-month-label"></h4>
+                        <button id="cal-next" type="button" class="calendar-nav-btn">&raquo;</button>
                     </div>
                 </div>
-            </section>
-        </main>
 
-        @php
-            // ==========================================
-            // PREPARACIÓN DE DATOS PARA JS (gráficas y calendario)
-            // Estos arrays se transforman en JSON y se exponen en window.*
-            // ==========================================
+                <!-- GRID: CALENDARIO IZQUIERDA — DETALLES DERECHA -->
+                <div class="calendar-card-body">
 
-            // 1) Eventos calendario tal cual ya los tienes desde el controlador
-            $calendarEventsJson = $calendarEvents ?? [];
+                    <!-- CALENDARIO -->
+                    <table class="calendar-table">
+                        <thead>
+                        <tr>
+                            <th>Lun</th>
+                            <th>Mar</th>
+                            <th>Mié</th>
+                            <th>Jue</th>
+                            <th>Vie</th>
+                            <th>Sáb</th>
+                            <th>Dom</th>
+                        </tr>
+                        </thead>
+                        <tbody id="cal-body">
+                        {{-- Se rellena por JavaScript --}}
+                        </tbody>
+                    </table>
 
-            // 2) Datos para gráficas de KM por vehículo
-            $kmChartData = [];
-            foreach ($vehiculos as $v) {
-                $rawKm = [];
-                foreach ($v->registrosKm as $rk) {
-                    // Normalizamos la fecha, usando \Carbon\Carbon
-                    $fecha =
-                        $rk->fecha_registro instanceof \Carbon\Carbon
-                            ? $rk->fecha_registro
-                            : \Carbon\Carbon::parse($rk->fecha_registro);
+                    <!-- DETALLES + FORMULARIO -->
+                    <div class="calendar-details">
 
-                    // Usamos timestamp en ms para CanvasJS y etiquetas útiles para agrupar
-                    $rawKm[] = [
-                        'timestamp' => $fecha->timestamp * 1000, // ms para dateTime
-                        'year' => $fecha->format('Y'),
-                        'month' => $fecha->format('Y-m'),
-                        'day' => $fecha->format('Y-m-d'),
-                        'dayLabel' => $fecha->format('d/m/Y'),
-                        'monthLabel' => $fecha->format('m/Y'),
-                        'yearLabel' => $fecha->format('Y'),
-                        'km' => (int) $rk->km_actual,
-                    ];
-                }
+                        <h5 id="cal-details-title">Detalles del día</h5>
 
-                // Guardamos la serie cruda indexada por id_vehiculo
-                $kmChartData[$v->id_vehiculo] = $rawKm;
+                        <div id="cal-details-content" class="calendar-details-content">
+                            Pulsa un día con datos para ver los detalles.
+                        </div>
+
+                        <hr class="calendar-divider">
+
+                        {{-- FORMULARIO DE NOTA --}}
+                        <form action="{{ route('notas-calendario.store') }}" method="POST"
+                              class="calendar-note-form">
+                            @csrf
+
+                            <!-- Fecha -->
+                            <div class="form-group">
+                                <label for="nota_fecha_evento">Fecha</label><br>
+                                <input type="date" id="nota_fecha_evento" name="fecha_evento"
+                                       class="form-control form-control-sm" value="{{ now()->format('Y-m-d') }}"
+                                       style="width: 50%" required>
+                            </div>
+                            <p></p>
+
+                            <!-- Hora -->
+                            <div class="form-group">
+                                <label for="nota_hora_evento">Hora (opcional)</label><br>
+                                <input type="time" id="nota_hora_evento" name="hora_evento"
+                                       class="form-control form-control-sm" style="width: 50%">
+                            </div>
+                            <p></p>
+
+                            <!-- Título -->
+                            <div class="form-group">
+                                <label for="nota_titulo">Título</label><br>
+                                <input type="text" id="nota_titulo" name="titulo"
+                                       class="form-control form-control-sm" placeholder="Revisión, ITV, viaje..."
+                                       style="width: 100%; height: 30px;" required>
+                            </div>
+                            <p></p>
+
+                            <!-- Descripción -->
+                            <div class="form-group">
+                                <label for="nota_descripcion">Descripción</label><br>
+                                <textarea id="nota_descripcion" name="descripcion" rows="2" class="form-control form-control-sm"
+                                          placeholder="Detalles de la nota..." style="width: 100%; height: 60px;"></textarea>
+                            </div>
+                            <p></p>
+
+                            <!-- Vehículo -->
+                            @if ($vehiculos->isNotEmpty())
+                                <div class="form-group">
+                                    <label for="nota_id_vehiculo">Vehículo (opcional)</label><br>
+                                    <select id="nota_id_vehiculo" name="id_vehiculo"
+                                            class="form-select form-select-sm" style="width: 100%; height: 20px;">
+                                        <option value="">Sin vehículo asociado</option>
+                                        @foreach ($vehiculos as $v)
+                                            <option value="{{ $v->id_vehiculo }}">
+                                                {{ $v->marca }} {{ $v->modelo }} ({{ $v->matricula }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+                            <p></p>
+
+                            <!-- Botón -->
+                            <button type="submit" class="btn_guardar">
+                                Guardar
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {{-- Datos para el calendario: mezcla de km, gastos y notas_calendario --}}
+    <script>
+        const CALENDAR_EVENTS = @json($calendarEvents ?? []);
+    </script>
+
+    <script src="{{ asset('assets/js/perfil/perfil.js') }}"></script>
+
+    {{-- Script específico del calendario grande --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const panelCalendario = document.getElementById('panel-calendario');
+
+            const monthLabel = document.getElementById('cal-month-label');
+            const calBody = document.getElementById('cal-body');
+            const prevBtn = document.getElementById('cal-prev');
+            const nextBtn = document.getElementById('cal-next');
+            const detailsTitle = document.getElementById('cal-details-title');
+            const detailsContent = document.getElementById('cal-details-content');
+
+            const notaFechaInput = document.getElementById('nota_fecha_evento');
+
+            const eventsByDate = {};
+            (CALENDAR_EVENTS || []).forEach(e => {
+                if (!e.fecha) return;
+                eventsByDate[e.fecha] = eventsByDate[e.fecha] || [];
+                eventsByDate[e.fecha].push(e);
+            });
+
+            let current = new Date();
+
+            const monthNames = [
+                'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+            ];
+
+            let selectedCell = null;
+            let selectedDate = null;
+
+            function formatDateISO(date) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
             }
 
-            // 3) Datos para gráficas de GASTOS por vehículo
-            $gastosChartData = [];
-            foreach ($vehiculos as $v) {
-                $rawGastos = [];
-                foreach ($v->registrosGastos as $g) {
-                    // Normalizamos la fecha del gasto
-                    $fecha =
-                        $g->fecha_gasto instanceof \Carbon\Carbon
-                            ? $g->fecha_gasto
-                            : \Carbon\Carbon::parse($g->fecha_gasto);
+            function renderCalendar() {
+                const year = current.getFullYear();
+                const month = current.getMonth();
 
-                    // Guardamos la información para agrupar por día / mes / año
-                    $rawGastos[] = [
-                        'date' => $fecha->format('Y-m-d'),
-                        'year' => $fecha->format('Y'),
-                        'month' => $fecha->format('Y-m'),
-                        'dayLabel' => $fecha->format('d/m/Y'),
-                        'monthLabel' => $fecha->format('m/Y'),
-                        'yearLabel' => $fecha->format('Y'),
-                        'importe' => (float) $g->importe,
-                    ];
-                }
+                monthLabel.textContent =
+                    `${monthNames[month].charAt(0).toUpperCase() + monthNames[month].slice(1)} ${year}`;
 
-                // Guardamos por id_vehiculo
-                $gastosChartData[$v->id_vehiculo] = $rawGastos;
-            }
+                calBody.innerHTML = '';
 
-            // 4) Datos para gráficas de VALOR (precio nuevo + 2ª mano) por vehículo
-            $valorChartData = [];
-            foreach ($vehiculos as $v) {
-                // Años desde la matriculación
-                $anios = now()->year - (int) $v->anio_matriculacion;
+                const first = new Date(year, month, 1);
+                let startDay = first.getDay();
+                if (startDay === 0) startDay = 7;
 
-                $dataNuevo = [];
-                $dataSegunda = [];
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-                // Generamos un punto por cada año desde la matriculación hasta hoy
-                for ($i = 0; $i <= $anios; $i++) {
-                    $year = (int) $v->anio_matriculacion + $i;
+                let day = 1;
+                for (let week = 0; week < 6; week++) {
+                    const tr = document.createElement('tr');
 
-                    // Creamos una fecha 1 de enero de ese año y la pasamos a timestamp ms
-                    $fecha = \Carbon\Carbon::create($year, 1, 1)->timestamp * 1000;
+                    for (let dow = 1; dow <= 7; dow++) {
+                        const td = document.createElement('td');
 
-                    // Serie de precio nuevo
-                    if (($v->precio ?? 0) > 0) {
-                        $calcNuevo = calcularValorVehiculoView((float) $v->precio, $i);
-                        $dataNuevo[] = [
-                            'x' => $fecha,
-                            'y' => round($calcNuevo['valor_actual'], 2),
-                        ];
+                        if ((week === 0 && dow < startDay) || day > daysInMonth) {
+                            td.classList.add('empty');
+                            tr.appendChild(td);
+                            continue;
+                        }
+
+                        const cellDate = new Date(year, month, day);
+                        const iso = formatDateISO(cellDate);
+
+                        td.dataset.date = iso;
+                        td.classList.add('calendar-day');
+
+                        const dayNumber = document.createElement('div');
+                        dayNumber.classList.add('day-number');
+                        dayNumber.textContent = day;
+                        td.appendChild(dayNumber);
+
+                        const items = eventsByDate[iso];
+                        if (items && items.length) {
+                            td.classList.add('has-data');
+
+                            const badges = document.createElement('div');
+                            badges.classList.add('day-badges');
+
+                            const totalKm = items.reduce((acc, e) => acc + (Number(e.km) || 0), 0);
+                            const totalGastos = items.reduce((acc, e) => acc + (Number(e.gastos) || 0), 0);
+                            const hasNota = items.some(e => e.nota);
+
+                            if (totalKm > 0) {
+                                const kmBadge = document.createElement('span');
+                                kmBadge.classList.add('badge', 'badge-km');
+                                kmBadge.textContent = `${totalKm} km`;
+                                badges.appendChild(kmBadge);
+                            }
+
+                            if (totalGastos > 0) {
+                                const gastoBadge = document.createElement('span');
+                                gastoBadge.classList.add('badge', 'badge-gastos');
+                                gastoBadge.textContent = `${totalGastos.toFixed(2)} €`;
+                                badges.appendChild(gastoBadge);
+                            }
+
+                            if (hasNota) {
+                                const notaBadge = document.createElement('span');
+                                notaBadge.classList.add('badge', 'badge-nota');
+
+                                const firstNota = items.find(i => i.nota);
+                                let hora = firstNota?.hora_evento || '';
+
+                                if (hora && hora.length >= 5) {
+                                    hora = hora.slice(0, 5);
+                                }
+
+                                notaBadge.textContent = hora ? `📝 ${hora}` : '📝';
+
+                                badges.appendChild(notaBadge);
+                            }
+
+                            td.appendChild(badges);
+                        }
+
+                        if (iso === selectedDate) {
+                            td.classList.add('selected-day');
+                            selectedCell = td;
+                        }
+
+                        td.addEventListener('click', function() {
+                            if (selectedCell) {
+                                selectedCell.classList.remove('selected-day');
+                            }
+                            selectedCell = td;
+                            selectedDate = iso;
+                            td.classList.add('selected-day');
+
+                            showDetails(iso);
+                        });
+
+                        tr.appendChild(td);
+                        day++;
                     }
 
-                    // Serie de precio 2ª mano
-                    if (($v->precio_segunda_mano ?? 0) > 0) {
-                        $calc2 = calcularValorVehiculoView((float) $v->precio_segunda_mano, $i);
-                        $dataSegunda[] = [
-                            'x' => $fecha,
-                            'y' => round($calc2['valor_actual'], 2),
-                        ];
-                    }
+                    calBody.appendChild(tr);
+                    if (day > daysInMonth) break;
+                }
+            }
+
+            function showDetails(iso) {
+                const items = eventsByDate[iso] || [];
+                const [year, month, day] = iso.split('-');
+                detailsTitle.textContent = `Detalles del ${day}/${month}/${year}`;
+
+                if (notaFechaInput) {
+                    notaFechaInput.value = iso;
                 }
 
-                // Guardamos ambas series por id_vehiculo
-                $valorChartData[$v->id_vehiculo] = [
-                    'nuevo' => $dataNuevo,
-                    'segunda' => $dataSegunda,
-                ];
+                if (!items.length) {
+                    detailsContent.textContent = 'No hay datos registrados para este día.';
+                    return;
+                }
+
+                let html = '';
+                items.forEach(e => {
+                    html += `
+                <div class="detail-item">
+                    ${e.nota ? `<div class="detail-line"><strong>Nota:</strong> ${e.nota}</div>` : ''}
+                    ${e.hora_evento ? `<div class="detail-line"><strong>Hora:</strong> ${e.hora_evento}</div>` : ''}
+                    ${e.km ? `<div class="detail-line"><strong>Kilómetros:</strong> ${e.km}</div>` : ''}
+                    ${e.gastos ? `<div class="detail-line"><strong>Gastos:</strong> ${e.gastos.toFixed(2)} €</div>` : ''}
+                </div>
+            `;
+                });
+
+                detailsContent.innerHTML = html;
             }
-        @endphp
 
-        {{-- Inyección de datos JS globales (para los scripts externos) --}}
-        <script>
-            // Eventos del calendario (km, gastos, notas)
-            window.CALENDAR_EVENTS = @json($calendarEventsJson);
-            // Datos crudos de km por vehículo
-            window.PERFIL_KM_DATA = @json($kmChartData);
-            // Datos crudos de gastos por vehículo
-            window.PERFIL_GASTOS_DATA = @json($gastosChartData);
-            // Datos de evolución de valor por vehículo (nuevo / 2ª mano)
-            window.PERFIL_VALOR_DATA = @json($valorChartData);
-        </script>
+            prevBtn.addEventListener('click', function() {
+                current.setMonth(current.getMonth() - 1);
+                renderCalendar();
+            });
 
-        {{-- JS de control de tarjetas y modos (Vehículos / Valor / KM / Gastos / Calendario) --}}
-        <script src="{{ asset('assets/js/perfil/perfil-cards.js') }}"></script>
+            nextBtn.addEventListener('click', function() {
+                current.setMonth(current.getMonth() + 1);
+                renderCalendar();
+            });
 
-        {{-- Script del calendario grande (navegación, eventos, detalles) --}}
-        <script src="{{ asset('assets/js/perfil/calendario.js') }}"></script>
+            renderCalendar();
 
-        {{-- Scripts de gráficas (KM, Gastos, Valor) --}}
-        <script src="{{ asset('assets/js/perfil/perfil-graphs.js') }}"></script>
+        });
+    </script>
 
-        <!-- FOOTER -->
-        <footer class="ayuda-footer">
-            ...
-        </footer>
-    </div>
+    {{-- Gráficos de KM --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
 
-    <!-- Bootstrap JS necesario para componentes de Bootstrap (si los usas) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            @foreach ($vehiculos as $v)
+                @php
+                    $kmPoints = [];
+
+                    foreach ($v->registrosKm as $rk) {
+                        $ts = $rk->fecha_registro instanceof \Carbon\Carbon
+                            ? $rk->fecha_registro->timestamp
+                            : strtotime($rk->fecha_registro);
+
+                        if ($ts) {
+                            $kmPoints[] = [
+                                'x' => $ts * 1000,
+                                'y' => (int) $rk->km_actual,
+                            ];
+                        }
+                    }
+
+                    usort($kmPoints, fn($a, $b) => $a['x'] <=> $b['x']);
+                @endphp
+
+                (function() {
+                    const dialog = document.getElementById("modalKm_{{ $v->id_vehiculo }}");
+                    let chartRendered = false;
+
+                    window.openKmModal_{{ $v->id_vehiculo }} = function() {
+                        if (!dialog) return;
+
+                        dialog.showModal();
+
+                        if (chartRendered) return;
+                        chartRendered = true;
+
+                        const chart = new CanvasJS.Chart("chartKm_{{ $v->id_vehiculo }}", {
+                            animationEnabled: true,
+                            theme: "light2",
+                            title: {
+                                text: "Evolución de kilómetros"
+                            },
+                            axisX: {
+                                valueFormatString: "DD MMM"
+                            },
+                            axisY: {
+                                title: "Kilómetros",
+                                includeZero: true
+                            },
+                            data: [{
+                                type: "splineArea",
+                                color: "#6599FF",
+                                xValueType: "dateTime",
+                                xValueFormatString: "DD MMM",
+                                yValueFormatString: "#,##0 km",
+                                dataPoints: {!! json_encode($kmPoints, JSON_NUMERIC_CHECK) !!}
+                            }]
+                        });
+
+                        chart.render();
+                    };
+                })();
+            @endforeach
+
+        });
+    </script>
+
+    {{-- Gráficos de GASTOS --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            @foreach ($vehiculos as $v)
+                @php
+                    $seriesMap = [];
+
+                    foreach ($v->registrosGastos as $g) {
+                        if ($g->fecha_gasto instanceof \Carbon\Carbon) {
+                            $fechaKey = $g->fecha_gasto->format('Y-m-d');
+                            $labelFecha = $g->fecha_gasto->format('d/m/Y');
+                        } else {
+                            $fecha = \Carbon\Carbon::parse($g->fecha_gasto);
+                            $fechaKey = $fecha->format('Y-m-d');
+                            $labelFecha = $fecha->format('d/m/Y');
+                        }
+
+                        $tipo = $g->tipo_gasto ?? 'Otros';
+
+                        if (!isset($seriesMap[$tipo])) {
+                            $seriesMap[$tipo] = [];
+                        }
+
+                        if (!isset($seriesMap[$tipo][$fechaKey])) {
+                            $seriesMap[$tipo][$fechaKey] = [
+                                'label' => $labelFecha,
+                                'y' => 0,
+                            ];
+                        }
+
+                        $seriesMap[$tipo][$fechaKey]['y'] += (float) $g->importe;
+                    }
+
+                    foreach ($seriesMap as $tipo => $pointsByDate) {
+                        ksort($pointsByDate);
+                        $seriesMap[$tipo] = array_values($pointsByDate);
+                    }
+                @endphp
+
+                (function() {
+                    const dialog = document.getElementById("modalGastos_{{ $v->id_vehiculo }}");
+                    let chartRendered = false;
+
+                    window.openGastosModal_{{ $v->id_vehiculo }} = function() {
+                        if (!dialog) return;
+
+                        dialog.showModal();
+
+                        if (chartRendered) return;
+                        chartRendered = true;
+
+                        var chart = new CanvasJS.Chart("chartGastos_{{ $v->id_vehiculo }}", {
+                            title: {
+                                text: "Gastos Totales (€): {{ number_format($v->registrosGastos->sum('importe'), 2, ',', '.') }} €"
+                            },
+                            theme: "light2",
+                            animationEnabled: true,
+                            toolTip: {
+                                shared: true,
+                                reversed: true
+                            },
+                            axisY: {
+                                title: "Gastos acumulados",
+                                suffix: " €",
+                                includeZero: true
+                            },
+                            legend: {
+                                cursor: "pointer",
+                                itemclick: function(e) {
+                                    if (typeof(e.dataSeries.visible) === "undefined" ||
+                                        e.dataSeries.visible) {
+                                        e.dataSeries.visible = false;
+                                    } else {
+                                        e.dataSeries.visible = true;
+                                    }
+                                    e.chart.render();
+                                }
+                            },
+                            data: [
+                                @foreach ($seriesMap as $tipo => $points)
+                                {
+                                    type: "stackedColumn",
+                                    name: "{{ $tipo }}",
+                                    showInLegend: true,
+                                    yValueFormatString: "€#,##0.00",
+                                    dataPoints: {!! json_encode($points, JSON_NUMERIC_CHECK) !!}
+                                }
+                                @if (!$loop->last)
+                                ,
+                                @endif
+                                @endforeach
+                            ]
+                        });
+
+                        chart.render();
+                    };
+                })();
+            @endforeach
+        });
+    </script>
+
+    {{-- Gráficos de VALOR (Nuevo + 2ª mano) --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            @foreach ($vehiculos as $v)
+                @php
+                    $anios = now()->year - (int) $v->anio_matriculacion;
+
+                    $dataNuevo = [];
+                    $dataSegunda = [];
+
+                    // Generar año por año desde la matriculación hasta hoy
+                    for ($i = 0; $i <= $anios; $i++) {
+                        $year = (int) $v->anio_matriculacion + $i;
+
+                        // Usar \Carbon\Carbon
+                        $fecha = \Carbon\Carbon::create($year, 1, 1)->timestamp * 1000;
+
+                        if (($v->precio ?? 0) > 0) {
+                            $calcNuevo = calcularValorVehiculoView((float) $v->precio, $i);
+                            $dataNuevo[] = [
+                                'x' => $fecha,
+                                'y' => round($calcNuevo['valor_actual'], 2),
+                            ];
+                        }
+
+                        if (($v->precio_segunda_mano ?? 0) > 0) {
+                            $calc2 = calcularValorVehiculoView((float) $v->precio_segunda_mano, $i);
+                            $dataSegunda[] = [
+                                'x' => $fecha,
+                                'y' => round($calc2['valor_actual'], 2),
+                            ];
+                        }
+                    }
+                @endphp
+
+                (function() {
+                    const dialog = document.getElementById("modalValor_{{ $v->id_vehiculo }}");
+                    let chartRendered = false;
+
+                    window.openValorModal_{{ $v->id_vehiculo }} = function() {
+                        if (!dialog) return;
+
+                        dialog.showModal();
+
+                        if (chartRendered) return;
+                        chartRendered = true;
+
+                        var chart = new CanvasJS.Chart("chartValor_{{ $v->id_vehiculo }}", {
+                            animationEnabled: true,
+                            theme: "light2",
+                            title: {
+                                text: "Evolución del valor del vehículo"
+                            },
+                            axisX: {
+                                valueFormatString: "YYYY"
+                            },
+                            axisY: {
+                                prefix: "€",
+                                includeZero: false
+                            },
+                            toolTip: {
+                                shared: true
+                            },
+                            legend: {
+                                cursor: "pointer",
+                                itemclick: function(e) {
+                                    e.dataSeries.visible = !(e.dataSeries.visible ?? true);
+                                    e.chart.render();
+                                }
+                            },
+                            data: [
+                                {
+                                    type: "area",
+                                    color: "#4A90E2",
+                                    name: "Precio nuevo",
+                                    showInLegend: true,
+                                    xValueType: "dateTime",
+                                    xValueFormatString: "YYYY",
+                                    yValueFormatString: "€#,##0.##",
+                                    dataPoints: {!! json_encode($dataNuevo, JSON_NUMERIC_CHECK) !!}
+                                },
+                                {
+                                    type: "area",
+                                    color: "#E24A4A",
+                                    name: "Precio 2ª mano",
+                                    showInLegend: true,
+                                    xValueType: "dateTime",
+                                    xValueFormatString: "YYYY",
+                                    yValueFormatString: "€#,##0.##",
+                                    dataPoints: {!! json_encode($dataSegunda, JSON_NUMERIC_CHECK) !!}
+                                }
+                            ]
+                        });
+
+                        chart.render();
+                    };
+                })();
+            @endforeach
+
+        });
+    </script>
+
+    <!-- FOOTER -->
+    <footer class="ayuda-footer">
+        <div class="footer-content">
+
+            <!-- Columna 1 - Marca -->
+            <div class="footer-section">
+                <div class="footer-socials">
+                    <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Columna 2 - Soporte -->
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Soporte</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ route('ayuda') }}">Centro de Ayuda</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3 - Legal -->
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Legal</h4>
+                <ul class="footer-links footer-links-legal">
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Términos de uso</a></li>
+                    <li><a href="#">Cookies</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Línea inferior -->
+        <div class="footer-bottom">
+            © {{ date('Y') }} Cartorial — Todos los derechos reservados.
+        </div>
+    </footer>
+</div>
+
+<!-- Bootstrap JS necesario para los modales -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

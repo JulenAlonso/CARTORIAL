@@ -1,360 +1,308 @@
 // =======================================================
 // PERFIL-GRAPHS.JS
-// - Gestiona todos los gráficos CanvasJS del perfil:
-//   · KM (día / mes / año)
-//   · Gastos (día / mes / año)
-//   · Valor (nuevo / 2ª mano)
-// - Usa los datos inyectados desde Blade en:
-//   window.PERFIL_KM_DATA, window.PERFIL_GASTOS_DATA, window.PERFIL_VALOR_DATA
+//  - Gráficos CanvasJS de:
+//    · KM (día / mes / año)
+//    · Gastos (día / mes / año)
+//    · Valor (nuevo / 2ª mano)
+//  - Usa window.PERFIL_KM_DATA, window.PERFIL_GASTOS_DATA, window.PERFIL_VALOR_DATA
+//  - Funciones públicas para el Blade: openKmModal, openGastosModal, openValorModal
 // =======================================================
 
-// Cuando el DOM está listo, inicializamos todos los gráficos
-document.addEventListener("DOMContentLoaded", function () {
-    initKmCharts();
-    initGastoCharts();
-    initValorCharts();
-});
+(function () {
+    // Seguridad básica
+    if (typeof CanvasJS === "undefined") {
+        console.warn("CanvasJS no está cargado.");
+        return;
+    }
 
-/* ========================= KM ========================= */
-/* Gráficos de kilómetros por vehículo (Día / Mes / Año) */
+    // ====== HELPERS ===================================================
 
-function initKmCharts() {
-    // Objeto global con datos por idVehiculo => array de registros KM
-    const kmData = window.PERFIL_KM_DATA || {};
+    function ensureContainer(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        // Limpia el contenedor antes de pintar
+        el.innerHTML = "";
+        return el;
+    }
 
-    // Recorremos cada vehículo que tiene datos de KM
-    Object.keys(kmData).forEach(idVehiculo => {
-        const dialog      = document.getElementById(`modalKm_${idVehiculo}`);   // <dialog> del gráfico
-        const containerId = `chartKm_${idVehiculo}`;                            // id del contenedor del gráfico
-        const raw         = kmData[idVehiculo];                                 // array crudo de registros km
+    function showEmptyMessage(containerId, msg) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.innerHTML = "<p style='text-align:center; color:#666; font-size:0.9rem;'>" +
+            (msg || "No hay datos suficientes para mostrar el gráfico.") +
+            "</p>";
+    }
 
-        // Si no hay dialog o no hay datos, salimos
-        if (!dialog || !raw || !raw.length) return;
-
-        let chartRendered = false; // Para no renderizar dos veces el mismo gráfico
-        let chart;                // Instancia de CanvasJS.Chart
-
-        // Agrupa por día → para ese día nos quedamos con el último valor de km
-        function groupByDay() {
-            const map = {}; // clave: YYYY-MM-DD
-            raw.forEach(r => {
-                map[r.day] = {
-                    x: r.timestamp,   // timestamp en ms (para xValueType: dateTime)
-                    y: r.km,          // km actual ese día
-                    label: r.dayLabel // etiqueta "dd/mm/YYYY"
-                };
-            });
-            // Ordenamos por fecha (x) ascendente
-            return Object.values(map).sort((a, b) => a.x - b.x);
-        }
-
-        // Agrupa por mes → último valor de km del mes
-        function groupByMonth() {
-            const map = {}; // clave: YYYY-MM
-            raw.forEach(r => {
-                map[r.month] = {
-                    x: r.timestamp,
-                    y: r.km,
-                    label: r.monthLabel // "mm/YYYY"
-                };
-            });
-            return Object.values(map).sort((a, b) => a.x - b.x);
-        }
-
-        // Agrupa por año → último valor de km del año
-        function groupByYear() {
-            const map = {}; // clave: YYYY
-            raw.forEach(r => {
-                map[r.year] = {
-                    x: r.timestamp,
-                    y: r.km,
-                    label: r.yearLabel // "YYYY"
-                };
-            });
-            return Object.values(map).sort((a, b) => a.x - b.x);
-        }
-
-        // Cambia la vista del gráfico (día / mes / año)
-        function renderChart(view = "day") {
-            let dataPoints;
-
-            if (view === "day")        dataPoints = groupByDay();
-            else if (view === "month") dataPoints = groupByMonth();
-            else                       dataPoints = groupByYear();
-
-            chart.options.data[0].dataPoints = dataPoints;
-            chart.render();
-        }
-
-        // Solo renderizamos el gráfico cuando se abre el <dialog> por primera vez
-        dialog.addEventListener("toggle", function () {
-            // Si el dialog no está abierto o ya está renderizado → nada
-            if (!dialog.open || chartRendered) return;
-            chartRendered = true;
-
-            // Creamos la instancia de CanvasJS para KM
-            chart = new CanvasJS.Chart(containerId, {
-                animationEnabled: true,
-                theme: "light2",
-                title: { text: "Evolución de kilómetros" },
-                axisX: {
-                    valueFormatString: "DD MMM" // solo formato visual del eje X
-                },
-                axisY: {
-                    title: "Kilómetros",
-                    includeZero: false
-                },
-                data: [{
-                    type: "splineArea",
-                    color: "#6599FF",          // color del área
-                    xValueType: "dateTime",    // usamos timestamp en ms
-                    yValueFormatString: "#,##0 km",
-                    dataPoints: groupByDay()   // vista inicial → día
-                }]
-            });
-
-            chart.render();
-
-            // Botones de filtro (Día / Mes / Año) dentro del dialog de este vehículo
-            const botones = dialog.querySelectorAll(".btnFiltro");
-
-            // Vista inicial: día → aplicamos clase "active-view"
-            botones.forEach(b => b.classList.remove("active-view"));
-            const btnDia = dialog.querySelector('[data-view="day"]');
-            if (btnDia) btnDia.classList.add("active-view");
-
-            // Asignamos listener a cada botón
-            botones.forEach(btn => {
-                btn.addEventListener("click", function () {
-                    const view = this.dataset.view; // "day", "month" o "year"
-
-                    // Cambiamos la vista del gráfico
-                    renderChart(view);
-
-                    // Actualizamos estilos de botón activo (azul)
-                    botones.forEach(b => b.classList.remove("active-view"));
-                    this.classList.add("active-view");
-                });
-            });
-        });
-    });
-}
-
-/* ========================= GASTOS ========================= */
-/* Gráficos de gastos por vehículo (Día / Mes / Año) */
-
-function initGastoCharts() {
-    // Objeto global con datos de gastos por idVehiculo
-    const gastosData = window.PERFIL_GASTOS_DATA || {};
-
-    Object.keys(gastosData).forEach(idVehiculo => {
-        const dialog      = document.getElementById(`modalGastos_${idVehiculo}`); // <dialog> de gastos
-        const containerId = `chartGastos_${idVehiculo}`;                          // id contenedor gráfico
-        const raw         = gastosData[idVehiculo];                               // array crudo de gastos
-
-        if (!dialog || !raw || !raw.length) return;
-
-        let chartRendered = false;
-        let chart;
-
-        // Agrupación por día → sumamos todos los importes del mismo día
-        function groupByDay() {
-            const map = {}; // clave: YYYY-MM-DD
-            raw.forEach(g => {
-                if (!map[g.date]) {
-                    map[g.date] = { label: g.dayLabel, y: 0 };
-                }
-                map[g.date].y += g.importe;
-            });
-            // Ordenamos por fecha
-            return Object.keys(map).sort().map(k => map[k]);
-        }
-
-        // Agrupación por mes → sumamos todos los importes del mismo mes
-        function groupByMonth() {
-            const map = {}; // clave: YYYY-MM
-            raw.forEach(g => {
-                if (!map[g.month]) {
-                    map[g.month] = { label: g.monthLabel, y: 0 };
-                }
-                map[g.month].y += g.importe;
-            });
-            return Object.keys(map).sort().map(k => map[k]);
-        }
-
-        // Agrupación por año → sumamos todos los importes del mismo año
-        function groupByYear() {
-            const map = {}; // clave: YYYY
-            raw.forEach(g => {
-                if (!map[g.year]) {
-                    map[g.year] = { label: g.yearLabel, y: 0 };
-                }
-                map[g.year].y += g.importe;
-            });
-            return Object.keys(map).sort().map(k => map[k]);
-        }
-
-        // Cambia entre vista diaria / mensual / anual
-        function renderChart(view = "day") {
-            let dataPoints;
-            let serieName;
-            let axisTitle;
-
-            if (view === "day") {
-                dataPoints = groupByDay();
-                serieName  = "Gasto diario";
-                axisTitle  = "Gasto por día";
-            } else if (view === "month") {
-                dataPoints = groupByMonth();
-                serieName  = "Gasto mensual";
-                axisTitle  = "Gasto por mes";
-            } else {
-                dataPoints = groupByYear();
-                serieName  = "Gasto anual";
-                axisTitle  = "Gasto por año";
+    function groupByLastValue(data, keyField) {
+        const map = {};
+        data.forEach((item) => {
+            const key = item[keyField];
+            if (!key) return;
+            if (!map[key] || item.timestamp > map[key].timestamp) {
+                map[key] = item;
             }
+        });
+        return Object.values(map).sort((a, b) => a.timestamp - b.timestamp);
+    }
 
-            // Actualizamos título del eje Y y nombre de la serie
-            chart.options.axisY.title = axisTitle;
-            chart.options.data[0].name = serieName;
-            chart.options.data[0].dataPoints = dataPoints;
-            chart.render();
+    function groupSum(data, keyField) {
+        const map = {};
+        data.forEach((item) => {
+            const key = item[keyField];
+            if (!key) return;
+            if (!map[key]) {
+                map[key] = {
+                    key,
+                    total: 0,
+                    // labels para mostrar
+                    dayLabel: item.dayLabel,
+                    monthLabel: item.monthLabel,
+                    yearLabel: item.yearLabel
+                };
+            }
+            map[key].total += Number(item.importe || 0);
+        });
+        return Object.values(map);
+    }
+
+    // ====== KM =========================================================
+
+    function renderKmChart(idVehiculo, view) {
+        const raw = (window.PERFIL_KM_DATA && window.PERFIL_KM_DATA[idVehiculo]) || [];
+        const containerId = "chartKm_" + idVehiculo;
+
+        if (!raw.length) {
+            showEmptyMessage(containerId, "No hay registros de kilómetros para este vehículo.");
+            return;
         }
 
-        // Renderiza el gráfico únicamente cuando se abre el dialog por primera vez
-        dialog.addEventListener("toggle", function () {
-            if (!dialog.open || chartRendered) return;
-            chartRendered = true;
+        const container = ensureContainer(containerId);
+        if (!container) return;
 
-            chart = new CanvasJS.Chart(containerId, {
-                title: {
-                    // Aquí podrías poner el total precalculado desde PHP si lo necesitas
-                    text: "Gastos Totales (€)"
-                },
-                theme: "light2",
-                animationEnabled: true,
-                toolTip: {
-                    shared: false,
-                    yValueFormatString: "€#,##0.00"
-                },
-                axisY: {
-                    title: "Gasto por día", // título inicial → luego cambia con renderChart()
-                    suffix: " €",
-                    includeZero: true
-                },
-                legend: {
-                    enabled: false
-                },
-                data: [{
-                    type: "column",
-                    name: "Gasto diario", // nombre inicial
-                    yValueFormatString: "€#,##0.00",
-                    dataPoints: groupByDay() // vista inicial diaria
-                }]
+        let dataPoints = [];
+        const sorted = raw.slice().sort((a, b) => a.timestamp - b.timestamp);
+
+        if (view === "day") {
+            dataPoints = sorted.map((r) => ({
+                x: new Date(r.timestamp),
+                y: Number(r.km) || 0
+            }));
+        } else if (view === "month") {
+            const grouped = groupByLastValue(sorted, "month");
+            dataPoints = grouped.map((r) => ({
+                x: new Date(r.timestamp),
+                y: Number(r.km) || 0,
+                label: r.monthLabel
+            }));
+        } else { // year
+            const grouped = groupByLastValue(sorted, "year");
+            dataPoints = grouped.map((r) => ({
+                x: new Date(r.timestamp),
+                y: Number(r.km) || 0,
+                label: r.yearLabel
+            }));
+        }
+
+        const chart = new CanvasJS.Chart(containerId, {
+            animationEnabled: true,
+            theme: "light2",
+            axisX: {
+                valueFormatString: view === "day"
+                    ? "DD/MM/YYYY"
+                    : (view === "month" ? "MM/YYYY" : "YYYY"),
+                labelAngle: view === "day" ? -45 : 0
+            },
+            axisY: {
+                title: "Kilómetros",
+                includeZero: false
+            },
+            data: [{
+                type: "line",
+                markerSize: 5,
+                xValueType: "dateTime",
+                dataPoints: dataPoints
+            }]
+        });
+
+        chart.render();
+    }
+
+    // ====== GASTOS =====================================================
+
+    function renderGastosChart(idVehiculo, view) {
+        const raw = (window.PERFIL_GASTOS_DATA && window.PERFIL_GASTOS_DATA[idVehiculo]) || [];
+        const containerId = "chartGastos_" + idVehiculo;
+
+        if (!raw.length) {
+            showEmptyMessage(containerId, "No hay registros de gastos para este vehículo.");
+            return;
+        }
+
+        const container = ensureContainer(containerId);
+        if (!container) return;
+
+        let grouped;
+        if (view === "day") {
+            grouped = groupSum(raw, "date");
+        } else if (view === "month") {
+            grouped = groupSum(raw, "month");
+        } else { // year
+            grouped = groupSum(raw, "year");
+        }
+
+        // Para usar fechas en el eje X, montamos una Date según el tipo
+        const dataPoints = grouped.map((g) => {
+            let dt;
+            if (view === "day") {
+                // g.key = "YYYY-MM-DD"
+                dt = new Date(g.key + "T00:00:00");
+            } else if (view === "month") {
+                // g.key = "YYYY-MM"
+                dt = new Date(g.key + "-01T00:00:00");
+            } else {
+                // g.key = "YYYY"
+                dt = new Date(g.key + "-01-01T00:00:00");
+            }
+            return {
+                x: dt,
+                y: Number(g.total) || 0
+            };
+        }).sort((a, b) => a.x - b.x);
+
+        const chart = new CanvasJS.Chart(containerId, {
+            animationEnabled: true,
+            theme: "light2",
+            axisX: {
+                valueFormatString: view === "day"
+                    ? "DD/MM/YYYY"
+                    : (view === "month" ? "MM/YYYY" : "YYYY"),
+                labelAngle: view === "day" ? -45 : 0
+            },
+            axisY: {
+                title: "Gastos (€)",
+                includeZero: true,
+                prefix: ""
+            },
+            data: [{
+                type: "column",
+                dataPoints: dataPoints
+            }]
+        });
+
+        chart.render();
+    }
+
+    // ====== VALOR ======================================================
+
+    function renderValorChart(idVehiculo) {
+        const data = window.PERFIL_VALOR_DATA && window.PERFIL_VALOR_DATA[idVehiculo];
+        const containerId = "chartValor_" + idVehiculo;
+
+        if (!data || ((!data.nuevo || !data.nuevo.length) && (!data.segunda || !data.segunda.length))) {
+            showEmptyMessage(containerId, "No hay datos de valor para este vehículo.");
+            return;
+        }
+
+        const container = ensureContainer(containerId);
+        if (!container) return;
+
+        const series = [];
+
+        if (data.nuevo && data.nuevo.length) {
+            series.push({
+                type: "line",
+                name: "Precio nuevo",
+                showInLegend: true,
+                xValueType: "dateTime",
+                dataPoints: data.nuevo.map(p => ({
+                    x: new Date(p.x),
+                    y: Number(p.y) || 0
+                }))
             });
+        }
 
-            chart.render();
+        if (data.segunda && data.segunda.length) {
+            series.push({
+                type: "line",
+                name: "Precio 2ª mano",
+                showInLegend: true,
+                xValueType: "dateTime",
+                dataPoints: data.segunda.map(p => ({
+                    x: new Date(p.x),
+                    y: Number(p.y) || 0
+                }))
+            });
+        }
 
-            // Botones de filtro dentro de este modal de gastos
-            const botones = dialog.querySelectorAll(".btnFiltro");
+        const chart = new CanvasJS.Chart(containerId, {
+            animationEnabled: true,
+            theme: "light2",
+            axisX: {
+                valueFormatString: "YYYY",
+                labelAngle: 0
+            },
+            axisY: {
+                title: "Valor (€)",
+                includeZero: false
+            },
+            legend: {
+                verticalAlign: "top",
+                horizontalAlign: "center"
+            },
+            data: series
+        });
 
-            // Seleccionamos la vista "Día" por defecto
-            botones.forEach(b => b.classList.remove("active-view"));
-            const btnDia = dialog.querySelector('[data-view="day"]');
-            if (btnDia) btnDia.classList.add("active-view");
+        chart.render();
+    }
 
-            // Listener para cada botón
-            botones.forEach(btn => {
+    // ====== FUNCIONES PÚBLICAS (usadas en el Blade) ====================
+
+    window.openKmModal = function (idVehiculo) {
+        const dialog = document.getElementById("modalKm_" + idVehiculo);
+        if (!dialog) return;
+
+        dialog.showModal();
+        // por defecto vista "day"
+        renderKmChart(idVehiculo, "day");
+
+        // enganchar botones de filtros solo una vez
+        if (!dialog.dataset.filtersBound) {
+            const btns = dialog.querySelectorAll(".btnFiltro");
+            btns.forEach(btn => {
                 btn.addEventListener("click", function () {
-                    const view = this.dataset.view; // "day" | "month" | "year"
-
-                    // Cambiamos la vista del gráfico
-                    renderChart(view);
-
-                    // Actualizamos el estilo visual del botón activo
-                    botones.forEach(b => b.classList.remove("active-view"));
-                    this.classList.add("active-view");
+                    const view = this.dataset.view || "day";
+                    renderKmChart(idVehiculo, view);
                 });
             });
-        });
-    });
-}
+            dialog.dataset.filtersBound = "1";
+        }
+    };
 
-/* ========================= VALOR ========================= */
-/* Gráficos de valor del vehículo (nuevo vs 2ª mano, año a año) */
+    window.openGastosModal = function (idVehiculo) {
+        const dialog = document.getElementById("modalGastos_" + idVehiculo);
+        if (!dialog) return;
 
-function initValorCharts() {
-    // Objeto con datos de valor por idVehiculo:
-    // { idVehiculo: { nuevo: [...], segunda: [...] } }
-    const valorData = window.PERFIL_VALOR_DATA || {};
+        dialog.showModal();
+        renderGastosChart(idVehiculo, "day");
 
-    Object.keys(valorData).forEach(idVehiculo => {
-        const dialog      = document.getElementById(`modalValor_${idVehiculo}`); // dialog valor
-        const containerId = `chartValor_${idVehiculo}`;                          // id div gráfico
-        const dataVehiculo = valorData[idVehiculo];                              // { nuevo, segunda }
-
-        if (!dialog || !dataVehiculo) return;
-
-        let chartRendered = false;
-
-        // Solo se crea el gráfico cuando se abre el dialog la primera vez
-        dialog.addEventListener("toggle", function () {
-            if (!dialog.open || chartRendered) return;
-            chartRendered = true;
-
-            const dataNuevo   = dataVehiculo.nuevo   || []; // puntos de "precio nuevo"
-            const dataSegunda = dataVehiculo.segunda || []; // puntos de "precio 2ª mano"
-
-            // Instancia de CanvasJS para el valor del vehículo
-            const chart = new CanvasJS.Chart(containerId, {
-                animationEnabled: true,
-                theme: "light2",
-                title: {
-                    text: "Evolución del valor del vehículo"
-                },
-                axisX: {
-                    valueFormatString: "YYYY" // mostramos solo el año en el eje X
-                },
-                axisY: {
-                    prefix: "€",
-                    includeZero: false
-                },
-                toolTip: {
-                    shared: true // tooltip compartido entre las dos series
-                },
-                legend: {
-                    cursor: "pointer",
-                    // Al hacer click en la leyenda, ocultamos/mostramos la serie
-                    itemclick: function (e) {
-                        e.dataSeries.visible = !(e.dataSeries.visible ?? true);
-                        e.chart.render();
-                    }
-                },
-                data: [
-                    {
-                        type: "area",
-                        color: "#4A90E2",          // azul → precio nuevo
-                        name: "Precio nuevo",
-                        showInLegend: true,
-                        xValueType: "dateTime",
-                        xValueFormatString: "YYYY",
-                        yValueFormatString: "€#,##0.##",
-                        dataPoints: dataNuevo
-                    },
-                    {
-                        type: "area",
-                        color: "#E24A4A",          // rojo → precio 2ª mano
-                        name: "Precio 2ª mano",
-                        showInLegend: true,
-                        xValueType: "dateTime",
-                        xValueFormatString: "YYYY",
-                        yValueFormatString: "€#,##0.##",
-                        dataPoints: dataSegunda
-                    }
-                ]
+        if (!dialog.dataset.filtersBound) {
+            const btns = dialog.querySelectorAll(".btnFiltro");
+            btns.forEach(btn => {
+                btn.addEventListener("click", function () {
+                    const view = this.dataset.view || "day";
+                    renderGastosChart(idVehiculo, view);
+                });
             });
+            dialog.dataset.filtersBound = "1";
+        }
+    };
 
-            chart.render();
-        });
-    });
-}
+    window.openValorModal = function (idVehiculo) {
+        const dialog = document.getElementById("modalValor_" + idVehiculo);
+        if (!dialog) return;
+
+        dialog.showModal();
+        renderValorChart(idVehiculo);
+    };
+
+})();
