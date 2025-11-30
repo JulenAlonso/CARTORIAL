@@ -1,0 +1,147 @@
+/* ============================= */
+/*          MEDIA QUERIES        */
+/* ============================= */
+
+@media (max-width: 1200px) {
+    .cards {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .vehiculos-grid {
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(min(360px, 100%), 1fr)
+        );
+    }
+
+    .km-board {
+        width: 85%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+/* Layout móvil general + sidebar horizontal */
+@media (max-width: 820px) {
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    aside {
+        grid-column: auto;
+        grid-row: auto;
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        box-shadow: none;
+        border-bottom: 2px solid #e8f0ff;
+        position: relative;
+        top: auto;
+        z-index: 1;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+    }
+
+    .sidebar-menu {
+        flex-direction: row;
+        gap: 8px;
+        margin-bottom: 0;
+        padding-block: 4px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .btn-sidebar {
+        padding: 8px 10px;
+        font-size: .9rem;
+        white-space: nowrap;
+        flex: 0 0 auto;
+    }
+
+    .profile-pic img {
+        width: 56px;
+        height: 56px;
+        border-width: 2px;
+        margin: 0;
+    }
+
+    main {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .vehiculo-card {
+        flex-direction: column;
+    }
+
+    .vehiculo-media {
+        max-width: 100%;
+        aspect-ratio: 16/9;
+    }
+
+    .vehiculo-datos {
+        grid-template-columns: 1fr;
+    }
+
+    .km-board {
+        width: 100%;
+        margin: 12px 0 0 0;
+    }
+
+    .calendar-card-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .vehiculo-km-form .row,
+    .vehiculo-gastos-form .row {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 520px) {
+    .vehiculos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    main {
+        padding: 14px;
+    }
+
+    main h1 {
+        font-size: clamp(1.4rem, 5vw, 1.7rem);
+    }
+
+    .vehiculo-body {
+        padding: 14px;
+    }
+}
+
+/* Footer responsive */
+@media (max-width: 992px) {
+    .footer-content {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    #perfil-layout .ayuda-footer {
+        height: 80px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

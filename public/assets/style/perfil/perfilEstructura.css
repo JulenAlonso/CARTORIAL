@@ -1,0 +1,105 @@
+/* ============================= */
+/*            GENERAL            */
+/* ============================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --vehiculo-card-min: 420px;
+    --vehiculo-card-vertical-max: 420px;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    overflow-y: scroll;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    margin: 0;
+    min-height: 100vh;
+}
+
+#perfil-layout {
+    display: grid;
+    grid-template-columns: clamp(220px, 22vw, 260px) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    margin: 0 0 .6em;
+}
+
+.h2_mis_vehiculos {
+    margin-bottom: 12px;
+    margin-left: 5vh !important;
+}
+
+p {
+    margin: .6em 0;
+}
+
+/* ============================= */
+/*              MAIN             */
+/* ============================= */
+#perfil-layout main {
+    grid-column: 2;
+    grid-row: 1;
+
+    flex-grow: 1;
+    background: linear-gradient(135deg, #e8f0ff, #ffffff);
+    padding: clamp(16px, 3vw, 30px) clamp(12px, 3vw, 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(16px, 2vw, 30px);
+}
+
+#perfil-layout main h1 {
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 1rem + 2vw, 2.2rem);
+    margin-bottom: clamp(24px, 4vw, 40px);
+    text-align: center;
+    animation: fadeInDown 1s ease both;
+}
+
+#seccion-mis-vehiculos {
+    width: 100%;
+    align-self: stretch;
+}
+
+/* ============================= */
+/*          ANIMACIONES          */
+/* ============================= */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -10px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}

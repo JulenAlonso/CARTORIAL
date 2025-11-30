@@ -1,0 +1,50 @@
+/* ============================= */
+/*             MODAL             */
+/* ============================= */
+
+dialog.chart-dialog {
+    border: none;
+    border-radius: 12px;
+    padding: 20px 30px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.dialog-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* ============================= */
+/*   Botones vista Día/Mes/Año   */
+/* ============================= */
+
+.btnFiltro {
+    padding: 6px 14px;
+    border: none;
+    background: #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0 4px;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.btnFiltro:hover {
+    background: #d1d5db;
+}
+
+.btnFiltro.active-view {
+    background: #3b82f6;
+    color: white;
+    font-weight: 600;
+    transform: scale(1.05);
+}
+
+.btnFiltro.active-view:hover {
+    background: #2563eb;
+}

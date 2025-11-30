@@ -1,0 +1,37 @@
+/* Perfil maestro: importa todos los parciales en orden */
+
+/* 1. Estructura general (layout, body, main, títulos…) */
+@import url("perfilEstructura.css");
+
+/* 2. Sidebar */
+@import url("perfilAside.css");
+
+/* 3. Info de usuario */
+@import url("perfilUserInfo.css");
+
+/* 4. Tarjetas superiores (vehículos, valor, km, gastos, calendario mini…) */
+@import url("perfilTarjetas.css");
+
+/* 5. Listado de vehículos (vehiculos-grid, vehiculo-card, etc.) */
+@import url("perfilVehiculos.css");
+
+/* 6. Calendario grande */
+@import url("perfilCalendario.css");
+
+/* 7. Formularios de km y gastos */
+@import url("perfilFormularios.css");
+
+/* 8. Bloque de valor / devaluación y botones de filtro */
+@import url("perfilValorKmGastos.css");
+
+/* 9. Botones (guardar, gráfico, etc.) */
+@import url("perfilBotones.css");
+
+/* 10. Gráficos (si tienes algo específico) */
+@import url("perfilGraficos.css");
+
+/* 11. Footer */
+@import url("perfilFooter.css");
+
+/* 12. Responsive SIEMPRE AL FINAL */
+@import url("perfilResponsive.css");

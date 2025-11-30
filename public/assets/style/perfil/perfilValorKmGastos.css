@@ -1,0 +1,129 @@
+/* ============================= */
+/*   TARJETA VALOR GLOBAL        */
+/* ============================= */
+
+.tarjeta-valor-global {
+    display: none;
+}
+
+.modo-valor .tarjeta-valor-global {
+    display: block;
+}
+
+.tarjeta-valor-global .valor-item {
+    margin-bottom: 1rem;
+}
+
+.tarjeta-valor-global .valor-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.tarjeta-valor-global .valor-col {
+    flex: 1 1 250px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+/* ============================= */
+/*        COLLAPSIBLE / MODOS    */
+/* ============================= */
+
+.collapsible {
+    overflow: hidden;
+    max-height: 0;
+    display: block;
+}
+
+.collapsible.open {
+    max-height: 4000px;
+}
+
+/* Ocultar datos por modo */
+#seccion-mis-vehiculos.modo-valor .vehiculo-media,
+#seccion-mis-vehiculos.modo-km .vehiculo-media,
+#seccion-mis-vehiculos.modo-gastos .vehiculo-media,
+#seccion-mis-vehiculos.modo-calendario .vehiculo-media {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculo-datos li,
+#seccion-mis-vehiculos.modo-km .vehiculo-datos li,
+#seccion-mis-vehiculos.modo-gastos .vehiculo-datos li,
+#seccion-mis-vehiculos.modo-calendario .vehiculo-datos li {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculo-datos li.precio,
+#seccion-mis-vehiculos.modo-valor .vehiculo-datos li.precio2 {
+    display: list-item;
+}
+
+#seccion-mis-vehiculos.modo-km .vehiculo-datos li.km {
+    display: list-item;
+}
+
+#seccion-mis-vehiculos.modo-gastos .vehiculo-datos li.gastos {
+    display: list-item;
+}
+
+#seccion-mis-vehiculos.modo-calendario .vehiculo-datos li.gastos {
+    display: list-item;
+}
+
+/* Vista vertical en modos */
+#seccion-mis-vehiculos.modo-valor .vehiculos-grid,
+#seccion-mis-vehiculos.modo-km .vehiculos-grid,
+#seccion-mis-vehiculos.modo-gastos .vehiculos-grid,
+#seccion-mis-vehiculos.modo-calendario .vehiculos-grid,
+#seccion-mis-vehiculos.modo-valor .vehiculos-grid2,
+#seccion-mis-vehiculos.modo-km .vehiculos-grid2,
+#seccion-mis-vehiculos.modo-gastos .vehiculos-grid2,
+#seccion-mis-vehiculos.modo-calendario .vehiculos-grid2 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#seccion-mis-vehiculos.modo-valor .vehiculo-card,
+#seccion-mis-vehiculos.modo-km .vehiculo-card,
+#seccion-mis-vehiculos.modo-gastos .vehiculo-card,
+#seccion-mis-vehiculos.modo-calendario .vehiculo-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left !important;
+}
+
+/* ============================= */
+/*   VISIBILIDAD KM / GASTOS     */
+/* ============================= */
+
+.tarjeta-detalle {
+    display: block;
+}
+
+.tarjeta-km,
+.tarjeta-gastos {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-km .tarjeta-detalle {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-km .tarjeta-km {
+    display: block;
+}
+
+#seccion-mis-vehiculos.modo-gastos .tarjeta-detalle {
+    display: none;
+}
+
+#seccion-mis-vehiculos.modo-gastos .tarjeta-gastos {
+    display: block;
+}

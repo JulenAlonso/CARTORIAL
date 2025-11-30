@@ -1,0 +1,45 @@
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+    gap: clamp(14px, 2vw, 25px);
+    width: 100%;
+    justify-content: center;
+    align-items: stretch;
+    animation: fadeInUp 1s ease both;
+}
+
+.card {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: clamp(12px, 2vw, 20px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .05);
+    transition: transform .3s ease, box-shadow .3s ease;
+    position: relative;
+}
+
+.card h3 {
+    text-align: center;
+    color: #0d6efd;
+    font-size: clamp(1rem, .8rem + .9vw, 1.35rem);
+    margin-bottom: clamp(12px, 2vw, 30px);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, .15);
+}
+
+.card p {
+    font-size: clamp(1rem, .8rem + .8vw, 1.4rem);
+    font-weight: 700;
+    color: #333;
+}
+
+.text-muted {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    font-size: .8rem;
+    text-align: center;
+}

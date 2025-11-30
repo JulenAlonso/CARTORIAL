@@ -1,0 +1,72 @@
+/* ============================= */
+/*          FORMULARIOS          */
+/* ============================= */
+
+.vehiculo-km-form,
+.vehiculo-gastos-form {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.vehiculo-km-form .form-label,
+.vehiculo-gastos-form .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.vehiculo-km-form .form-control,
+.vehiculo-gastos-form .form-control,
+.vehiculo-km-form textarea,
+.vehiculo-gastos-form textarea,
+.vehiculo-gastos-form .form-select {
+    font-size: 0.85rem;
+    border-radius: 8px;
+    width: max-content;
+}
+
+.vehiculo-km-form .row,
+.vehiculo-gastos-form .row {
+    display: flex;
+    gap: 16px;
+}
+
+.vehiculo-km-form .col-md-4,
+.vehiculo-gastos-form .col-md-4 {
+    flex: 1;
+}
+
+.km-tabla,
+.gastos-tabla {
+    width: 102%;
+    min-height: 80px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.tabla-registros-gastos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.tabla-registros-gastos th,
+.tabla-registros-gastos td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 4px 6px;
+    text-align: left;
+}
+
+.tabla-registros-gastos th {
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.tabla-registros-gastos tr:last-child td {
+    border-bottom: none;
+}

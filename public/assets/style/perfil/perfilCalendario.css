@@ -1,0 +1,279 @@
+/* ============================= */
+/*   MINI CALENDARIO (cards)    */
+/* ============================= */
+
+.mini-calendar.small {
+    background: #fff;
+    border: 1px solid #e2e6ea;
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: left;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+}
+
+.mc-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.mc-month {
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+.mc-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.mc-days > div {
+    text-align: center;
+    font-size: .65rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.mc-date {
+    height: 26px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-weight: 600;
+    font-size: .75rem;
+    transition: background-color .2s;
+}
+
+.mc-date:hover {
+    background-color: #e8f0ff;
+}
+
+.mc-date.mc-empty {
+    background: transparent;
+}
+
+.mc-today {
+    outline: 2px solid #0d6efd;
+    background: #e8f0ff;
+}
+
+.mc-dot {
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    background: #0d6efd;
+    border-radius: 50%;
+}
+
+.card .mini-calendar.small {
+    max-width: 220px;
+    padding: 8px 10px;
+}
+
+.card .mini-calendar .mc-date {
+    height: 26px;
+    font-size: .75rem;
+}
+
+/* ============================= */
+/*        CALENDARIO GRANDE      */
+/* ============================= */
+
+.calendar-panel {
+    margin: 32px auto 48px;
+    max-width: 1100px;
+}
+
+.calendar-card {
+    background-color: #ffffff;
+    border-radius: 18px;
+    padding: 20px 24px 24px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.calendar-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.calendar-month-label {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.calendar-nav-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.calendar-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-1px);
+}
+
+/* Layout del calendario (izquierda) + detalles (derecha) */
+.calendar-card-body {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+/* Tabla del calendario */
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 0.9rem;
+}
+
+.calendar-table thead th {
+    padding: 6px 0;
+    text-align: center;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.calendar-table td {
+    border: 1px solid #e5e7eb;
+    height: 80px;
+    vertical-align: top;
+    padding: 6px 6px 4px;
+    position: relative;
+    background-color: #f9fafb;
+}
+
+.calendar-table td.empty {
+    background-color: #f3f4f6;
+}
+
+.calendar-day {
+    cursor: pointer;
+    transition: background 0.12s ease, box-shadow 0.12s ease, transform 0.06s ease;
+}
+
+.calendar-day:hover {
+    background-color: #eff6ff;
+    box-shadow: inset 0 0 0 1px #bfdbfe;
+    transform: translateY(-1px);
+}
+
+.day-number {
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+}
+
+.day-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 1px 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-km {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge-gastos {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.calendar-day.has-data {
+    background: #eef2ff;
+}
+
+.calendar-day.has-data .day-number {
+    color: #1d4ed8;
+}
+
+/* Panel lateral de detalles */
+.calendar-details {
+    width: 100%;
+    height: 100%;
+    background-color: #f9fafb;
+    border-radius: 14px;
+    padding: 16px 18px;
+    border: 1px dashed #d1d5db;
+}
+
+.calendar-details h5 {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.calendar-details-content {
+    font-size: 0.85rem;
+    color: #4b5563;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.detail-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-item strong {
+    font-weight: 600;
+}
+
+.calendar-day.selected-day {
+    outline-offset: 2px;
+    background-color: #e7f1ff;
+    border-radius: 6px;
+}
+
+.badge-nota {
+    background: #2c57d8;
+    color: #fff;
+    border-radius: 4px;
+    padding: 0 4px;
+    font-size: 0.7rem;
+    margin-left: 2px;
+}
