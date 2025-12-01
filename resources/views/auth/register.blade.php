@@ -7,7 +7,9 @@
     <title>Registro</title>
     <link rel="shortcut icon" href="{{ asset('assets/images/CARTORIAL2.png') }}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ asset('assets/style/Register.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/style/registroUsuario/Register.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/style/login/mostrarPassword.css') }}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -85,10 +87,15 @@
 
                                         <!-- PASSWORD -->
                                         <div class="mt-3">
+
                                             <label for="password">Contraseña</label>
-                                            <input id="password" type="password" name="password" class="form-control"
-                                                required>
-                                            <!-- CHECKLIST EN DOS BLOQUES -->
+                                            <div class="password-wrapper">
+                                                <input id="password" type="password" name="password"
+                                                    class="form-control" required>
+                                                <i class="bi bi-eye toggle-password" data-target="password"></i>
+                                            </div>
+
+                                            <!-- CHECKLIST -->
                                             <div id="password-checklist"
                                                 style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px 20px; font-size:14px; margin-top:8px;">
 
@@ -108,10 +115,14 @@
                                                 </li>
 
                                             </div>
-                                            <div>
-                                                <label for="password_confirmation">Confirmar contraseña</label>
+
+                                            <label for="password_confirmation" class="mt-3">Confirmar
+                                                contraseña</label>
+                                            <div class="password-wrapper">
                                                 <input id="password_confirmation" type="password"
                                                     name="password_confirmation" class="form-control" required>
+                                                <i class="bi bi-eye toggle-password"
+                                                    data-target="password_confirmation"></i>
                                             </div>
 
                                             <div class="mt-3">
@@ -137,10 +148,12 @@
                                             <a href="{{ route('login') }}" class="btn btn-outline-danger">Login</a>
                                         </div>
                                 </form>
+
                                 @include('components.loadingRegister')
 
-                                <a href="{{ Auth::check() ? route('home') : url('/') }}" class="btn btn-volver">Volver
-                                    al Inicio</a>
+                                <a href="{{ Auth::check() ? route('home') : url('/') }}" class="btn btn-volver">
+                                    Volver al Inicio
+                                </a>
 
                             </div>
                         </div>
@@ -153,9 +166,16 @@
 
 </body>
 
-<!-- JavaScript VALIDACIÓN CONTRASEÑA -->
+<!-- Script validación contraseña -->
 <script src="{{ asset('./assets/js/registroUsuario/password.js') }}"></script>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap Icons (icono del ojo) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<!-- Script mostrar/ocultar contraseña -->
+<script src="{{ asset('./assets/js/login/mostrarPassword.js') }}"></script>
 
 </html>
