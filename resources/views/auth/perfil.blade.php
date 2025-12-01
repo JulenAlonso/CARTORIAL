@@ -78,8 +78,9 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout">Cerrar Sesión</button>
+                {{-- 👇 Aquí dentro, para que closest("form") lo encuentre --}}
+                @include('components.loadingLogout')
             </form>
-            @include('components.loadingLogout')
         </aside>
 
         <main>
@@ -656,6 +657,7 @@
                                             <button type="submit" class="btn_guardar">
                                                 Guardar kilometraje
                                             </button>
+                                            @include('components.loadingGuardarDato')
                                         </form>
                                     </div>
 
@@ -854,6 +856,7 @@
                                             <button type="submit" class="btn_guardar">
                                                 Añadir gasto
                                             </button>
+                                            @include('components.loadingGuardarDato')
                                         </form>
                                     </div>
                                 </div>
@@ -1261,43 +1264,39 @@
                 });
             });
         </script>
+        {{-- ================================================================ --}}
         {{-- Gráficos de GASTOS --}}
         <script>
             document.addEventListener("DOMContentLoaded", function() {
 
                 @foreach ($vehiculos as $v)
                     @php
-                        $seriesMap = [];
+                        $dataPoints = [];
 
                         foreach ($v->registrosGastos as $g) {
-                            // Fecha como Carbon
+                            // Convertir fecha a Carbon
                             if ($g->fecha_gasto instanceof \Carbon\Carbon) {
                                 $fecha = $g->fecha_gasto;
                             } else {
                                 $fecha = \Carbon\Carbon::parse($g->fecha_gasto);
                             }
 
-                            $timestampMs = $fecha->timestamp * 1000; // 👈 eje X en milisegundos
-                            $labelFecha = $fecha->format('d/m/Y');
-                            $tipo = $g->tipo_gasto ?? 'Otros';
-
-                            if (!isset($seriesMap[$tipo])) {
-                                $seriesMap[$tipo] = [];
-                            }
-
-                            // 👇 UNA BARRA POR CADA GASTO (sin agrupar)
-                            $seriesMap[$tipo][] = [
-                                'x' => $timestampMs,
+                            // Añadir punto inicialmente SIN ordenar
+                            $dataPoints[] = [
                                 'y' => (float) $g->importe,
-                                'label' => $labelFecha . ' - ' . $tipo,
+                                'label' => $fecha->format('d/m/Y'),
+                                'fecha_sort' => $fecha->timestamp, // 👈 lo usamos para ordenar correctamente
                             ];
                         }
 
-                        // Ordenamos cada serie por fecha ASC
-                        foreach ($seriesMap as $tipo => $points) {
-                            usort($points, fn($a, $b) => $a['x'] <=> $b['x']);
-                            $seriesMap[$tipo] = $points;
+                        // 🔥 ORDENAR ASCENDENTE por timestamp
+                        usort($dataPoints, fn($a, $b) => $a['fecha_sort'] <=> $b['fecha_sort']);
+
+                        // Eliminar la clave auxiliar
+                        foreach ($dataPoints as &$p) {
+                            unset($p['fecha_sort']);
                         }
+
                     @endphp
 
                         (function() {
@@ -1305,64 +1304,39 @@
                             let chartRendered = false;
 
                             dialog.addEventListener("toggle", function() {
-                                if (!dialog.open) return;
-                                if (chartRendered) return;
+                                if (!dialog.open || chartRendered) return;
                                 chartRendered = true;
 
                                 var chart = new CanvasJS.Chart("chartGastos_{{ $v->id_vehiculo }}", {
-                                    title: {
-                                        text: "Gastos (1 barra = 1 gasto) — Total: {{ number_format($v->registrosGastos->sum('importe'), 2, ',', '.') }} €"
-                                    },
-                                    theme: "light2",
                                     animationEnabled: true,
-                                    toolTip: {
-                                        shared: true
-                                    },
-                                    axisX: {
-                                        valueFormatString: "DD MMM" // 👈 sin labelAngle, texto horizontal
+                                    theme: "light2",
+                                    title: {
+                                        text: "Gastos del vehículo — Total: {{ number_format($v->registrosGastos->sum('importe'), 2, ',', '.') }} €"
                                     },
                                     axisY: {
-                                        title: "Importe del gasto",
-                                        suffix: " €",
-                                        includeZero: true
+                                        title: "Importe (€)",
+                                        suffix: " €"
                                     },
-                                    legend: {
-                                        cursor: "pointer",
-                                        itemclick: function(e) {
-                                            if (typeof(e.dataSeries.visible) === "undefined" ||
-                                                e.dataSeries.visible) {
-                                                e.dataSeries.visible = false;
-                                            } else {
-                                                e.dataSeries.visible = true;
-                                            }
-                                            e.chart.render();
-                                        }
-                                    },
-                                    data: [
-                                        @foreach ($seriesMap as $tipo => $points)
-                                            {
-                                                type: "column", // 👈 barra normal, no stacked
-                                                name: "{{ $tipo }}",
-                                                showInLegend: true,
-                                                xValueType: "dateTime",
-                                                xValueFormatString: "DD/MM/YYYY",
-                                                yValueFormatString: "€#,##0.00",
-                                                dataPoints: {!! json_encode($points, JSON_NUMERIC_CHECK) !!}
-                                            }
-                                            @if (!$loop->last)
-                                                ,
-                                            @endif
-                                        @endforeach
-                                    ]
+                                    data: [{
+                                        type: "column",
+                                        showInLegend: true,
+                                        legendText: "Cada barra = 1 gasto",
+                                        legendMarkerColor: "grey",
+                                        yValueFormatString: "€#,##0.00",
+                                        dataPoints: {!! json_encode($dataPoints, JSON_NUMERIC_CHECK) !!}
+                                    }]
                                 });
 
                                 chart.render();
                             });
                         })();
                 @endforeach
+
             });
         </script>
+        {{-- ================================================================ --}}
 
+        {{-- ================================================================ --}}
         {{-- Gráficos de VALOR (Nuevo + 2ª mano) --}}
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -1458,7 +1432,6 @@
                             });
                         })();
                 @endforeach
-
             });
         </script>
 
