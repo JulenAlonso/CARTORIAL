@@ -78,8 +78,8 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout">Cerrar Sesión</button>
-            </form>                                    @include('components.loadingLogout')
-
+            </form>
+            @include('components.loadingLogout')
         </aside>
 
         <main>
@@ -307,8 +307,7 @@
 
                     <div class="mini-calendar small">
                         @php
-                            use Carbon\Carbon;
-                            $now = Carbon::now();
+                            $now = \Carbon\Carbon::now();
                             $first = $now->copy()->startOfMonth();
                             $daysInMonth = $now->daysInMonth;
                             $leading = $first->isoWeekday() - 1;
@@ -433,122 +432,116 @@
                                         </ul>
                                     </div>
                                     {{-- ========================================= --}}
-                                    {{-- TARJETA GLOBAL · VALOR (SOLO MODO-VALOR) --}}
+                                    {{-- TARJETA VALOR · POR VEHÍCULO             --}}
                                     {{-- ========================================= --}}
-                                    {{-- ========================================= --}}
-                                    {{-- REVISAR --}}
-                                    {{-- ========================================= --}}
+                                    @php
+                                        // Años desde la matriculación de ESTE vehículo
+                                        $aniosValor = now()->year - (int) $v->anio_matriculacion;
+
+                                        // Cálculo para precio nuevo y 2ª mano (si existen)
+                                        $datosNuevo =
+                                            ($v->precio ?? 0) > 0
+                                                ? calcularValorVehiculoView((float) $v->precio, $aniosValor)
+                                                : null;
+
+                                        $datosSegunda =
+                                            ($v->precio_segunda_mano ?? 0) > 0
+                                                ? calcularValorVehiculoView(
+                                                    (float) $v->precio_segunda_mano,
+                                                    $aniosValor,
+                                                )
+                                                : null;
+
+                                        // Usamos la gama que salga del precio nuevo; si no hay, de la 2ª mano
+                                        $datosBase = $datosNuevo ?? $datosSegunda;
+                                    @endphp
 
                                     <div class="tarjeta-valor-global">
                                         <h3>💰 Valor actual del vehículo</h3>
 
-                                        @foreach ($vehiculos as $v)
-                                            @php
-                                                // Años desde la matriculación
-                                                $anios = now()->year - (int) $v->anio_matriculacion;
+                                        <div class="valor-item">
+                                            <h4>{{ $v->marca }} {{ $v->modelo }}
+                                                ({{ $v->anio_matriculacion }})</h4>
 
-                                                // Cálculo para precio nuevo y 2ª mano (si existen)
-                                                $datosNuevo =
-                                                    ($v->precio ?? 0) > 0
-                                                        ? calcularValorVehiculoView((float) $v->precio, $anios)
-                                                        : null;
+                                            {{-- Gama --}}
+                                            <p>
+                                                <strong>Gama:</strong>
+                                                {{ $datosBase['gama'] ?? 'N/D' }}
+                                            </p>
 
-                                                $datosSegunda =
-                                                    ($v->precio_segunda_mano ?? 0) > 0
-                                                        ? calcularValorVehiculoView(
-                                                            (float) $v->precio_segunda_mano,
-                                                            $anios,
-                                                        )
-                                                        : null;
+                                            {{-- 🔹 DOS COLUMNAS: NUEVO / 2ª MANO --}}
+                                            <div class="valor-columns">
+                                                {{-- Columna 1: Precio nuevo --}}
+                                                <div class="valor-col">
+                                                    <h5>🚘 Precio nuevo</h5>
 
-                                                // Usamos la gama que salga del precio nuevo; si no hay, de la 2ª mano
-                                                $datosBase = $datosNuevo ?? $datosSegunda;
-                                            @endphp
+                                                    @if ($datosNuevo)
+                                                        <p>
+                                                            <strong>Valor estimado actual:</strong>
+                                                            {{ number_format($datosNuevo['valor_actual'], 2, ',', '.') }}
+                                                            €
+                                                        </p>
 
-                                            <div class="valor-item">
-                                                <h4>{{ $v->marca }} {{ $v->modelo }}
-                                                    ({{ $v->anio_matriculacion }})</h4>
-
-                                                {{-- Gama --}}
-                                                <p>
-                                                    <strong>Gama:</strong>
-                                                    {{ $datosBase['gama'] ?? 'N/D' }}
-                                                </p>
-
-                                                {{-- 🔹 DOS COLUMNAS: NUEVO / 2ª MANO --}}
-                                                <div class="valor-columns">
-                                                    {{-- Columna 1: Precio nuevo --}}
-                                                    <div class="valor-col">
-                                                        <h5>🚘 Precio nuevo</h5>
-
-                                                        @if ($datosNuevo)
-                                                            <p>
-                                                                <strong>Valor estimado actual:</strong>
-                                                                {{ number_format($datosNuevo['valor_actual'], 2, ',', '.') }}
-                                                                €
-                                                            </p>
-
-                                                            <p>
-                                                                <strong>Devaluación desde nuevo:</strong>
-                                                                -{{ number_format($datosNuevo['devaluacion_abs'], 2, ',', '.') }}
-                                                                €
-                                                                ({{ number_format($datosNuevo['devaluacion_pct'], 1, ',', '.') }}
-                                                                %)
-                                                            </p>
-                                                        @else
-                                                            <p class="text-muted">Sin precio nuevo registrado.</p>
-                                                        @endif
-                                                    </div>
-
-                                                    {{-- Columna 2: Precio 2ª mano --}}
-                                                    <div class="valor-col">
-                                                        <h5>🔁 Precio 2ª mano</h5>
-
-                                                        @if ($datosSegunda)
-                                                            <p>
-                                                                <strong>Valor estimado actual:</strong>
-                                                                {{ number_format($datosSegunda['valor_actual'], 2, ',', '.') }}
-                                                                €
-                                                            </p>
-
-                                                            <p>
-                                                                <strong>Devaluación desde 2ª mano:</strong>
-                                                                -{{ number_format($datosSegunda['devaluacion_abs'], 2, ',', '.') }}
-                                                                €
-                                                                ({{ number_format($datosSegunda['devaluacion_pct'], 1, ',', '.') }}
-                                                                %)
-                                                            </p>
-                                                        @else
-                                                            <p class="text-muted">Sin precio de 2ª mano registrado.</p>
-                                                        @endif
-                                                    </div>
+                                                        <p>
+                                                            <strong>Devaluación desde nuevo:</strong>
+                                                            -{{ number_format($datosNuevo['devaluacion_abs'], 2, ',', '.') }}
+                                                            €
+                                                            ({{ number_format($datosNuevo['devaluacion_pct'], 1, ',', '.') }}
+                                                            %)
+                                                        </p>
+                                                    @else
+                                                        <p class="text-muted">Sin precio nuevo registrado.</p>
+                                                    @endif
                                                 </div>
 
-                                                <hr>
+                                                {{-- Columna 2: Precio 2ª mano --}}
+                                                <div class="valor-col">
+                                                    <h5>🔁 Precio 2ª mano</h5>
 
-                                                {{-- Botón + Modal gráfico valor --}}
-                                                <button class="btn_grafico"
-                                                    onclick="document.getElementById('modalValor_{{ $v->id_vehiculo }}').showModal();">
-                                                    Ver gráfico de valor
-                                                </button>
+                                                    @if ($datosSegunda)
+                                                        <p>
+                                                            <strong>Valor estimado actual:</strong>
+                                                            {{ number_format($datosSegunda['valor_actual'], 2, ',', '.') }}
+                                                            €
+                                                        </p>
 
-                                                <dialog id="modalValor_{{ $v->id_vehiculo }}" class="chart-dialog">
-                                                    <h3>📉 Valor del vehículo — {{ $v->marca }}
-                                                        {{ $v->modelo }}</h3>
-
-                                                    <div id="chartValor_{{ $v->id_vehiculo }}"
-                                                        style="height: 420px; width: 100%;"></div>
-
-                                                    <div class="dialog-buttons">
-                                                        <button
-                                                            onclick="document.getElementById('modalValor_{{ $v->id_vehiculo }}').close();"
-                                                            class="btn btn-secondary">
-                                                            Cerrar
-                                                        </button>
-                                                    </div>
-                                                </dialog>
+                                                        <p>
+                                                            <strong>Devaluación desde 2ª mano:</strong>
+                                                            -{{ number_format($datosSegunda['devaluacion_abs'], 2, ',', '.') }}
+                                                            €
+                                                            ({{ number_format($datosSegunda['devaluacion_pct'], 1, ',', '.') }}
+                                                            %)
+                                                        </p>
+                                                    @else
+                                                        <p class="text-muted">Sin precio de 2ª mano registrado.</p>
+                                                    @endif
+                                                </div>
                                             </div>
-                                        @endforeach
+
+                                            <hr>
+
+                                            {{-- Botón + Modal gráfico valor (SOLO DE ESTE VEHÍCULO) --}}
+                                            <button class="btn_grafico"
+                                                onclick="document.getElementById('modalValor_{{ $v->id_vehiculo }}').showModal();">
+                                                Ver gráfico de valor
+                                            </button>
+
+                                            <dialog id="modalValor_{{ $v->id_vehiculo }}" class="chart-dialog">
+                                                <h3>📉 Valor del vehículo — {{ $v->marca }} {{ $v->modelo }}
+                                                </h3>
+
+                                                <div id="chartValor_{{ $v->id_vehiculo }}"
+                                                    style="height: 420px; width: 100%;"></div>
+
+                                                <div class="dialog-buttons">
+                                                    <button
+                                                        onclick="document.getElementById('modalValor_{{ $v->id_vehiculo }}').close();"
+                                                        class="btn btn-secondary">
+                                                        Cerrar
+                                                    </button>
+                                                </div>
+                                            </dialog>
+                                        </div>
                                     </div>
                                     {{-- --------------------------- --}}
                                     {{-- 🟦 Tarjeta KM --}}
@@ -1187,66 +1180,85 @@
         {{-- ------------------------------------------------------------------------------------- --}}
         {{-- GRAFICOS --}}
 
-        {{-- Gráficos de KM --}}
+        {{-- =================== GRÁFICOS KM POR VEHÍCULO =================== --}}
+        @php
+            $kmData = [];
+
+            foreach ($vehiculos as $v) {
+                $kmPoints = [];
+
+                foreach ($v->registrosKm as $rk) {
+                    // Detectar si es instancia de Carbon sin usar "use Carbon"
+                    if ($rk->fecha_registro instanceof \Carbon\Carbon) {
+                        $ts = $rk->fecha_registro->timestamp;
+                    } else {
+                        $ts = strtotime($rk->fecha_registro);
+                    }
+
+                    if ($ts) {
+                        $kmPoints[] = [
+                            'x' => $ts * 1000,
+                            'y' => (int) $rk->km_actual,
+                        ];
+                    }
+                }
+
+                usort($kmPoints, fn($a, $b) => $a['x'] <=> $b['x']);
+
+                $kmData[$v->id_vehiculo] = $kmPoints;
+            }
+        @endphp
+
         <script>
             document.addEventListener("DOMContentLoaded", function() {
+                // Objeto global: idVehiculo => puntos km
+                const KM_DATA = @json($kmData, JSON_NUMERIC_CHECK);
 
-                @foreach ($vehiculos as $v)
-                    @php
-                        $kmPoints = [];
+                // Recorremos cada vehículo que tenga datos (o aunque no tenga)
+                Object.keys(KM_DATA).forEach(function(idVehiculo) {
+                    const dialog = document.getElementById("modalKm_" + idVehiculo);
+                    const containerId = "chartKm_" + idVehiculo;
 
-                        foreach ($v->registrosKm as $rk) {
-                            $ts = $rk->fecha_registro instanceof \Carbon\Carbon ? $rk->fecha_registro->timestamp : strtotime($rk->fecha_registro);
+                    if (!dialog) {
+                        console.warn("No se encontró el dialog para vehículo", idVehiculo);
+                        return;
+                    }
 
-                            if ($ts) {
-                                $kmPoints[] = [
-                                    'x' => $ts * 1000, // timestamp (ms) → eje X
-                                    'y' => (int) $rk->km_actual, // km → eje Y
-                                ];
-                            }
-                        }
+                    let chartRendered = false;
 
-                        // 🔽 ORDENAR POR FECHA ASCENDENTE (primer registro → último)
-                        usort($kmPoints, fn($a, $b) => $a['x'] <=> $b['x']);
-                    @endphp
+                    dialog.addEventListener("toggle", function() {
+                        // Solo cuando se abre y solo la primera vez
+                        if (!dialog.open || chartRendered) return;
+                        chartRendered = true;
 
-                        (function() {
-                            const dialog = document.getElementById("modalKm_{{ $v->id_vehiculo }}");
-                            let chartRendered = false;
+                        const dataPoints = KM_DATA[idVehiculo] || [];
 
-                            dialog.addEventListener("toggle", function() {
-                                if (!dialog.open || chartRendered) return;
+                        const chart = new CanvasJS.Chart(containerId, {
+                            animationEnabled: true,
+                            theme: "light2",
+                            title: {
+                                text: "Evolución de kilómetros"
+                            },
+                            axisX: {
+                                valueFormatString: "DD MMM"
+                            },
+                            axisY: {
+                                title: "Kilómetros",
+                                includeZero: true
+                            },
+                            data: [{
+                                type: "splineArea",
+                                color: "#6599FF",
+                                xValueType: "dateTime",
+                                xValueFormatString: "DD MMM",
+                                yValueFormatString: "#,##0 km",
+                                dataPoints: dataPoints
+                            }]
+                        });
 
-                                chartRendered = true;
-
-                                const chart = new CanvasJS.Chart("chartKm_{{ $v->id_vehiculo }}", {
-                                    animationEnabled: true,
-                                    theme: "light2",
-                                    title: {
-                                        text: "Evolución de kilómetros"
-                                    },
-                                    axisX: {
-                                        valueFormatString: "DD MMM"
-                                    },
-                                    axisY: {
-                                        title: "Kilómetros",
-                                        includeZero: true
-                                    },
-                                    data: [{
-                                        type: "splineArea",
-                                        color: "#6599FF",
-                                        xValueType: "dateTime",
-                                        xValueFormatString: "DD MMM",
-                                        yValueFormatString: "#,##0 km",
-                                        dataPoints: {!! json_encode($kmPoints, JSON_NUMERIC_CHECK) !!}
-                                    }]
-                                });
-
-                                chart.render();
-                            });
-                        })();
-                @endforeach
-
+                        chart.render();
+                    });
+                });
             });
         </script>
         {{-- Gráficos de GASTOS --}}
