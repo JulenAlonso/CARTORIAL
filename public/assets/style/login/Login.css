@@ -1,21 +1,45 @@
+/* ========================================== */
+/*               GENERAL (LOGIN)              */
+/* ========================================== */
 body {
-    background: #f6f5f7;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: -20px 0 50px;
+    
 }
 
+
+/* ========================================== */
+/*     ESPACIADO BLOQUE BOTÓN LOGIN / TEXTO   */
+/* ========================================== */
+/* Reduce el espacio entre el botón "Iniciar sesión"
+   y el bloque inferior (Registro / Volver) */
+.text-center.pt-1.mb-5.pb-1 {
+    margin-bottom: 10px !important;
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+
+/* ========================================== */
+/*       TARJETA / CONTENEDOR PRINCIPAL       */
+/* ========================================== */
 .col-xl-10 {
-    max-width: 900px;
-    /* o el ancho que quieras */
-    margin: 0 auto;
-    /* centrado horizontal */
+    max-width: 900px;     /* Ancho máximo de la tarjeta */
+    margin: 0 auto;       /* Centrado horizontal */
+    
+    
+
 }
 
 
-/* Boton: Registro  */
+/* ========================================== */
+/*           BOTONES (LOGIN / REGISTRO)       */
+/* ========================================== */
+
+/* Botón: "Regístrate" */
 .btn.btn-outline-danger {
     color: #01579B;
     border-color: #01579B;
@@ -27,7 +51,7 @@ body {
     border-color: #01579B;
 }
 
-/* Boton: volver  */
+/* Botón: "Volver al Inicio" */
 .btn.btn-volver {
     display: flex;
     justify-content: center;
@@ -42,17 +66,36 @@ body {
     border-color: #01579B;
 }
 
+
+/* ========================================== */
+/*           COLUMNA AZUL (TEXTO)             */
+/* ========================================== */
 .gradient-custom-2 {
-    /* fallback for old browsers */
-    /* background: #fccb90; */
-
-    /* Chrome 10-25, Safari 5.1-6 */
+    /* Gradiente azul lateral derecho */
     background: -webkit-linear-gradient(to right, #039BE5, #0288D1, #0277BD, #01579B);
-
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, #039BE5, #0288D1, #0277BD, #01579B);
 }
 
+
+/* ========================================== */
+/*      SEPARADOR HR (BAJO EL FORM LOGIN)     */
+/* ========================================== */
+/* Línea separadora con el ancho del contenedor
+   donde está el botón "Volver al inicio" */
+.registro-separador {
+    width: 100%;                    /* Ocupa todo el ancho del contenido */
+    margin: 10px auto 25px auto;    /* Centrado, con algo de aire */
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, #039BE5, #0288D1, #0277BD, #01579B);
+    opacity: 0.5;
+    border-radius: 10px;
+}
+
+
+/* ========================================== */
+/*               RESPONSIVE LOGIN             */
+/* ========================================== */
 @media (min-width: 768px) {
     .gradient-form {
         height: 100vh !important;

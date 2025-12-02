@@ -1,50 +1,89 @@
-/* ------------------ GENERAL ------------------ */
+/* ============================================================ */
+/*                          GENERAL                             */
+/* ============================================================ */
 html,
 body {
-    transform: scale(0.998);
-    transform-origin: top center;
+    /* Permitimos que la página crezca según el contenido */
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+    height: auto;
+    min-height: 100vh;
+
+    /* Eliminamos márgenes y padding por defecto */
+    margin: 0;
+    padding: 0;
+
+    /* Evita problemas de scroll horizontal */
+    overflow-x: hidden;
 }
 
-/* ------------------ CONTENEDOR PRINCIPAL ------------------ */
+
+/* ============================================================ */
+/*                 CONTENEDOR PRINCIPAL (CARD)                  */
+/* ============================================================ */
 .container.py-5.h-100 {
-    height: 100vh;
+    /* Eliminamos el alto forzado para que crezca con el contenido */
+    height: auto;
     width: 100%;
-    padding: 0 !important;
+
+    /* Espaciado general */
+    padding: 40px 15px !important;
+
     margin: 0 auto;
     display: flex;
-    align-items: center;
     justify-content: center;
+
+    /* Permitimos que el contenido crezca hacia abajo */
+    align-items: flex-start;
 }
 
-/* ------------------ TARJETA ------------------ */
+/* Ajuste por si Bootstrap aplica 100% de altura al row */
+.row.d-flex.justify-content-center.align-items-center.h-100 {
+    height: auto;
+    min-height: 0;
+    align-items: flex-start;
+}
+
+
+/* ============================================================ */
+/*                        TARJETA LOGIN                         */
+/* ============================================================ */
 .card.rounded-3.text-black {
     border: 2px solid #e0e0e0;
+    /* Borde exterior */
     box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
     width: 100%;
-    height: 100%;
+    height: auto;
+    /* Se adapta al contenido */
     display: flex;
     flex-direction: row;
     border-radius: 18px;
     overflow: hidden;
     background-color: #fff;
-    border-bottom: 4px solid #01579B; /* Bottom border */
+
+    /* Borde azul (tu identidad visual) */
+    border: 2px solid #0277BD;
 }
 
 .card.rounded-3.text-black:hover {
+    /* Sombra al hacer hover */
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
 }
 
-/* ------------------ COLUMNA AZUL ------------------ */
+
+/* ============================================================ */
+/*                 COLUMNA AZUL (INFORMACIÓN)                   */
+/* ============================================================ */
 .gradient-custom-2 {
+    /* Fondo con gradiente */
     background: linear-gradient(90deg, #039BE5, #0288D1, #0277BD, #01579B);
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     flex: 0 0 40%;
     padding: 30px;
+
     color: #fff;
 }
 
@@ -54,7 +93,10 @@ body {
     margin: 0;
 }
 
-/* ------------------ COLUMNA FORMULARIO ------------------ */
+
+/* ============================================================ */
+/*                 COLUMNA DEL FORMULARIO LOGIN                 */
+/* ============================================================ */
 .col-lg-6 {
     flex: 0 0 60%;
     display: flex;
@@ -80,7 +122,20 @@ body {
     letter-spacing: .3px;
 }
 
-/* ------------------ FORMULARIO ------------------ */
+
+/* ============================================================ */
+/*         ESPACIADO ENTRE BOTÓN "CREAR CUENTA" Y LOGIN         */
+/* ============================================================ */
+.text-center.pt-1.mb-5.pb-1 {
+    margin-bottom: 10px !important;
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+
+/* ============================================================ */
+/*                    FORMULARIO LOGIN                          */
+/* ============================================================ */
 label {
     font-weight: 600;
     font-size: 1rem;
@@ -90,27 +145,39 @@ label {
 .form-control {
     border-radius: 10px;
     border: 1px solid #ccc;
+    /* Borde suave */
     padding: 10px 12px;
     font-size: 1rem;
-    border-bottom: 2px solid #01579B; /* Bottom border */
+
+    /* Identidad visual: borde inferior azul */
+    border-bottom: 2px solid #01579B;
 }
 
+
+/* Botón de enviar (Iniciar Sesión) */
 button[type="submit"] {
     width: 100%;
     border-radius: 10px;
     padding: 5px;
+
     background: linear-gradient(to right, #0288D1, #01579B);
     border: none;
     font-weight: 600;
     color: #fff;
-    border-bottom: 2px solid #01579B; /* Bottom border */
+
+    border-bottom: 2px solid #01579B;
 }
 
 button[type="submit"]:hover {
     transform: translateY(-1px);
 }
 
-/* ------------------ BOTONES EXTRA ------------------ */
+
+/* ============================================================ */
+/*                        BOTONES EXTRA                         */
+/* ============================================================ */
+
+/* Botón: “Regístrate” */
 .btn.btn-outline-danger {
     color: #01579B !important;
     border-color: #01579B !important;
@@ -126,6 +193,7 @@ button[type="submit"]:hover {
     border-color: #01579B !important;
 }
 
+/* Botón: “Volver al inicio” */
 .btn.btn-volver {
     display: flex;
     justify-content: center;
@@ -141,17 +209,39 @@ button[type="submit"]:hover {
     background-color: #01579B;
 }
 
-/* ------------------ RESPONSIVE ------------------ */
+
+/* ============================================================ */
+/*              HR — SEPARADOR ENTRE SECCIONES                  */
+/* ============================================================ */
+.registro-separador {
+    width: 100%;
+    /* Misma anchura visual que el botón “Volver” */
+    margin: 10px auto 25px auto;
+    border: none;
+    height: 2px;
+
+    /* Color corporativo */
+    background: #01579B;
+    opacity: 0.5;
+
+    border-radius: 10px;
+}
+
+
+/* ============================================================ */
+/*                           RESPONSIVE                          */
+/* ============================================================ */
 @media (max-width: 991.98px) {
+
     html,
     body {
-        overflow: auto;
+        overflow-y: auto;
     }
 
     .container.py-5.h-100 {
         width: 100%;
         height: auto;
-        padding: 20px;
+        padding: 20px !important;
     }
 
     .card.rounded-3.text-black {
