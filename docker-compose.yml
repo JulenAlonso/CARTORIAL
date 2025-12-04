@@ -1,0 +1,34 @@
+services:
+  php-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    ports:
+      - "80:80"
+    volumes:
+      # Monta el proyecto Laravel completo en el contenedor
+      - ./:/var/www/html
+    environment:
+      # Para que Apache sirva desde /public
+      APACHE_DOCUMENT_ROOT: /var/www/html/public
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: laravel-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cartorial
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
